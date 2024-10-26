@@ -1,1 +1,8 @@
 .DS_Store
+
+#Ignore all test files
+# test*: This ignores any files or directories that start with test in the current folder.
+# **/test*: This pattern ignores any files or directories that start with test in any subdirectory (recursively).
+
+test*
+**/test*
