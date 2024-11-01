@@ -1,3 +1,9 @@
+import json
+
+# Load the messages from the JSON file
+with open('calculator_messages.json', 'r') as file:
+    MESSAGES = json.load(file)
+
 while True:
     def prompt(message):
         print(f"==> {message}")
@@ -10,27 +16,27 @@ while True:
 
         return False
 
-    prompt('Welcome to Calculator!')
+    prompt(MESSAGES['Welcome'])
 
-    prompt("What's the first number?")
+    prompt(MESSAGES['First'])
     number1 = input()
 
     while invalid_number(number1):
-        prompt("Hmm... that doesn't look like a valid number.")
+        prompt(MESSAGES['Not_valid'])
         number1 = input()
 
-    prompt("What's the second number?")
+    prompt(MESSAGES['Second'])
     number2 = input()
 
     while invalid_number(number2):
-        prompt("Hmm... that doesn't look like a valid number.")
+        prompt(MESSAGES['Not_valid'])
         number2 = input()
 
-    prompt("What operation would you like to perform?\n1) Add 2) Subtract 3) Multiply 4) Divide")
+    prompt(MESSAGES['Operation'])
     operation = input()
 
     while operation not in ["1", "2", "3", "4"]:
-        prompt("You must choose 1, 2, 3, or 4")
+        prompt(MESSAGES['Choose'])
         operation = input()
 
     match operation:
@@ -43,9 +49,9 @@ while True:
         case "4":
             output = int(number1) / int(number2)
 
-    prompt(f"The result is {output}")
+    prompt(f'The result is {output}')
 
-    prompt("Would you like to perform another calculation? Input 'Y' for yes and 'N' for no.")
+    prompt(MESSAGES['Continue?'])
     carry_on = input()
 
     if carry_on == 'N':
