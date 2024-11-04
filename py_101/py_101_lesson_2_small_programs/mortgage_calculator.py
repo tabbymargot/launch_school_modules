@@ -32,19 +32,17 @@ def remove_leading_zeros(num_str):
     else:  
         return num_str
         
-def remove_percent_symbol(number_str):
+# def remove_percent_symbol(number_str):
 
-    chars = ['%']
+#     chars = ['%']
 
-    for char in chars:
-        if char in number_str:
-            print(f'This is the char: {char}')
-            number_str = number_str.replace(char, '')
-            print(number_str)
+#     for char in chars:
+#         if char in number_str:
+#             print(f'This is the char: {char}')
+#             number_str = number_str.replace(char, '')
+#             print(number_str)
 
-    return number_str
-
-
+#     return number_str
 
 
 # FUNCTIONS FOR GETTING INPUT
@@ -69,23 +67,30 @@ def get_loan_amount():
             return loan_amount     
 
 def get_apr():
-    # TODO adjust for US way of entering rates, ie 0.05%
-    cleaned_rate = ''
+    # cleaned_rate = ''
 
-    while cleaned_rate == '':
+    while True:
         prompt("""What is the annual interest rate?
-        Please enter the rate either as a whole number
-        or as a decimal. For example, if the annual 
-        interest rate is 5% you could enter 5 or 5.0
-        """)
+    Please enter the rate either as a whole number
+    or as a decimal. For example, if the annual 
+    interest rate is 5% you could enter 5 or 5.0
+        
+    Note that the annual interest rate must be greater 
+    than 0.
+    """)
         annual_rate_str = input()
 
+        if annual_rate_str.endswith('%'):
+            annual_rate_str = annual_rate_str[:-1]
+
         try: 
-            cleaned_rate = float(remove_percent_symbol(annual_rate_str))
+            cleaned_rate = float(annual_rate_str)
         except ValueError:
             prompt("Unfortunately that is not a valid APR. Please try again")
+        else:
+            break
 
-    apr = cleaned_rate / 1000
+    apr = cleaned_rate / 100
     return apr
 
 def get_time_unit():
@@ -96,13 +101,12 @@ def get_time_unit():
             ))
         
         time_unit_str = input()[0].lower()
-        validation_status = is_valid_unit(time_unit_str)
-        
-        match validation_status:
-            case True:
+
+        match time_unit_str:
+            case 'm' | 'y' :
                 return time_unit_str
-            case False:
-                prompt("Unfortunately that is not a valid duration.")
+            case _:
+                prompt("Unfortunately that is not a valid duration. Please try again.")
 
 def get_duration():
     if time_unit_str == 'y':
@@ -110,31 +114,37 @@ def get_duration():
             prompt('Over how many years will you be paying off your loan?')
             duration_in_years_str = input()
 
-            if duration_in_years_str.isdigit() == False:
-                prompt("The loan duration should contain only digits. Please try again.")
-            else: 
+            try: 
                 duration_in_months = int(duration_in_years_str) * 12
-                break 
+            except ValueError:
+                prompt("The loan duration should contain only digits. Please try again.")
+            else:
+                break
+
     elif time_unit_str == 'm':
         while True:
             prompt('Over how many months will you be paying off your loan?')
             duration_in_months_str = input()
 
-            if duration_in_months_str.isdigit() == False:
+            try: 
+                duration_in_months = int(duration_in_months_str)
+            except ValueError:
                 prompt("The loan duration should contain only digits. Please try again.")
             else:
-                duration_in_months = int(duration_in_months_str)
                 break
     
     return duration_in_months
 
 loan_amount = get_loan_amount()
+print(f'loan_amount: {loan_amount}')
 
 apr = get_apr()
-# print(apr)
+print(f'APR: {apr}')
 
 time_unit_str = get_time_unit()
+print(f'time_unit_str: {time_unit_str}')
 duration_in_months = get_duration()
+print(f'duration_in_months: {duration_in_months}')
 
 
 
@@ -143,7 +153,4 @@ print(f'Monthly interest rate: {monthly_interest_rate}')
 
 monthly_payment = loan_amount * (monthly_interest_rate / (1 - (1 + monthly_interest_rate) ** (-duration_in_months)))
 
-
-monthly_payment = loan_amount * (monthly_interest_rate /
-(1 - ((1 + monthly_interest_rate)**(-duration_in_months))))
 print(f'Your monthly repayment will be: ${monthly_payment:.2f}')
