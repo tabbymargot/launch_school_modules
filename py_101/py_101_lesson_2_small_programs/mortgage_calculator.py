@@ -91,10 +91,12 @@ def get_apr():
 def get_duration():
     if time_unit == 'y':
         prompt('Over how many years will you be paying off your loan?')
+        # TODO validate input?
         duration_in_years = int(input())
         duration_in_months = duration_in_years * 12
     elif time_unit == 'm':
         prompt('Over how many months will you be paying off your loan?')
+        # TODO validate input?
         duration_in_months = int(input())
     
     return duration_in_months
