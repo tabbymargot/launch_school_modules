@@ -12,62 +12,77 @@ def prompt(message):
     print(f'==> {message}')
 
 # VALIDATION FUNCTIONS
-
-def is_valid_unit(time_unit_str):
-    match time_unit_str:
-        case 'm' | 'y' :
-            return True
-        case _:
-            return False
         
-def remove_leading_zeros(num_str):
-    while num_str != '':
-        if (num_str[0] == '0'):
-            num_str = num_str[1:]
-        elif (num_str[0] != '0'):
-            break
+# def remove_leading_zeros(num_str):
+#     while num_str != '':
+#         if (num_str[0] == '0'):
+#             num_str = num_str[1:]
+#         elif (num_str[0] != '0'):
+#             break
         
-    if num_str == '':
-        return '0'
-    else:  
-        return num_str
+#     if num_str == '':
+#         return '0'
+#     else:  
+#         return num_str
+    
+# FUNCTIONS TO BE ORGANISED
+
+def get_duration_in_years():
+    while True:
+        prompt('Over how many years will you be paying off your loan?')
+        duration_in_years_str = input()
+
+        try: 
+            duration_in_years = int(duration_in_years_str)
+        except ValueError:
+            prompt("The loan duration should contain only digits. Please try again.")
+            continue
+
+        if duration_in_years <= 0:
+            prompt("The duration of your loan must be at least 1 year. Please try again.")
+        else: 
+            return duration_in_years
         
-# def remove_percent_symbol(number_str):
+def get_duration_in_months():
+    while True:
+        prompt('Over how many months will you be paying off your loan?')
+        duration_in_months_str = input()
 
-#     chars = ['%']
+        try: 
+            duration_in_months = int(duration_in_months_str)
+        except ValueError:
+            prompt("The loan duration should contain only digits. Please try again.")
 
-#     for char in chars:
-#         if char in number_str:
-#             print(f'This is the char: {char}')
-#             number_str = number_str.replace(char, '')
-#             print(number_str)
+        if duration_in_months <= 0:
+            prompt("The duration of your loan must be at least 1 month. Please try again.")
+        else: 
+            return duration_in_months
 
-#     return number_str
 
 
 # FUNCTIONS FOR GETTING INPUT
+
+# TODO move prompts to JSON file.
         
 def get_loan_amount():
-    loan_amount = 0
 
-    while loan_amount < 1:
+    while True:
         prompt('How much would you like to borrow in USD?')
         loan_amount_str = input()
 
-        loan_amount_str = remove_leading_zeros(loan_amount_str)
-
-        if loan_amount_str == '0':
-            prompt("The amount must be greater than 0. Please try again.")
-        elif '.' in loan_amount_str:
-            prompt("The amount cannot contain a decimal point. Please try again.")
-        elif loan_amount_str.isdigit() == False:
+        try: loan_amount = int(loan_amount_str)
+        except ValueError:
             prompt("Your amount should contain only digits. Please try again.")
-        else:
-            loan_amount = int(loan_amount_str)
-            return loan_amount     
+            continue
+
+        if loan_amount <= 0:
+            prompt("Your amount must be greater than 0. Please try again.")
+        else: 
+            break
+
+    return loan_amount 
 
 def get_apr():
-    # cleaned_rate = ''
 
     while True:
         prompt("""What is the annual interest rate?
@@ -84,13 +99,17 @@ def get_apr():
             annual_rate_str = annual_rate_str[:-1]
 
         try: 
-            cleaned_rate = float(annual_rate_str)
+            annual_rate_float = float(annual_rate_str)
         except ValueError:
             prompt("Unfortunately that is not a valid APR. Please try again")
-        else:
+            continue
+        
+        if annual_rate_float <= 0:
+            prompt("Your amount must be greater than 0. Please try again.")
+        else: 
             break
 
-    apr = cleaned_rate / 100
+    apr = annual_rate_float / 100
     return apr
 
 def get_time_unit():
@@ -106,32 +125,13 @@ def get_time_unit():
             case 'm' | 'y' :
                 return time_unit_str
             case _:
-                prompt("Unfortunately that is not a valid duration. Please try again.")
+                prompt("Unfortunately that is not a valid unit of time. Please try again.")
 
 def get_duration():
     if time_unit_str == 'y':
-        while True:
-            prompt('Over how many years will you be paying off your loan?')
-            duration_in_years_str = input()
-
-            try: 
-                duration_in_months = int(duration_in_years_str) * 12
-            except ValueError:
-                prompt("The loan duration should contain only digits. Please try again.")
-            else:
-                break
-
+        duration_in_months = get_duration_in_years() / 12
     elif time_unit_str == 'm':
-        while True:
-            prompt('Over how many months will you be paying off your loan?')
-            duration_in_months_str = input()
-
-            try: 
-                duration_in_months = int(duration_in_months_str)
-            except ValueError:
-                prompt("The loan duration should contain only digits. Please try again.")
-            else:
-                break
+        duration_in_months = get_duration_in_months()
     
     return duration_in_months
 
