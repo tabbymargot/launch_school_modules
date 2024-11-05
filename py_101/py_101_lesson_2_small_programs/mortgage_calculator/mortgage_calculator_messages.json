@@ -1,0 +1,8 @@
+{
+    "request_loan_amount": "How much would you like to borrow in USD?",
+    "non_digits_entered": "Your amount should contain only digits. Please try again.",
+    "amount_too_low": "Your amount must be greater than 0. Please try again.",
+    "request_annual_rate": "What is the annual interest rate? Please enter the rate either as a whole number or as a decimal.\n\nFor example, if the annual interest rate is 5% enter 5 or 5.0.\n\nNote that the annual interest rate must be greater than 0.",
+    "apr_not_valid": "Unfortunately that is not a valid APR. Please try again.",
+    "rate_too_low": "The interest rate must be greater than 0. Please try again."
+}
