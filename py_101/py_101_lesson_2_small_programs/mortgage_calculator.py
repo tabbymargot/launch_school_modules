@@ -1,66 +1,6 @@
-"""
-Get the loan amount
-Get the APR
-Get the duration
-
-Calculate the monthly interest rate (APR / 12)
-Calculate the loan duration in months
-
-"""
-
+# HELPER FUNCTIONS
 def prompt(message):
     print(f'==> {message}')
-
-# VALIDATION FUNCTIONS
-        
-# def remove_leading_zeros(num_str):
-#     while num_str != '':
-#         if (num_str[0] == '0'):
-#             num_str = num_str[1:]
-#         elif (num_str[0] != '0'):
-#             break
-        
-#     if num_str == '':
-#         return '0'
-#     else:  
-#         return num_str
-    
-# FUNCTIONS TO BE ORGANISED
-
-def get_duration_in_years():
-    while True:
-        prompt('Over how many years will you be paying off your loan?')
-        duration_in_years_str = input()
-
-        try: 
-            duration_in_years = int(duration_in_years_str)
-        except ValueError:
-            prompt("The loan duration should contain only digits. Please try again.")
-            continue
-
-        if duration_in_years <= 0:
-            prompt("The duration of your loan must be at least 1 year. Please try again.")
-        else: 
-            return duration_in_years
-        
-def get_duration_in_months():
-    while True:
-        prompt('Over how many months will you be paying off your loan?')
-        duration_in_months_str = input()
-
-        try: 
-            duration_in_months = int(duration_in_months_str)
-        except ValueError:
-            prompt("The loan duration should contain only digits. Please try again.")
-
-        if duration_in_months <= 0:
-            prompt("The duration of your loan must be at least 1 month. Please try again.")
-        else: 
-            return duration_in_months
-
-
-
-# FUNCTIONS FOR GETTING INPUT
 
 # TODO move prompts to JSON file.
         
@@ -105,7 +45,7 @@ def get_apr():
             continue
         
         if annual_rate_float <= 0:
-            prompt("Your amount must be greater than 0. Please try again.")
+            prompt("The interest rate must be greater than 0. Please try again.")
         else: 
             break
 
@@ -125,32 +65,58 @@ def get_time_unit():
             case 'm' | 'y' :
                 return time_unit_str
             case _:
-                prompt("Unfortunately that is not a valid unit of time. Please try again.")
+                prompt("Unfortunately your entry does not represent a valid unit of time. Please try again.")
 
-def get_duration():
-    if time_unit_str == 'y':
-        duration_in_months = get_duration_in_years() / 12
-    elif time_unit_str == 'm':
-        duration_in_months = get_duration_in_months()
-    
-    return duration_in_months
+def get_duration_in_years():
+    while True:
+        prompt('Over how many years will you be paying off your loan?')
+        duration_in_years_str = input()
+
+        try: 
+            duration_in_years = int(duration_in_years_str)
+        except ValueError:
+            prompt("The loan duration should contain only digits. Please try again.")
+            continue
+
+        if duration_in_years <= 0:
+            prompt("The duration of your loan must be at least 1 year. Please try again.")
+        else: 
+            return duration_in_years
+        
+def get_duration_in_months():
+    while True:
+        prompt('Over how many months will you be paying off your loan?')
+        duration_in_months_str = input()
+
+        try: 
+            duration_in_months = int(duration_in_months_str)
+        except ValueError:
+            prompt("The loan duration should contain only digits. Please try again.")
+            continue
+
+        if duration_in_months <= 0:
+            prompt("The duration of your loan must be at least 1 month. Please try again.")
+        else: 
+            return duration_in_months
+
+# REQUEST AND VALIDATE INPUT
 
 loan_amount = get_loan_amount()
-print(f'loan_amount: {loan_amount}')
 
 apr = get_apr()
-print(f'APR: {apr}')
 
 time_unit_str = get_time_unit()
-print(f'time_unit_str: {time_unit_str}')
-duration_in_months = get_duration()
-print(f'duration_in_months: {duration_in_months}')
 
+match time_unit_str:
+    case 'y':
+        duration_in_months = get_duration_in_years() * 12
+    case 'm':
+        duration_in_months = get_duration_in_months()
 
+# CALCULATE AND OUTPUT MONTHLY REPAYMENT
 
 monthly_interest_rate = apr / 12
-print(f'Monthly interest rate: {monthly_interest_rate}')
 
 monthly_payment = loan_amount * (monthly_interest_rate / (1 - (1 + monthly_interest_rate) ** (-duration_in_months)))
 
-print(f'Your monthly repayment will be: ${monthly_payment:.2f}')
+prompt(f'Your monthly repayment will be: ${monthly_payment:.2f}')
