@@ -141,7 +141,9 @@ while True:
                     (-final_duration_in_months))))
 
     prompt(f'Your monthly repayment will be: ${monthly_payment:.2f}')
-    
+
+    # CONFIRM IF USER WISHES TO CONTINUE
+
     final_answer = get_continuation_preference()
 
     if final_answer == 'n':
