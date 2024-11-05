@@ -3,14 +3,38 @@ import json
 with open('mortgage_calculator_messages.json', 'r') as file:
     MESSAGES = json.load(file)
 
-# HELPER FUNCTIONS
+from time import sleep
+
+def display_welcome_message():
+    prompt('Welcome to The Loan Calculator! \U0001F44B\n')
+    sleep(1.5)
+
 def prompt(message):
     print(f'==> {message}')
 
+def implement_pause():
+    sleep(1.5)
+
+def display_divider():
+    sleep(0.5)
+    print('\n'
+        '********************************'
+        '\n')
+
+def display_emojis():
+    counter = 3
+    while counter > 0:
+        sleep(1)
+        print('\U0001F630\n')
+
+        counter -= 1
+
+    sleep(1)
+
+display_welcome_message()
+
 while True:
-
     def get_loan_amount():
-
         while True:
             prompt(MESSAGES['request_loan_amount'])
             loan_amount_str = input()
@@ -19,19 +43,20 @@ while True:
                 int(loan_amount_str)
             except ValueError:
                 prompt(MESSAGES['invalid_loan_amount'])
+                implement_pause()
                 continue
             else:
                 loan_amount = int(loan_amount_str)
 
             if loan_amount <= 0:
                 prompt(MESSAGES['amount_too_low'])
+                implement_pause()
             else:
                 break
 
         return loan_amount
 
     def get_apr():
-
         while True:
             prompt(MESSAGES['request_annual_rate'])
             annual_rate_str = input()
@@ -43,12 +68,14 @@ while True:
                 float(annual_rate_str)
             except ValueError:
                 prompt(MESSAGES['apr_not_valid'])
+                implement_pause()
                 continue
             else:
                 annual_rate_float = float(annual_rate_str)
 
             if annual_rate_float <= 0:
                 prompt(MESSAGES['rate_too_low'])
+                implement_pause()
             else:
                 break
 
@@ -66,6 +93,7 @@ while True:
                     return time_unit_str
                 case _:
                     prompt(MESSAGES['invalid_time_unit'])
+                    implement_pause()
 
     def get_duration_in_years():
         while True:
@@ -76,12 +104,14 @@ while True:
                 int(duration_in_years_str)
             except ValueError:
                 prompt(MESSAGES['invalid_loan_duration'])
+                implement_pause()
                 continue
             else:
                 duration_in_years = int(duration_in_years_str)
 
             if duration_in_years <= 0:
                 prompt(MESSAGES['too_few_years'])
+                implement_pause()
             else:
                 return duration_in_years
 
@@ -94,18 +124,21 @@ while True:
                 int(duration_in_months_str)
             except ValueError:
                 prompt(MESSAGES['invalid_loan_duration'])
+                implement_pause()
                 continue
             else:
                 duration_in_months = int(duration_in_months_str)
 
             if duration_in_months <= 0:
                 prompt(MESSAGES['too_few_months'])
+                implement_pause()
             else:
                 return duration_in_months
 
     def get_continuation_preference():
         while True:
             prompt(MESSAGES['continue?'])
+            implement_pause()
 
             answer = input()[0].lower()
 
@@ -117,34 +150,45 @@ while True:
                 case _:
                     prompt(MESSAGES['invalid_entry'])
 
-    # REQUEST AND VALIDATE INPUT
+    def display_monthly_payment():
+        print('Your monthly repayment will be...\n')
 
-    final_loan_amount = get_loan_amount()
+        display_emojis()
 
-    final_apr = get_apr()
+        print(f'${monthly_payment:.2f} \U0001F631\n')
 
-    final_time_unit_str = get_time_unit()
+        sleep(2)
 
-    match final_time_unit_str:
+    validated_loan_amount = get_loan_amount()
+    display_divider()
+
+    validated_apr = get_apr()
+    display_divider()
+
+    validated_time_unit_str = get_time_unit()
+    display_divider()
+
+    match validated_time_unit_str:
         case 'y':
-            final_duration_in_months = get_duration_in_years() * 12
+            validated_duration_in_months = get_duration_in_years() * 12
         case 'm':
-            final_duration_in_months = get_duration_in_months()
+            validated_duration_in_months = get_duration_in_months()
+    display_divider()
 
     # CALCULATE AND OUTPUT MONTHLY REPAYMENT
 
-    monthly_interest_rate = final_apr / 12
+    monthly_interest_rate = validated_apr / 12
 
-    monthly_payment = (final_loan_amount *
+    monthly_payment = (validated_loan_amount *
                     (monthly_interest_rate /
                     (1 - (1 + monthly_interest_rate) **
-                    (-final_duration_in_months))))
+                    (-validated_duration_in_months))))
 
-    prompt(f'Your monthly repayment will be: ${monthly_payment:.2f}')
-
-    # CONFIRM IF USER WISHES TO CONTINUE
+    display_monthly_payment()
+    display_divider()
 
     continuation_preference = get_continuation_preference()
 
     if continuation_preference == 'n':
+        print('\nNo problem! Hope to see you again soon!')
         break
