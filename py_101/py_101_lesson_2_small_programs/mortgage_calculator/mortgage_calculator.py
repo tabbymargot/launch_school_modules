@@ -144,7 +144,7 @@ while True:
 
     # CONFIRM IF USER WISHES TO CONTINUE
 
-    final_answer = get_continuation_preference()
+    continuation_preference = get_continuation_preference()
 
-    if final_answer == 'n':
+    if continuation_preference == 'n':
         break
