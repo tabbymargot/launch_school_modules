@@ -1,17 +1,30 @@
 {
     "request_loan_amount": "How much would you like to borrow in USD?\n",
     "invalid_loan_amount": "Your amount should contain only digits and must not be empty. Please try again.\n",
+
     "amount_too_low": "Your amount must be greater than 0. Please try again.",
-    "request_annual_rate": "What is the annual interest rate? Please enter the rate either as a whole number or as a decimal.\n\nFor example, if the annual interest rate is 5% enter 5 or 5.0.\n\nNote that the annual interest rate must be greater than 0.\n",
+
+    "request_annual_rate": "What is the annual interest rate?\n\nPlease enter the rate either as a whole number or as a decimal.\n\nFor example, if the annual interest rate is 5% enter 5 or 5.0.\n\nNote that the annual interest rate must be greater than 0.\n",
+
     "apr_not_valid": "Unfortunately that is not a valid APR. Please try again.\n",
+
     "rate_too_low": "The interest rate must be greater than 0. Please try again\n.",
+
     "request_time_unit": "Would you like to enter the duration of your loan in months or years?\n\nEnter 'M' for months.\n\nEnter 'Y' for years.\n",
+
     "invalid_time_unit": "Unfortunately your entry does not represent a valid unit of time. Please try again.\n",
+
     "request_loan_duration_in_years": "Over how many years will you be paying off your loan?\n",
+
     "invalid_loan_duration": "The loan duration should contain only digits. Please try again.\n",
+
     "too_few_years": "The duration of your loan must be at least 1 year. Please try again.\n",
+
     "request_loan_duration_in_months": "Over how many months will you be paying off your loan?\n",
+
     "too_few_months": "The duration of your loan must be at least 1 month. Please try again.\n",
+
     "continue?": "Would you like to perform another calculation?\n\nEnter 'Y' for 'yes'.\n\nEnter 'N' for 'no'.\n",
+    
     "invalid_entry": "Unfortunately your entry isn't valid. Please try again.\n"
 }
