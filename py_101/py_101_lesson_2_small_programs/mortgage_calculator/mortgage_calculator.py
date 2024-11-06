@@ -175,8 +175,6 @@ while True:
             validated_duration_in_months = get_duration_in_months()
     display_divider()
 
-    # CALCULATE AND OUTPUT MONTHLY REPAYMENT
-
     monthly_interest_rate = validated_apr / 12
 
     monthly_payment = (validated_loan_amount *
