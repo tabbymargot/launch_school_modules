@@ -10,6 +10,14 @@ VALID_CHOICES_LEGEND = {
 
 VALID_CHOICES = list(VALID_CHOICES_LEGEND.values())
 
+WINNING_COMBOS = {
+    'rock':     ['scissors', 'lizard'],
+    'paper':    ['rock',     'spock'],
+    'scissors': ['paper',    'lizard'],
+    'lizard':   ['paper',    'spock'],
+    'spock':    ['rock',     'scissors'],
+}
+
 player_current_score = 0
 computer_current_score = 0
 continuation_preference = ''
@@ -25,29 +33,11 @@ def get_choice(word_choice):
 
     return word_choice
 
-def compute_game_winner():
-    if (((player_choice == "rock" and
-         computer_choice == ("scissors" or "lizard"))) or
-        ((player_choice == "scissors" and
-        computer_choice == ("paper" or "lizard"))) or
-        ((player_choice == "paper" and
-        computer_choice == ("rock" or "spock"))) or
-        ((player_choice == "spock" and
-        computer_choice == ("scissors" or "rock"))) or
-        ((player_choice == "lizard" and
-        computer_choice == ("paper" or "spock")))):
+def compute_game_winner(the_player_choice, the_computer_choice):
+    if the_computer_choice in WINNING_COMBOS[the_player_choice]:
         return 'player_wins'
 
-    if (((player_choice == "rock" and
-        computer_choice == ("paper" or "spock"))) or
-        ((player_choice == "paper" and
-        computer_choice == ("scissors" or "lizard"))) or
-        ((player_choice == "scissors" and
-        computer_choice == ("rock" or "spock"))) or
-        ((player_choice == "spock" and
-        computer_choice == ("lizard" or "paper"))) or
-        ((player_choice == "scissors" and
-        computer_choice == ("rock" or "spock")))):
+    if the_player_choice in WINNING_COMBOS[the_computer_choice]:
         return 'computer_wins'
 
     return 'tie'
@@ -107,7 +97,8 @@ while True:
     prompt(f"You chose {validated_player_choice}, "
             f"computer chose {computer_choice}")
 
-    result = compute_game_winner()
+    result = compute_game_winner(validated_player_choice, computer_choice)
+    # print(result)
 
     display_game_winner(result)
 
