@@ -98,7 +98,6 @@ while True:
             f"computer chose {computer_choice}")
 
     result = compute_game_winner(validated_player_choice, computer_choice)
-    # print(result)
 
     display_game_winner(result)
 
