@@ -1,6 +1,18 @@
 import random
 
-VALID_CHOICES = ['rock', 'paper', 'scissors', 'spock', 'scissors']
+VALID_CHOICES_LEGEND = {
+        'r': 'rock',
+        'p': 'paper',
+        'sc': 'scissors',
+        'sp': 'spock',
+        'l': 'lizard',
+    }
+
+VALID_CHOICES = list(VALID_CHOICES_LEGEND.values())
+
+player_current_score = 0
+computer_current_score = 0
+continuation_preference = ''
 
 def prompt(message):
     print(f"==> {message}")
@@ -8,33 +20,33 @@ def prompt(message):
 def get_choice(word_choice):
     while word_choice is None:
         prompt("That's not a valid choice")
-        player_choice = input()
-        word_choice = abbreviations.get(player_choice)
+        the_player_choice = input().lower()
+        word_choice = VALID_CHOICES_LEGEND.get(the_player_choice)
 
     return word_choice
 
 def compute_game_winner():
-    if (((full_word_choice == "rock" and
+    if (((player_choice == "rock" and
          computer_choice == ("scissors" or "lizard"))) or
-        ((full_word_choice == "scissors" and
+        ((player_choice == "scissors" and
         computer_choice == ("paper" or "lizard"))) or
-        ((full_word_choice == "paper" and
+        ((player_choice == "paper" and
         computer_choice == ("rock" or "spock"))) or
-        ((full_word_choice == "spock" and
+        ((player_choice == "spock" and
         computer_choice == ("scissors" or "rock"))) or
-        ((full_word_choice == "lizard" and
+        ((player_choice == "lizard" and
         computer_choice == ("paper" or "spock")))):
         return 'player_wins'
 
-    if (((full_word_choice == "rock" and
+    if (((player_choice == "rock" and
         computer_choice == ("paper" or "spock"))) or
-        ((full_word_choice == "paper" and
+        ((player_choice == "paper" and
         computer_choice == ("scissors" or "lizard"))) or
-        ((full_word_choice == "scissors" and
+        ((player_choice == "scissors" and
         computer_choice == ("rock" or "spock"))) or
-        ((full_word_choice == "spock" and
+        ((player_choice == "spock" and
         computer_choice == ("lizard" or "paper"))) or
-        ((full_word_choice == "scissors" and
+        ((player_choice == "scissors" and
         computer_choice == ("rock" or "spock")))):
         return 'computer_wins'
 
@@ -65,8 +77,6 @@ def display_grand_winner(player_score, computer_score):
         prompt('You are the grand winner!')
     elif computer_score == 3:
         prompt('The computer is the grand winner!')
-    else:
-        pass
 
 def get_continuation_preference():
     while player_current_score == 3 or computer_current_score == 3:
@@ -75,35 +85,27 @@ def get_continuation_preference():
 
         if answer.startswith('n') or answer.startswith('y'):
             return answer
-        else:
-            prompt("That's not a valid choice")
 
-player_current_score = 0
-computer_current_score = 0
-continuation_preference = ''
+        prompt("That's not a valid choice")
 
-prompt('Welcome to Best of Five!')
+prompt('Welcome to Best of Five!\n')
 
 while True:
+    prompt('Choose one of the following:')
 
-    prompt(f'Choose one: {", ".join(VALID_CHOICES)}')
-    choice = input()
+    for first_letter, full_word in VALID_CHOICES_LEGEND.items():
+        prompt(f"Type '{first_letter}' for '{full_word}'")
 
-    abbreviations = {
-        'r': 'rock',
-        'p': 'paper',
-        'sc': 'scissors',
-        'sp': 'spock',
-        'l': 'lizard',
-    }
+    choice = input().lower()
 
-    full_word_choice = abbreviations.get(choice)
+    player_choice = VALID_CHOICES_LEGEND.get(choice)
 
-    validated_player_choice = get_choice(full_word_choice)
+    validated_player_choice = get_choice(player_choice)
 
     computer_choice = random.choice(VALID_CHOICES)
 
-    prompt(f"You chose {validated_player_choice}, computer chose {computer_choice}")
+    prompt(f"You chose {validated_player_choice}, "
+            f"computer chose {computer_choice}")
 
     result = compute_game_winner()
 
