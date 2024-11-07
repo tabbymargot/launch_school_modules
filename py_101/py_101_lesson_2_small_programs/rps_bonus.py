@@ -99,11 +99,11 @@ while True:
 
     full_word_choice = abbreviations.get(choice)
 
-    validated_choice = get_choice(full_word_choice)
+    validated_player_choice = get_choice(full_word_choice)
 
     computer_choice = random.choice(VALID_CHOICES)
 
-    prompt(f"You chose {validated_choice}, computer chose {computer_choice}")
+    prompt(f"You chose {validated_player_choice}, computer chose {computer_choice}")
 
     result = compute_game_winner()
 
