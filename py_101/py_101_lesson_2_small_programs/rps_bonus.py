@@ -18,6 +18,10 @@ WINNING_COMBOS = {
     'spock':    ['rock',     'scissors'],
 }
 
+PLAYER_WINS = 'player_wins'
+COMPUTER_WINS = 'computer_wins'
+TIE = 'tie'
+
 player_current_score = 0
 computer_current_score = 0
 continuation_preference = ''
@@ -35,12 +39,12 @@ def get_choice(word_choice):
 
 def compute_game_winner(the_player_choice, the_computer_choice):
     if the_computer_choice in WINNING_COMBOS[the_player_choice]:
-        return 'player_wins'
+        return COMPUTER_WINS
 
     if the_player_choice in WINNING_COMBOS[the_computer_choice]:
-        return 'computer_wins'
+        return PLAYER_WINS
 
-    return 'tie'
+    return TIE
 
 def display_game_winner(the_result):
     if the_result == 'player_wins':
@@ -74,7 +78,7 @@ def get_continuation_preference():
         answer = input().lower()
 
         if answer.startswith('n') or answer.startswith('y'):
-            return answer
+            return answer[0]
 
         prompt("That's not a valid choice")
 
@@ -111,6 +115,8 @@ while True:
     display_grand_winner(player_current_score, computer_current_score)
 
     continuation_preference = get_continuation_preference()
+    print(f'This is the CP: {continuation_preference}')
+    display_scores(player_current_score, computer_current_score)
 
     match continuation_preference:
         case None:
