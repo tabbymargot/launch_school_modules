@@ -73,7 +73,7 @@ while True:
             else:
                 annual_rate_float = float(annual_rate_str)
 
-            if annual_rate_float <= 0:
+            if annual_rate_float < 0:
                 prompt(MESSAGES['rate_too_low'])
                 implement_pause()
             else:
@@ -150,12 +150,24 @@ while True:
                 case _:
                     prompt(MESSAGES['invalid_entry'])
 
-    def display_monthly_payment():
+    def calculate_monthly_payment():
+        if validated_apr == 0:
+            calculated_monthly_payment = (validated_loan_amount /
+            validated_duration_in_months)
+        else:
+            calculated_monthly_payment = (validated_loan_amount *
+                            (monthly_interest_rate /
+                            (1 - (1 + monthly_interest_rate) **
+                            (-validated_duration_in_months))))
+
+        return calculated_monthly_payment
+
+    def display_monthly_payment(calculated_monthly_payment):
         print('Your monthly repayment will be...\n')
 
         display_emojis()
 
-        print(f'${monthly_payment:.2f} \U0001F631\n')
+        print(f'${calculated_monthly_payment:.2f} \U0001F631\n')
 
         sleep(2)
 
@@ -177,12 +189,9 @@ while True:
 
     monthly_interest_rate = validated_apr / 12
 
-    monthly_payment = (validated_loan_amount *
-                    (monthly_interest_rate /
-                    (1 - (1 + monthly_interest_rate) **
-                    (-validated_duration_in_months))))
+    monthly_payment = calculate_monthly_payment()
 
-    display_monthly_payment()
+    display_monthly_payment(monthly_payment)
     display_divider()
 
     continuation_preference = get_continuation_preference()
