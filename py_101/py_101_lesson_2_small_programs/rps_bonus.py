@@ -66,10 +66,10 @@ def display_scores(player_score, computer_score):
     prompt(f"Your score is {player_score}.")
     prompt(f"The computer's score is {computer_score}.\n")
 
-def display_grand_winner(player_score, computer_score):
-    if player_score == 3:
+def display_grand_winner(player_current_score, computer_current_score):
+    if player_current_score == 3:
         prompt('You are the grand winner!')
-    elif computer_score == 3:
+    elif computer_current_score == 3:
         prompt('The computer is the grand winner!')
 
 def get_continuation_preference():
