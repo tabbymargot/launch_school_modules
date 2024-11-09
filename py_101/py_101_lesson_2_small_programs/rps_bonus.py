@@ -73,14 +73,15 @@ def display_grand_winner(player_score, computer_score):
         prompt('The computer is the grand winner!')
 
 def get_continuation_preference():
-    while player_current_score == 3 or computer_current_score == 3:
+    while True:
         prompt("Do you want to play again (y/n)?")
         answer = input().lower()
 
-        if answer.startswith('n') or answer.startswith('y'):
+        if (answer.startswith('n') is False) and\
+        (answer.startswith('y') is False):
+            prompt("That's not a valid choice")
+        else:
             return answer[0]
-
-        prompt("That's not a valid choice")
 
 prompt('Welcome to Best of Five!\n')
 
@@ -114,9 +115,11 @@ while True:
 
     display_grand_winner(player_current_score, computer_current_score)
 
-    continuation_preference = get_continuation_preference()
-    print(f'This is the CP: {continuation_preference}')
-    display_scores(player_current_score, computer_current_score)
+    if player_current_score == 3 or computer_current_score == 3:
+        continuation_preference = get_continuation_preference()
+
+    # print(f'This is the CP: {continuation_preference}')
+    # display_scores(player_current_score, computer_current_score)
 
     match continuation_preference:
         case None:
