@@ -7,26 +7,35 @@ def sort_by_consonant_count(lst):
 
     for word in lst:
         word = word.replace(" ", "")
-        letters_list = list(word)
-        for idx, current_letter in enumerate(letters_list):
+
+        for idx, current_letter in enumerate(word):
+
+            if idx != len(word) - 1:
+                next_letter = word[idx + 1]
+            if idx != 0:
+                previous_letter = word[idx - 1]
+
             if current_letter in CONSONANTS:
+                # If it's the first letter in the string and the next letter is a consonant
                 if idx == 0:
                     print(current_letter)
-                    if letters_list[idx + 1] in CONSONANTS:
+                    if next_letter in CONSONANTS:
                         points_running_total += 1
                         print(points_running_total)
-                elif idx == -1:
+                # If it's the last letter in the string and the previous letter is a consonant
+                elif idx == len(word) - 1:
                     print(current_letter)
-                    if letters_list[idx - 1] in CONSONANTS:
+                    if previous_letter in CONSONANTS:
                         points_running_total += 1
                         print(points_running_total)
+                # If it's any other letter in the string and the previous and / or next letter is a consonant
                 else:
                     print(current_letter)
-                    if (letters_list[idx - 1] in CONSONANTS) or (letters_list[idx + 1] in CONSONANTS):
+                    if (previous_letter in CONSONANTS) or (next_letter in CONSONANTS):
                         points_running_total += 1
                         print(points_running_total)
 
-my_list = ['da mn']
+my_list = ['rrr']
 print(sort_by_consonant_count(my_list))
 
 # my_list = ['aa', 'baa', 'ccaa', 'dddaa']
