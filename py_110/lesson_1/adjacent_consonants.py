@@ -1,5 +1,7 @@
 # PEDAC outline is here: capacities://f3ac60b1-b034-4dd7-b4d7-629caa9a67bf/4c547bac-9525-43ae-a20a-d0bb5c86ff0a
 
+# Note that I didn't understand what was meant by "highest number of adjacent consonants", so I solved the wrong problem. To be fair, I included this as a question in the 'Understand the problem' section, and also my code still worked with the test cases given. However, it shows how important it is to understand the problem!
+
 CONSONANTS = "bcdfghjklmnpqrstvwxyz"
 
 def sort_by_consonant_count(lst):
@@ -72,6 +74,7 @@ def sort_the_words(the_words_and_scores):
 # print(sort_by_consonant_count(my_list))
 # # # # ['month', 'day', 'week', 'year']
 
-my_list = ['xxaxxaxxaxxaxxa', 'xxxx', 'xxxb', 'rstafgdjecc']
-print(sort_by_consonant_count(my_list))
+# FINAL TEST CASE ADDED BY ME ONCE I REALISED I'D SOLVED THE WRONG PROBLEM. THIS CODE DOESN'T OUTPUT THE RIGHT ANSWER.
+# my_list = ['xxaxxaxxaxxaxxa', 'xxxx', 'xxxb', 'rstafgdjecc']
+# print(sort_by_consonant_count(my_list))
 # # ['xxxx', 'xxxb', 'xxxa']
