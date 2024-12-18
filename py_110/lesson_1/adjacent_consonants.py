@@ -1,3 +1,5 @@
+# PEDAC outline is here: capacities://f3ac60b1-b034-4dd7-b4d7-629caa9a67bf/4c547bac-9525-43ae-a20a-d0bb5c86ff0a
+
 CONSONANTS = "bcdfghjklmnpqrstvwxyz"
 
 def sort_by_consonant_count(lst):
