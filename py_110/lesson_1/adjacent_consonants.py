@@ -56,22 +56,22 @@ def sort_the_words(the_words_and_scores):
 
     return sorted_words
 
-my_list = ['aa', 'baa', 'ccaa', 'dddaa']
-print(sort_by_consonant_count(my_list))
-# # ['dddaa', 'ccaa', 'aa', 'baa']
+# my_list = ['aa', 'baa', 'ccaa', 'dddaa']
+# print(sort_by_consonant_count(my_list))
+# # # ['dddaa', 'ccaa', 'aa', 'baa']
 
-my_list = ['can can', 'toucan', 'batman', 'salt pan']
-print(sort_by_consonant_count(my_list))
-# # ['salt pan', 'can can', 'batman', 'toucan']
+# my_list = ['can can', 'toucan', 'batman', 'salt pan']
+# print(sort_by_consonant_count(my_list))
+# # # ['salt pan', 'can can', 'batman', 'toucan']
 
-my_list = ['bar', 'car', 'far', 'jar']
-print(sort_by_consonant_count(my_list))
-# # # ['bar', 'car', 'far', 'jar']
+# my_list = ['bar', 'car', 'far', 'jar']
+# print(sort_by_consonant_count(my_list))
+# # # # ['bar', 'car', 'far', 'jar']
 
-my_list = ['day', 'week', 'month', 'year']
-print(sort_by_consonant_count(my_list))
-# # # ['month', 'day', 'week', 'year']
+# my_list = ['day', 'week', 'month', 'year']
+# print(sort_by_consonant_count(my_list))
+# # # # ['month', 'day', 'week', 'year']
 
-my_list = ['xxxa', 'xxxx', 'xxxb']
+my_list = ['xxaxxaxxaxxaxxa', 'xxxx', 'xxxb', 'rstafgdjecc']
 print(sort_by_consonant_count(my_list))
 # # ['xxxx', 'xxxb', 'xxxa']
