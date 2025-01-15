@@ -1,3 +1,9 @@
+import random
+
+INITIAL_MARKER = ' '
+HUMAN_MARKER = 'X'
+COMPUTER_MARKER = '0'
+
 def display_board(board):
     # pass
     print('')
@@ -15,17 +21,15 @@ def display_board(board):
     print('')
 
 def initialize_board():
-    return {square: ' ' for square in range(1, 10)}
+    return {square: INITIAL_MARKER for square in range(1, 10)}
 
 def prompt(message):
     print(f'==> {message}')
 
 def player_chooses_square(board):
-    # valid square choices are those board keys whose values are spaces
-    empty_squares = [key for key, value in board.items() if value == ' ']
 
     while True:
-        valid_choices = [str(num) for num in empty_squares]
+        valid_choices = [str(num) for num in empty_squares(board)]
         prompt(f"Choose a square ({', '.join(valid_choices)}):")
         square = input().strip()
         if square in valid_choices:
@@ -34,6 +38,13 @@ def player_chooses_square(board):
         prompt("Sorry, that's not a valid choice.")
     
     board[int(square)] = 'X'
+
+def computer_chooses_square(board):
+    square = random.choice(empty_squares(board))
+    board[square] = COMPUTER_MARKER
+
+def empty_squares(board):
+    return [key for key, value in board.items() if value == INITIAL_MARKER]
 
 board = initialize_board()
 display_board(board)
