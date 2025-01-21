@@ -16,16 +16,14 @@ def integer_to_string(number):
     num_string = ""
 
     while True:
-        number_and_remainder = divmod(number, DIVISOR)
-        remainder = number_and_remainder[1]
+        number, remainder = divmod(number, DIVISOR)
         remainder_string = INTEGER_KEYS[remainder]
         num_string = f'{remainder_string}{num_string}'
-        number = number_and_remainder[0]
         if number == 0:
             break
 
     return num_string
-    
+
 print(integer_to_string(4321) == "4321")              # True
 print(integer_to_string(0) == "0")                    # True
 print(integer_to_string(5000) == "5000")              # True
