@@ -42,7 +42,7 @@ def player_chooses_square(board):
     
     board[int(square)] = 'X'
 
-def join_or(empty_squares_lst, punctuation = ", ", word = "or"):
+def join_or(empty_squares_lst, punctuation=", ", word="or"):
     match len(empty_squares_lst):
         case 0:
             return ""
