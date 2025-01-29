@@ -16,15 +16,16 @@ def remove_vowels(original):
 
 # SOLUTION 2
 # def remove_vowels(original):
-#     for string in original:
-#         consonant_string_list = [
-#             char
-#             for char in string
-#             if char in CONSONANTS
-#         ]
-#         new_list.append(''.join(consonant_string_list))
+    # new_list = []
+    # for string in original:
+    #     consonant_string_list = [
+    #         char
+    #         for char in string
+    #         if char in CONSONANTS
+    #     ]
+    #     new_list.append(''.join(consonant_string_list))
 
-#     return new_list
+    # return new_list
 
 
 
