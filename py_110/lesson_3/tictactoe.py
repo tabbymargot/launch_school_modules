@@ -33,7 +33,7 @@ def player_chooses_square(board):
 
     while True:
         valid_choices = [str(num) for num in empty_squares(board)]
-        prompt(f"Choose a square ({', '.join(valid_choices)}):")
+        prompt(f"Choose a square ({join_or(valid_choices)}):")
         square = input().strip()
         if square in valid_choices:
             break
@@ -41,6 +41,29 @@ def player_chooses_square(board):
         prompt("Sorry, that's not a valid choice.")
     
     board[int(square)] = 'X'
+
+def join_or(empty_squares_lst, punctuation = ", ", word = "or"):
+    match len(empty_squares_lst):
+        case 0:
+            return ""
+        case 1:
+            return str(empty_squares_lst[0])
+        case 2:
+            return f'{empty_squares_lst[0]} {word} {empty_squares_lst[1]}'
+        case _:
+            empty_squares_lst = add_punctuation_and_word(empty_squares_lst, punctuation, word)
+            return ''.join(empty_squares_lst)
+        
+def add_punctuation_and_word(empty_squares_lst, punctuation, word):
+    formatted_list = []
+
+    for num in empty_squares_lst:
+        if num != empty_squares_lst[-1]:
+            formatted_list.extend([str(num), punctuation])
+        else:
+            formatted_list.extend([word, ' ', str(num)])
+    
+    return formatted_list
 
 def computer_chooses_square(board):
     if len(empty_squares(board)) == 0:
