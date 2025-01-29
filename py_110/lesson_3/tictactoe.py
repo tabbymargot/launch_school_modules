@@ -50,9 +50,8 @@ def join_or(empty_squares_lst, punctuation=", ", word="or"):
             return str(empty_squares_lst[0])
         case 2:
             return f'{empty_squares_lst[0]} {word} {empty_squares_lst[1]}'
-        case _:
-            empty_squares_lst = add_punctuation_and_word(empty_squares_lst, punctuation, word)
-            return ''.join(empty_squares_lst)
+        
+    return ''.join(add_punctuation_and_word(empty_squares_lst, punctuation, word))
         
 def add_punctuation_and_word(empty_squares_lst, punctuation, word):
     formatted_list = []
