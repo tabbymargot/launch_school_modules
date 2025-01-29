@@ -4,6 +4,7 @@ import random
 INITIAL_MARKER = ' '
 HUMAN_MARKER = 'X'
 COMPUTER_MARKER = '0'
+GAMES_TO_WIN_MATCH = 5
 
 def display_board(board):
     os.system('clear')
@@ -99,7 +100,15 @@ def detect_winner(board):
         
     return None
 
+# def reset_scores(player_score, computer_score):
+#     player_score = 0
+#     computer_score = 0
+
+#     return player_score, computer_score
+
 def play_tic_tac_toe():
+    player_score = 0
+    computer_score = 0
     while True:
         board = initialize_board()
 
@@ -118,9 +127,22 @@ def play_tic_tac_toe():
         display_board(board)
 
         if someone_won(board):
-            prompt(f"{detect_winner(board)} won!")
+            winner = detect_winner(board)
+            if winner == 'Player':
+                player_score += 1
+            else:
+                computer_score += 1
+            print(f'Player score: {player_score}')
+            print(f'Computer score: {computer_score}')
+            prompt(f"{winner} won!")
         else:
             prompt("It's a tie!")
+        
+        if player_score == GAMES_TO_WIN_MATCH or computer_score == GAMES_TO_WIN_MATCH:
+            prompt(f'{winner} wins the match!')
+            player_score = 0
+            computer_score = 0
+
         prompt("Play again? (y or n)")
         answer = input().lower()
 
