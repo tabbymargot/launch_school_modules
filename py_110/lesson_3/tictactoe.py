@@ -6,7 +6,7 @@ COMPUTER_MARKER = '0'
 GAMES_TO_WIN_MATCH = 5
 HUMAN_MARKER = 'X'
 INITIAL_MARKER = ' '
-# Changed sublists to sets to use in is_threat
+# Changed sublists to sets to use in get_threat
 WINNING_LINES = [
     {1, 2, 3}, {4, 5, 6}, {7, 8, 9},  # rows
     {1, 4, 7}, {2, 5, 8}, {3, 6, 9},  # columns
@@ -38,7 +38,7 @@ def prompt(message):
     print(f'==> {message}')
 
 def get_threat(player_choices, board):
-    valid_choices = [num for num in empty_squares(board)]
+    valid_choices = get_valid_choices(board)
 
     available_square = None
     if len(player_choices) > 1:
@@ -60,12 +60,13 @@ def get_threat(player_choices, board):
         
 def player_chooses_square(board, player_choices):
     while True:
-        valid_choices = [str(num) for num in empty_squares(board)]
+        valid_choices = get_valid_choices(board)
         prompt(f"Choose a square ({join_or(valid_choices)}):")
-        square = input().strip()
-        # Create function is_valid?
+
+        square = int(input().strip())
+
         if square in valid_choices:
-            player_choices.add(int(square))
+            player_choices.add(square)
             break
         
         prompt("Sorry, that's not a valid choice.")
@@ -74,6 +75,9 @@ def player_chooses_square(board, player_choices):
 
     return player_choices
 
+# Created this function as valid choices needed in more than one function
+def get_valid_choices(board):
+    return [num for num in empty_squares(board)]
 
 def join_or(empty_squares_lst, punctuation=", ", word="or"):
     match len(empty_squares_lst):
