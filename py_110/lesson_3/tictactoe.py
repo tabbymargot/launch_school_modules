@@ -39,23 +39,24 @@ def prompt(message):
 
 def get_threat(player_choices, board):
     valid_choices = [num for num in empty_squares(board)]
-    # TODO: Is this the best way to initialise remaining_square?
-    remaining_square = None
+
+    available_square = None
     if len(player_choices) > 1:
         for line in WINNING_LINES:
-            matching_numbers = set()
+            chosen_squares = set()
 
-            for num in line:
-                if num in player_choices:
-                    matching_numbers.add(num)
+            for square in line:
+                if square in player_choices:
+                    chosen_squares.add(square)
         
-            if len(matching_numbers) == 2:
-                remaining_square = list(line - matching_numbers)[0]
+            if len(chosen_squares) == 2:
+                available_square = list(line - chosen_squares)[0]
+
             # TODO: Create function is_valid?
-            if remaining_square in valid_choices:
-                return remaining_square
+            if available_square in valid_choices:
+                return available_square
     
-    return remaining_square
+    return available_square
         
 def player_chooses_square(board, player_choices):
     while True:
@@ -147,7 +148,6 @@ def play_tic_tac_toe():
             if someone_won(board) or board_full(board):
                 break
 
-            # threatening_square = get_threat(player_choices, board)
             computer_chooses_square(board, player_choices)
 
             if someone_won(board) or board_full(board):
