@@ -38,8 +38,6 @@ def prompt(message):
     print(f'==> {message}')
 
 def get_threat(player_choices, board):
-    valid_choices = get_valid_choices(board)
-
     available_square = None
     if len(player_choices) > 1:
         for line in WINNING_LINES:
@@ -52,8 +50,7 @@ def get_threat(player_choices, board):
             if len(chosen_squares) == 2:
                 available_square = list(line - chosen_squares)[0]
 
-            # TODO: Create function is_valid?
-            if available_square in valid_choices:
+            if available_square in get_valid_choices(board):
                 return available_square
     
     return available_square
@@ -71,7 +68,7 @@ def player_chooses_square(board, player_choices):
         
         prompt("Sorry, that's not a valid choice.")
     
-    board[int(square)] = 'X'
+    board[square] = 'X'
 
     return player_choices
 
