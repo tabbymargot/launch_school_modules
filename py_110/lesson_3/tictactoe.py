@@ -40,7 +40,7 @@ def prompt(message):
 def get_threat(player_choices, board):
     valid_choices = [num for num in empty_squares(board)]
     # TODO: Is this the best way to initialise remaining_square?
-    remaining_square = 'None'
+    remaining_square = None
     if len(player_choices) > 1:
         for line in WINNING_LINES:
             matching_numbers = set()
@@ -96,15 +96,17 @@ def add_punctuation_and_word(empty_squares_lst, punctuation, word):
     
     return formatted_list
 
-def computer_chooses_square(board, threatening_square):
+def computer_chooses_square(board, player_choices):
     if len(empty_squares(board)) == 0:
         return
+
+    threatening_square = get_threat(player_choices, board)
     
-    # TODO - is there are better way to manage this?
-    if type(threatening_square) == int:
+    if threatening_square:
         square = threatening_square
     else:
         square = random.choice(empty_squares(board))
+    
     board[square] = COMPUTER_MARKER
 
 def empty_squares(board):
@@ -145,8 +147,8 @@ def play_tic_tac_toe():
             if someone_won(board) or board_full(board):
                 break
 
-            threatening_square = get_threat(player_choices, board)
-            computer_chooses_square(board, threatening_square)
+            # threatening_square = get_threat(player_choices, board)
+            computer_chooses_square(board, player_choices)
 
             if someone_won(board) or board_full(board):
                 break
