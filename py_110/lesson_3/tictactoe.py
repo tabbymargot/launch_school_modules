@@ -41,14 +41,14 @@ def get_threat(player_choices, board):
     available_square = None
     if len(player_choices) > 1:
         for line in WINNING_LINES:
-            chosen_squares = set()
+            players_chosen_squares = set()
 
             for square in line:
                 if square in player_choices:
-                    chosen_squares.add(square)
+                    players_chosen_squares.add(square)
         
-            if len(chosen_squares) == 2:
-                available_square = list(line - chosen_squares)[0]
+            if len(players_chosen_squares) == 2:
+                available_square = list(line - players_chosen_squares)[0]
 
             if available_square in get_valid_choices(board):
                 return available_square
@@ -98,7 +98,7 @@ def add_punctuation_and_word(empty_squares_lst, punctuation, word):
     
     return formatted_list
 
-def computer_chooses_square(board, player_choices):
+def computer_chooses_square(board, player_choices, computer_choices):
     if len(empty_squares(board)) == 0:
         return
 
@@ -141,6 +141,7 @@ def play_tic_tac_toe():
     while True:
         board = initialize_board()
         player_choices = set()
+        computer_choices = set()
 
         while True:
             display_board(board)
@@ -149,7 +150,7 @@ def play_tic_tac_toe():
             if someone_won(board) or board_full(board):
                 break
 
-            computer_chooses_square(board, player_choices)
+            computer_chooses_square(board, player_choices, computer_choices)
 
             if someone_won(board) or board_full(board):
                 break
