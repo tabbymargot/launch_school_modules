@@ -1,6 +1,7 @@
 import os
 import pdb
 import random
+import time
 
 # def prompt(message):
 #     print(f'==> {message}')
@@ -164,6 +165,32 @@ def decide_who_goes_first():
     else:
         first_player = WHO_GOES_FIRST
         return first_player
+    
+def player_wants_to_continue():
+    while True:
+        prompt("Play again? (y or n)")
+        answer = input().lower()
+
+        if answer != 'n' and answer != 'y':
+            prompt("Sorry, that's not a valid choice.")
+        elif answer == 'y':
+            return True
+        else:
+            return False
+        
+def alternate_player(current_player):
+    if current_player == 'computer':
+        current_player = 'player'
+    else:
+        current_player = 'computer'
+
+    return current_player
+
+def choose_square(board, current_player):
+    if current_player == 'computer':
+        computer_chooses_square(board)
+    else:
+        player_chooses_square(board)
 
 def play_tic_tac_toe():
     first_player = decide_who_goes_first()
@@ -171,35 +198,45 @@ def play_tic_tac_toe():
     computer_score = 0
     while True:
         board = initialize_board()
+        display_board(board)
 
         while True:
-
+            display_board(board)
             if first_player == 'computer':
-
-                    computer_chooses_square(board)
+                current_player = first_player
+                print(f'Initial current_player should print "computer": {current_player}')
+                while True:
+                    # computer_chooses_square(board)
+                    choose_square(board, current_player)
                     display_board(board)   
                     if someone_won(board) or board_full(board):
                         break
                     
-                    # print('Computer chose...')
-
-                    player_chooses_square(board)
+                    current_player = alternate_player(current_player)
+                    print(f'This current_player should print "player": {current_player}')
+                    # player_chooses_square(board)
+                    choose_square(board, current_player)
                     if someone_won(board) or board_full(board):
                         break
+
+                    current_player = alternate_player(current_player)
+                    print(f'This current_player should print "computer": {current_player}')
+            break
           
-            elif first_player == 'player':
-                display_board(board)
+            # elif first_player == 'player':
+            #     print(f'Initial current_player should print "player": {current_player}')
+            #     player_chooses_square(board)
+            #     if someone_won(board) or board_full(board):
+            #         break
 
-                player_chooses_square(board)
-                if someone_won(board) or board_full(board):
-                    break
-
-                computer_chooses_square(board)
-                if someone_won(board) or board_full(board):
-                    break
+            #     # print(current_player)
+            #     computer_chooses_square(board)
+            #     display_board(board) 
+            #     if someone_won(board) or board_full(board):
+            #         break
             
 
-        display_board(board) 
+        # display_board(board) 
 
         if someone_won(board):
             winner = detect_winner(board)
@@ -218,10 +255,10 @@ def play_tic_tac_toe():
             player_score = 0
             computer_score = 0
 
-        prompt("Play again? (y or n)")
-        answer = input().lower()
-
-        if answer[0] != 'y':
+        if player_wants_to_continue():
+            prompt("Good choice! Let's have another game!")
+            time.sleep(2)
+        else:
             break
     
     prompt('Thanks for playing Tic Tac Toe!')
