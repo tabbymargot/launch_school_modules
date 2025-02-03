@@ -2,7 +2,10 @@ import os
 import pdb
 import random
 
-FIRST_PLAYER = 'c'
+# def prompt(message):
+#     print(f'==> {message}')
+
+WHO_GOES_FIRST = 'choose'
 INITIAL_MARKER = ' '
 HUMAN_MARKER = 'X'
 COMPUTER_MARKER = '0'
@@ -14,7 +17,7 @@ WINNING_LINES = [
     ]
 
 def display_board(board):
-    os.system('clear')
+    # os.system('clear')
 
     prompt(f"You are {HUMAN_MARKER}. Computer is {COMPUTER_MARKER}.")
     print('')
@@ -93,18 +96,26 @@ def computer_chooses_square(board):
 
     square = None
 
-    # defense first
+    # offense first
     for line in WINNING_LINES:
-        square = find_at_risk_square(line, board, HUMAN_MARKER)
+        square = find_at_risk_square(line, board, COMPUTER_MARKER)
         if square:
             break
 
-    # offense
+    # defense
     if not square:
         for line in WINNING_LINES:
-            square = find_at_risk_square(line, board, COMPUTER_MARKER)
+            square = find_at_risk_square(line, board, HUMAN_MARKER)
             if square:
                 break
+    
+    # square 5
+    if not square:
+        for line in WINNING_LINES:
+            if 5 in empty_squares(board):
+                square = 5
+                if square:
+                    break
 
     # just pick a random square
     if not square:
@@ -135,34 +146,48 @@ def detect_winner(board):
         
     return None
 
+def decide_who_goes_first():
+    if WHO_GOES_FIRST == 'choose':
+        while True:
+            prompt("Please choose who plays first. Type 'p' for player or 'c' for 'computer': ")
+            first_player = input().strip().lower()
+
+            if first_player == 'p':
+                first_player = 'player'
+                return first_player
+            elif first_player == 'c':
+                first_player = 'computer'
+                return first_player  
+
+            prompt("Sorry, that's not a valid choice.")
+
+    else:
+        first_player = WHO_GOES_FIRST
+        return first_player
+
 def play_tic_tac_toe():
+    first_player = decide_who_goes_first()
     player_score = 0
     computer_score = 0
     while True:
         board = initialize_board()
 
         while True:
-            display_board(board)
-            # pdb.set_trace()
-            print(FIRST_PLAYER)
 
-            if FIRST_PLAYER == 'c':
-        #         # display_board(board)
+            if first_player == 'computer':
 
                     computer_chooses_square(board)
                     display_board(board)   
                     if someone_won(board) or board_full(board):
                         break
                     
-                    # display_board(board)
-                    print('Computer chose...')
+                    # print('Computer chose...')
 
                     player_chooses_square(board)
-                    # display_board(board)   
                     if someone_won(board) or board_full(board):
                         break
-                    # display_board(board)          
-            elif FIRST_PLAYER == 'p':
+          
+            elif first_player == 'player':
                 display_board(board)
 
                 player_chooses_square(board)
@@ -174,29 +199,7 @@ def play_tic_tac_toe():
                     break
             
 
-        display_board(board)
-
-        # board = initialize_board()
-
-        # while True:
-        #     # display_board(board)
-
-        #     computer_chooses_square(board)
-        #     if someone_won(board) or board_full(board):
-        #         break
-            
-        #     display_board(board)
-        #     print('Computer chose...')
-
-        #     player_chooses_square(board)
-        #     if someone_won(board) or board_full(board):
-        #         break
-        #     display_board(board)
-        
-
-        # display_board(board)
-            
-            
+        display_board(board) 
 
         if someone_won(board):
             winner = detect_winner(board)
