@@ -15,6 +15,32 @@ WINNING_LINES = [
         [1, 5, 9], [3, 5, 7]              # diagonals
     ]
 
+def welcome_message():
+    prompt("Welcome to Tic Tac Toe! \U0001F44B \n")
+    time.sleep(1.5)
+    prompt("The first player to win five games wins the match.\n")
+    time.sleep(1.5)
+
+def decide_first_player():
+    if FIRST_PLAYER == 'choose':
+        while True:
+            prompt("Please choose who plays first. Type 'P' for player " \
+                    "or 'C' for computer:\n")
+            player_input = input().strip().lower()
+
+            if player_input == 'p':
+                return PLAYER
+            if player_input == 'c':
+                return COMPUTER
+
+            prompt("Sorry, that's not a valid choice.\n")
+
+    else:
+        return FIRST_PLAYER
+
+def initialize_board():
+    return {square: INITIAL_MARKER for square in range(1, 10)}
+
 def display_board(board):
     os.system('clear')
 
@@ -33,8 +59,51 @@ def display_board(board):
     print('     |     |')
     print('')
 
-def initialize_board():
-    return {square: INITIAL_MARKER for square in range(1, 10)}
+def choose_square(board, current_player):
+    if current_player == COMPUTER:
+        computer_chooses_square(board)
+    else:
+        player_chooses_square(board)
+
+def someone_won(board):
+    return bool(detect_winner(board))
+
+def detect_winner(board):
+    for line in WINNING_LINES:
+        sq1, sq2, sq3 = line
+        if (board[sq1] == HUMAN_MARKER
+                and board[sq2] == HUMAN_MARKER
+                and board[sq3] == HUMAN_MARKER):
+            return PLAYER
+        if (board[sq1] == COMPUTER_MARKER
+                  and board[sq2] == COMPUTER_MARKER
+                  and board[sq3] == COMPUTER_MARKER):
+            return COMPUTER
+
+    return None
+
+def player_wants_to_continue():
+    while True:
+        prompt("Play again? (Enter 'y' for yes or 'n' for no.)")
+        answer = input().lower()
+
+        if answer not in ('n', 'y'):
+            prompt("Sorry, that's not a valid choice.\n")
+        elif answer == 'y':
+            return True
+        else:
+            return False
+
+def board_full(board):
+    return len(empty_squares(board)) == 0
+
+def alternate_player(current_player):
+    if current_player == COMPUTER:
+        current_player = PLAYER
+    else:
+        current_player = COMPUTER
+
+    return current_player
 
 def prompt(message):
     print(f'==> {message}')
@@ -124,75 +193,6 @@ def computer_chooses_square(board):
 
 def empty_squares(board):
     return [key for key, value in board.items() if value == INITIAL_MARKER]
-
-def board_full(board):
-    return len(empty_squares(board)) == 0
-
-def someone_won(board):
-    return bool(detect_winner(board))
-
-def detect_winner(board):
-    for line in WINNING_LINES:
-        sq1, sq2, sq3 = line
-        if (board[sq1] == HUMAN_MARKER
-                and board[sq2] == HUMAN_MARKER
-                and board[sq3] == HUMAN_MARKER):
-            return PLAYER
-        if (board[sq1] == COMPUTER_MARKER
-                  and board[sq2] == COMPUTER_MARKER
-                  and board[sq3] == COMPUTER_MARKER):
-            return COMPUTER
-
-    return None
-
-def decide_first_player():
-    if FIRST_PLAYER == 'choose':
-        while True:
-            prompt("Please choose who plays first. Type 'P' for player " \
-                    "or 'C' for computer:\n")
-            player_input = input().strip().lower()
-
-            if player_input == 'p':
-                return PLAYER
-            if player_input == 'c':
-                return COMPUTER
-
-            prompt("Sorry, that's not a valid choice.\n")
-
-    else:
-        return FIRST_PLAYER
-
-def player_wants_to_continue():
-    while True:
-        prompt("Play again? (Enter 'y' for yes or 'n' for no.)")
-        answer = input().lower()
-
-        if answer not in ('n', 'y'):
-            prompt("Sorry, that's not a valid choice.\n")
-        elif answer == 'y':
-            return True
-        else:
-            return False
-
-def alternate_player(current_player):
-    if current_player == COMPUTER:
-        current_player = PLAYER
-    else:
-        current_player = COMPUTER
-
-    return current_player
-
-def choose_square(board, current_player):
-    if current_player == COMPUTER:
-        computer_chooses_square(board)
-    else:
-        player_chooses_square(board)
-
-def welcome_message():
-    prompt("Welcome to Tic Tac Toe! \U0001F44B \n")
-    time.sleep(1.5)
-    prompt("The first player to win five games wins the match.\n")
-    time.sleep(1.5)
 
 def play_tic_tac_toe():
     welcome_message()
