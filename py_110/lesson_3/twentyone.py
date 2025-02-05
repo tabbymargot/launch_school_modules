@@ -2,7 +2,15 @@ from pprint import pprint
 import random
 
 #TODO - move constants into play_21??
+
 VALUES_AS_STRINGS = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
+
+ALL_CARDS = {
+    'Clubs': VALUES_AS_STRINGS,
+    'Diamonds': VALUES_AS_STRINGS,
+    'Hearts': VALUES_AS_STRINGS,
+    'Spades': VALUES_AS_STRINGS,
+    }
 
 INTEGER_VALUES = {
     'Ace': 1,
@@ -20,14 +28,7 @@ INTEGER_VALUES = {
     'King': 10,
 }
 
-ELEVEN_POINT_ACE = 11
-
-ALL_CARDS = {
-    'Clubs': VALUES_AS_STRINGS,
-    'Diamonds': VALUES_AS_STRINGS,
-    'Hearts': VALUES_AS_STRINGS,
-    'Spades': VALUES_AS_STRINGS,
-    }
+HIGH_VALUE_ACE = 11
 
 CARDS_IN_HAND = 2
 
@@ -90,8 +91,8 @@ def card_and_hand_values(hand, hand_total_value):
     return card_values, hand_total_value
 
 def get_ace_value(hand_total_value):
-    if (hand_total_value + ELEVEN_POINT_ACE) <= 21:
-        return ELEVEN_POINT_ACE
+    if (hand_total_value + HIGH_VALUE_ACE) <= 21:
+        return HIGH_VALUE_ACE
     else:
         return INTEGER_VALUES['Ace']
     
