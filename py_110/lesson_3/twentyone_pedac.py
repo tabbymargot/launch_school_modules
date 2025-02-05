@@ -24,39 +24,41 @@ DEAL CARDS
 
 
 
-ESTABLISH VALUE OF CARDS 
+ESTABLISH VALUE OF CARDS AND HAND
 
     Problem: 
-    Need to establish the integer value of the cards. (Establishing the integer values is necessary so that the value of any aces can be established.)
+    Need to establish the integer value of the cards. (Establishing the integer values is necessary at this stage so that the value of any aces can be established and later shown to the player.)
 
         Rules: 
         The value of any aces will depend on the other cards in the hand
 
         Input:
-        player_hand and dealer_hand lists
+        The hand list
 
         Output:
-        New lists containing the integer values of the cards (one for each player)
+        New list containing the integer values of the cards.
+        Running total of values
 
         NB: will probably need to reuse this function for additional cards dealt later in the game.
 
     Algorithm:
-        High-level: Get the value of the first card. Get the value of the second card, and if it's an ace calculate its integer value.
+        High-level: Get the value of the first card. Get the value of the second card, and if it's an ace calculate its integer value. Add values to hand total and also append values to a list.
 
         Detailed:
             - Initialise empty list card_values
-            - Initialse running_total to 0
-            - Index into the first sublist in player_hand and get the string at position 1.
-            - Get its corresponding integer value from STRINGS_TO_INTEGERS (if it's an ace its value will be 11)
+            - Initialise hand_total to 0
+            - Index into the first sublist in hand and get the string at position 1.
+            - Get its corresponding integer value from STRINGS_TO_INTEGERS
+                - If the card is an ace:
+                    - If hand_total + 11 does not exceed 21:
+                        Ace = 11
+                    - Else:
+                        Ace = 1
             - Append that to card_values
-            - Add it to running_total
+            - Add it to hand_total
             - Repeat for the second sublist.
-                - This time if it's an ace its value will be:
-                    11 if adding 11 to the running total does not exceed 21
-                    1 otherwise
 
-
-GET THE TOTAL VALUE OF EACH HAND
+        Return card_values, hand_total
 
 SHOW THE PLAYER THEIR CARDS, AS WELL AS ONE OF THE DEALER'S CARDS
 
