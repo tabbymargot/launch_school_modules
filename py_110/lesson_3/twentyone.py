@@ -2,14 +2,14 @@ from pprint import pprint
 import random
 
 #TODO - move constants into play_21??
-VALUES_AS_STRINGS = [['A1', 'A11'], '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+VALUES_AS_STRINGS = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 
-STRINGS_TO_INTEGERS = {
-    'A1': 1,
+INTEGER_VALUES = {
+    'Ace': 1,
     '2': 2,
     '3': 3,
     '4': 4,
-    '4': 5,
+    '5': 5,
     '6': 6,
     '7': 7,
     '8': 8,
@@ -18,17 +18,17 @@ STRINGS_TO_INTEGERS = {
     'J': 10,
     'Q': 10,
     'K': 10,
-    'A11': 11,
 }
 
+ELEVEN_POINT_ACE = 11
+
 ALL_CARDS = {
-    'C': VALUES_AS_STRINGS,
-    'D': VALUES_AS_STRINGS,
-    'H': VALUES_AS_STRINGS,
-    'S': VALUES_AS_STRINGS,
+    'Clubs': VALUES_AS_STRINGS,
+    'Diamonds': VALUES_AS_STRINGS,
+    'Hearts': VALUES_AS_STRINGS,
+    'Spades': VALUES_AS_STRINGS,
     }
 
-# INITIAL_DEAL = 4
 CARDS_IN_HAND = 2
 
 
@@ -70,9 +70,34 @@ def deal_cards(deck):
 
     return hand
 
+def card_and_hand_values(hand, hand_value):
+    card_values = []
+    # print(hand)
+
+    for card in hand:
+        card_string_value = card[1]
+        
+        if card_string_value == 'Ace':
+            card_value = get_ace_value(hand_value)
+        else:
+            card_value = INTEGER_VALUES[card_string_value]
+
+        hand_value += card_value
+        card_values.append(card_value)
+
+    return card_values, hand_value
+
+def get_ace_value(hand_value):
+    if (hand_value + ELEVEN_POINT_ACE) <= 21:
+        return ELEVEN_POINT_ACE
+    else:
+        return INTEGER_VALUES['Ace']
+
 
 def play_21():
     deck = initialise_deck()
+    player_hand_value = 0
+    dealer_hand_value = 0
 
     # Welcome message
     
@@ -85,19 +110,19 @@ def play_21():
         # Deal cards
         player_hand = deal_cards(deck)
         dealer_hand = deal_cards(deck)
+        # test_hand = [['D', 'Ace'], ['H', 'Ace']]
+        # test_hand2 = [['D', '10'], ['H', 'J']]
 
-        # player_hand = []
+        # Establish values
+        player_card_values, player_hand_value = card_and_hand_values(player_hand, player_hand_value)
+        dealer_card_values, dealer_hand_value = card_and_hand_values(dealer_hand, dealer_hand_value)
 
-        # for _ in range(CARDS_IN_HAND):
-        #     player_hand.append(random.choice(deck))
+
+
+        print(player_hand, player_card_values, player_hand_value)
+        print(player_hand, dealer_card_values, dealer_hand_value)
+
         
-        # print(player_hand)
-
-        # dealer_hand = []
-        # for _ in range(CARDS_IN_HAND):
-        #     dealer_hand.append(random.choice(deck))
-        
-        # print(dealer_hand)
 
 
         # Loop 2 - player turn
