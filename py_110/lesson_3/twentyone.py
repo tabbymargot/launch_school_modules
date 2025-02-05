@@ -1,42 +1,46 @@
 from pprint import pprint
 import random
 
-STRING_CARD_VALUES = [['A1', 'A11'], '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+#TODO - move constants into play_21??
+VALUES_AS_STRINGS = [['A1', 'A11'], '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 
-DIGIT_CARD_VALUES = {
+STRINGS_TO_INTEGERS = {
     'A1': 1,
-    '2': 1,
-    '3': 1,
-    '4': 1,
-    '4': 1,
-    '6': 1,
-    '7': 1,
-    '8': 1,
-    '9': 1,
-    '10': 1,
-    'J': 1,
-    'Q': 1,
-    'K': 1,
+    '2': 2,
+    '3': 3,
+    '4': 4,
+    '4': 5,
+    '6': 6,
+    '7': 7,
+    '8': 8,
+    '9': 9,
+    '10': 10,
+    'J': 10,
+    'Q': 10,
+    'K': 10,
     'A11': 11,
 }
 
-DECK = {
-    'C': STRING_CARD_VALUES,
-    'D': STRING_CARD_VALUES,
-    'H': STRING_CARD_VALUES,
-    'S': STRING_CARD_VALUES,
+ALL_CARDS = {
+    'C': VALUES_AS_STRINGS,
+    'D': VALUES_AS_STRINGS,
+    'H': VALUES_AS_STRINGS,
+    'S': VALUES_AS_STRINGS,
     }
+
+# INITIAL_DEAL = 4
+CARDS_IN_HAND = 2
 
 
 def initialise_deck():
     deck = []
 
-    for suit, values in DECK.items():
+    for suit, values in ALL_CARDS.items():
         for value in values:
             card = [suit, value]
             deck.append(card)
 
-    pprint(deck, compact= True)
+    # pprint(deck, compact= True)
 
     return deck
 
@@ -57,6 +61,16 @@ def shuffle(deck):
     return random.shuffle(deck)
     # print(deck)
 
+def deal_cards(deck):
+    hand = []
+    for _ in range(CARDS_IN_HAND):
+        card = random.choice(deck)
+        hand.append(card)
+        deck.remove(card)
+
+    return hand
+
+
 def play_21():
     deck = initialise_deck()
 
@@ -64,11 +78,27 @@ def play_21():
     
 
     # Loop 1 - continue playing
-    # while True:
+    while True:
     #     shuffle(deck)
     #     pprint(deck, compact= True)
 
         # Deal cards
+        player_hand = deal_cards(deck)
+        dealer_hand = deal_cards(deck)
+
+        # player_hand = []
+
+        # for _ in range(CARDS_IN_HAND):
+        #     player_hand.append(random.choice(deck))
+        
+        # print(player_hand)
+
+        # dealer_hand = []
+        # for _ in range(CARDS_IN_HAND):
+        #     dealer_hand.append(random.choice(deck))
+        
+        # print(dealer_hand)
+
 
         # Loop 2 - player turn
 
@@ -95,7 +125,7 @@ def play_21():
 
         # Play again?
 
-        # break # End loop 1
+        break # End loop 1
 
     # Goodbye message
 
