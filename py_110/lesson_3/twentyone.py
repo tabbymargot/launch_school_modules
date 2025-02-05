@@ -2,7 +2,7 @@ from pprint import pprint
 import random
 
 #TODO - move constants into play_21??
-VALUES_AS_STRINGS = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+VALUES_AS_STRINGS = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
 
 INTEGER_VALUES = {
     'Ace': 1,
@@ -15,9 +15,9 @@ INTEGER_VALUES = {
     '8': 8,
     '9': 9,
     '10': 10,
-    'J': 10,
-    'Q': 10,
-    'K': 10,
+    'Jack': 10,
+    'Queen': 10,
+    'King': 10,
 }
 
 ELEVEN_POINT_ACE = 11
@@ -30,6 +30,9 @@ ALL_CARDS = {
     }
 
 CARDS_IN_HAND = 2
+
+def prompt(message):
+    print(f'==> {message}')
 
 
 def initialise_deck():
@@ -70,34 +73,48 @@ def deal_cards(deck):
 
     return hand
 
-def card_and_hand_values(hand, hand_value):
+def card_and_hand_values(hand, hand_total_value):
     card_values = []
-    # print(hand)
 
     for card in hand:
         card_string_value = card[1]
         
         if card_string_value == 'Ace':
-            card_value = get_ace_value(hand_value)
+            card_value = get_ace_value(hand_total_value)
         else:
             card_value = INTEGER_VALUES[card_string_value]
 
-        hand_value += card_value
+        hand_total_value += card_value
         card_values.append(card_value)
 
-    return card_values, hand_value
+    return card_values, hand_total_value
 
-def get_ace_value(hand_value):
-    if (hand_value + ELEVEN_POINT_ACE) <= 21:
+def get_ace_value(hand_total_value):
+    if (hand_total_value + ELEVEN_POINT_ACE) <= 21:
         return ELEVEN_POINT_ACE
     else:
         return INTEGER_VALUES['Ace']
+    
+def details_of_cards_in_hand(hand):
+    all_cards_except_last = []
+
+    for card in hand:
+        suit = card[0]
+        value = card[1]
+        value_of_suit_string = f'the {value} of {suit}'
+
+        if card != hand[-1]:
+            all_cards_except_last.append(value_of_suit_string)
+
+    return ', '.join(all_cards_except_last) + " and " + value_of_suit_string
+        
+    
 
 
 def play_21():
     deck = initialise_deck()
-    player_hand_value = 0
-    dealer_hand_value = 0
+    player_hand_total_value = 0
+    dealer_hand_total_value = 0
 
     # Welcome message
     
@@ -108,21 +125,29 @@ def play_21():
     #     pprint(deck, compact= True)
 
         # Deal cards
-        player_hand = deal_cards(deck)
-        dealer_hand = deal_cards(deck)
+        player_hand = [['Diamonds', '10'], ['Hearts', 'Jack'], ['Hearts', 'Ace']]
+        # dealer_hand = deal_cards(deck)
         # test_hand = [['D', 'Ace'], ['H', 'Ace']]
-        # test_hand2 = [['D', '10'], ['H', 'J']]
+        # test_hand2 = [['D', '10'], ['H', 'J'], ['H', 'Ace']]
 
         # Establish values
-        player_card_values, player_hand_value = card_and_hand_values(player_hand, player_hand_value)
-        dealer_card_values, dealer_hand_value = card_and_hand_values(dealer_hand, dealer_hand_value)
+        player_card_values, player_hand_total_value = card_and_hand_values(player_hand, player_hand_total_value)
+        # dealer_card_values, dealer_hand_total_value = card_and_hand_values(dealer_hand, dealer_hand_total_value)
 
 
 
-        print(player_hand, player_card_values, player_hand_value)
-        print(player_hand, dealer_card_values, dealer_hand_value)
+        # print(player_hand, player_card_values, player_hand_total_value)
+        # print(dealer_hand, dealer_card_values, dealer_hand_total_value)
 
-        
+        values_and_suits_string = details_of_cards_in_hand(player_hand)
+
+        prompt(f"Your hand contains {values_and_suits_string}.\n")
+        prompt(f"Your hand is worth {player_hand_total_value} points.\n")
+            
+
+
+
+
 
 
         # Loop 2 - player turn
