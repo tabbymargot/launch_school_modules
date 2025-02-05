@@ -81,7 +81,6 @@ SHOW THE PLAYER THEIR CARDS, AS WELL AS ONE OF THE DEALER'S CARDS
 
         For card in cards:
             - Initialise empty card_string
-            - Initialise empty card_list
             - Concatenate the + value + of + suit together and assign to card_string
                 - If it's the last card in the hand, will need to add the word 'and' before 'the'.
             - Append card_string to card_list
@@ -98,6 +97,7 @@ SHOW THE PLAYER THEIR CARDS, AS WELL AS ONE OF THE DEALER'S CARDS
 
 Things to think about:
 - What happens if the deck runs out of cards?
+- Add emojis to suits?
 
     
     
