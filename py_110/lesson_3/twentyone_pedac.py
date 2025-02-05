@@ -24,7 +24,7 @@ DEAL CARDS
 
 
 
-ESTABLISH VALUE OF CARDS AND HAND
+ESTABLISH VALUE OF CARDS AND HANDS
 
     Problem: 
     Need to establish the integer value of the cards. (Establishing the integer values is necessary at this stage so that the value of any aces can be established and later shown to the player.)
@@ -61,6 +61,38 @@ ESTABLISH VALUE OF CARDS AND HAND
         Return card_values, hand_total
 
 SHOW THE PLAYER THEIR CARDS, AS WELL AS ONE OF THE DEALER'S CARDS
+    Problem: Output a string with the suits and values of the cards, and the value of the hand, interpolated into the string. Do the same to display one of the dealer's cards.
+
+    Input:
+    Sublists containing the cards' suits and values
+    hand_value (integer)
+
+    Output:
+    f-string
+
+    DS
+    Nested list?
+    String?
+
+    Algorithm:
+        High-level: For the cards' suits and values, for each card concatenate into a string, eg '2 of Hearts'. Then concatenate into a longer_string containing all the cards, eg '2 of Hearts, 3 of Clubs and Jack of Spades'. Interpolate this string into a longer string, eg "Your hand contains the '2 of Hearts, 3 of Clubs and Jack of Spades'. Get the hand_value and use string interpolation to show the player how much their hand is worth.
+
+        card_list = []
+
+        For card in cards:
+            - Initialise empty card_string
+            - Initialise empty card_list
+            - Concatenate the + value + of + suit together and assign to card_string
+                - If it's the last card in the hand, will need to add the word 'and' before 'the'.
+            - Append card_string to card_list
+            - Join all the card strings using a comma as a delimiter, creating a string with all the cards. Assign to longer_string.
+
+
+        Output a longer f-string:
+        "Your hand contains the following cards: {longer_string}. Your hand is worth {hand_value} points"
+
+
+
 
 
 
