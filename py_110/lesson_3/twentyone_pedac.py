@@ -22,7 +22,7 @@ DEAL CARDS
 
         - Repeat all steps above to create the dealer_hand
 
-
+****************
 
 ESTABLISH VALUE OF CARDS AND HANDS
 
@@ -60,6 +60,8 @@ ESTABLISH VALUE OF CARDS AND HANDS
 
         Return card_values, hand_total
 
+***********
+
 SHOW THE PLAYER THEIR CARDS, AS WELL AS ONE OF THE DEALER'S CARDS
     Problem: Output a string with the suits and values of the cards, and the value of the hand, interpolated into the string. Do the same to display one of the dealer's cards.
 
@@ -89,6 +91,66 @@ SHOW THE PLAYER THEIR CARDS, AS WELL AS ONE OF THE DEALER'S CARDS
 
         Output a longer f-string:
         "Your hand contains the following cards: {longer_string}. Your hand is worth {hand_value} points"
+
+**************
+
+PLAYER TURN
+Problem: The player always goes first, and can decide to either hit or stay. If their total exceeds 21, they will bust and lose the game. The decision to hit or stay depends on the player's cards and what the player thinks the dealer has. The player can continue to hit as many times as they want. The turn is over when the player either busts or stays. If the player busts, the game is over, and the dealer won.
+
+3. Player turn: hit or stay
+   - repeat until bust or stay
+4. If player bust, dealer wins.
+
+- Set up outer loop to contain the player's turn.
+
+SUB-PROBLEMS:
+
+1. GET PLAYER'S DECISION TO HIT OR STAY
+
+Problem: Ask the player to input whether they wish to hit or stay.
+
+Input: String
+Output: Either a message saying the input isn't valid, or a message confirming their choice.
+
+DS: tuple containing valid inputs.
+
+Algorithm:
+    High-level - In a loop, give the user valid choices and ask them to input their choice. Keep looping until a valid choice is entered, and then confirm their choice.
+
+    - Initialise tuple containing valid_choices ('h', 's')
+    - While True:
+        - Ask the user for their choice.
+        - Validate their input against valid_choices
+        - If input not valid:
+            - Ask them to try again.
+
+        - Otherwise, break out of the loop and confirm their choice.
+
+2. IF PLAYER HAS CHOSEN TO HIT, DEAL THEM A NEW CARD
+
+    If the player score is < 21:
+        - SHOW THEM THE CARD AND THE UPDATED HAND VALUE
+        - Go back to the start of the loop
+    If their score is 21 they have won:
+        Show them message and ask if they want to play again.
+    If their score is over 21 they have bust:
+        Show them message and ask if they want to play again.
+
+3. IF PLAYER HAS CHOSEN TO STAY, MOVE ON TO THE DEALER'S TURN
+
+**************
+
+DEALER TURN
+
+
+
+
+
+- Ask player to hit or stay.
+- If stay, stop asking.
+- Otherwise, go to #1.
+
+
 
 
 
