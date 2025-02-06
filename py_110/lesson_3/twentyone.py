@@ -117,6 +117,12 @@ def details_of_cards_in_hand(hand):
 # def all_the_cards(all_cards_except_last, last_card):
 #     return ', '.join(all_cards_except_last) + " and " + last_card
 
+def get_player_card_string(player_hand):
+    player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
+
+    return ', '.join(player_all_cards_except_last) + " and " + player_last_card
+
+
 def get_player_move():
     while True:
         prompt('Would you like to hit or stay? Enter H for hit and S for stay.\n')
@@ -174,17 +180,10 @@ def play_21():
             if player_move == 'h':
                 additional_card = deal_cards(deck, additional_deal)[0]
                 player_hand.append(additional_card)
-                print(f'player score 1: {player_score}')
+
+                prompt(f"Your hand now contains {get_player_card_string(player_hand)}.\n")
 
                 player_cards_numeric_values, player_score = calculate_values(player_hand)
-
-                print(f'player score 2: {player_score}')
-
-                player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
-
-                all_the_players_cards =  ', '.join(player_all_cards_except_last) + " and " + player_last_card
-
-                prompt(f"Your hand now contains {all_the_players_cards}.\n")
 
                 if player_score == MAX_WINNING_SCORE:
                     prompt('Congratulations, you have won the game!\n')
