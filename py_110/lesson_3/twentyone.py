@@ -77,22 +77,23 @@ def deal_cards(deck, number_of_cards):
 
     return cards
 
-def calculate_values(hand_cards, hand_total_worth):
+def calculate_values(hand_cards):
     card_values = []
+    hand_score = 0
 
     for card in hand_cards:
         card_string_value = card[1]
         
         if card_string_value == 'Ace':
-            card_value = get_ace_value(hand_total_worth)
+            card_value = get_ace_value(hand_score)
         else:
             card_value = INTEGER_VALUES[card_string_value]
 
-        hand_total_worth += card_value
+        hand_score += card_value
         card_values.append(card_value)
 
     # TODO - remove card_values if it's not being used anywhere
-    return card_values, hand_total_worth
+    return card_values, hand_score
 
 def get_ace_value(hand_total_worth):
     if (hand_total_worth + HIGH_VALUE_ACE) <= MAX_WINNING_SCORE:
@@ -113,8 +114,8 @@ def details_of_cards_in_hand(hand):
 
     return all_cards_except_last, last_card
 
-def all_the_cards(all_cards_except_last, last_card):
-    return ', '.join(all_cards_except_last) + " and " + last_card
+# def all_the_cards(all_cards_except_last, last_card):
+#     return ', '.join(all_cards_except_last) + " and " + last_card
 
 def get_player_move():
     while True:
@@ -131,8 +132,8 @@ def get_player_move():
 
 def play_21():
     deck = initialise_deck()
-    player_initial_hand_worth = 0
-    dealer_initial_hand_worth = 0
+    player_starting_score = 0
+    dealer_starting_score = 0
     initial_deal = 2
     additional_deal = 1
 
@@ -145,21 +146,23 @@ def play_21():
     #     pprint(deck, compact= True)
 
         # DEAL ALL CARDS
-        # player_hand = deal_cards(deck, initial_deal)
-        # dealer_hand = deal_cards(deck, initial_deal)
+        player_hand = deal_cards(deck, initial_deal)
+        dealer_hand = deal_cards(deck, initial_deal)
         # test_hand = [['D', '10'], ['H', 'J']]
         # test_hand2 = [['D', '10'], ['H', 'J'], ['H', 'Ace']]
-        player_hand = [['Diamonds', '2'], ['Hearts', '3']]
-        dealer_hand = [['Clubs', '8'], ['Spades', 'Queen']]
+        # player_hand = [['Diamonds', '2'], ['Hearts', '3']]
+        # dealer_hand = [['Clubs', '8'], ['Spades', 'Queen']]
 
         # CALCULATE CARD AND HAND VALUES
-        player_cards_numeric_values, player_score = calculate_values(player_hand, player_initial_hand_worth)
-        # dealer_card_values, dealer_initial_hand_worth = calculate_values(dealer_hand, dealer_initial_hand_worth)
+        player_cards_numeric_values, player_score = calculate_values(player_hand)
+        # dealer_card_values, dealer_starting_score = calculate_values(dealer_hand, dealer_starting_score)
 
         player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
         dealer_all_cards_except_last, dealer_last_card = details_of_cards_in_hand(dealer_hand)
 
-        all_the_players_cards = all_the_cards(player_all_cards_except_last, player_last_card)
+        # all_the_players_cards = all_the_cards(player_all_cards_except_last, player_last_card)
+
+        all_the_players_cards =  ', '.join(player_all_cards_except_last) + " and " + player_last_card
 
         prompt(f"Your hand contains {all_the_players_cards}.\n")
         prompt(f"Your hand is worth {player_score} points.\n")
@@ -171,27 +174,34 @@ def play_21():
             if player_move == 'h':
                 additional_card = deal_cards(deck, additional_deal)[0]
                 player_hand.append(additional_card)
+                print(f'player score 1: {player_score}')
 
-                player_cards_numeric_values, player_score = calculate_values(player_hand, player_score)
+                player_cards_numeric_values, player_score = calculate_values(player_hand)
+
+                print(f'player score 2: {player_score}')
 
                 player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
 
-                all_the_players_cards = all_the_cards(player_all_cards_except_last, player_last_card)
+                all_the_players_cards =  ', '.join(player_all_cards_except_last) + " and " + player_last_card
 
-                prompt(f"Your hand now contains {all_the_players_cards}, and is worth {player_score} points.\n")
+                prompt(f"Your hand now contains {all_the_players_cards}.\n")
 
+                if player_score == MAX_WINNING_SCORE:
+                    prompt('Congratulations, you have won the game!\n')
+                    break
+                elif player_score > MAX_WINNING_SCORE:
+                    prompt(f"That was a bad choice: your score is now {player_score} and you've busted!\n")
+                    break
 
-
-
-
-
-            # break # end loop 2 - player turn
-
-
-            
-
-
-
+                prompt(f'Your new score is {player_score}')
+            else:
+                break # end loop 2 - player turn
+        
+        # LOOP 3 - DEALER TURN
+        dealer_cards_numeric_values, dealer_score = calculate_values(dealer_hand)
+        print(dealer_cards_numeric_values)
+        print(dealer_score)
+        
 
 
 
