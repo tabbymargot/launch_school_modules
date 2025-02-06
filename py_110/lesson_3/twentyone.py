@@ -1,5 +1,6 @@
 from pprint import pprint
 import random
+import time
 
 #TODO - move constants into play_21??
 
@@ -118,15 +119,15 @@ def play_21():
     player_initial_hand_worth = 0
     dealer_initial_hand_worth = 0
 
-    # Welcome message
+    # WELCOME MESSAGE
     
 
-    # Loop 1 - continue playing
+    # LOOP 1 - CONTINUE PLAYING
     while True:
     #     shuffle(deck)
     #     pprint(deck, compact= True)
 
-        # Deal all_cards
+        # DEAL ALL CARDS
         # player_hand = deal_cards(deck)
         # dealer_hand = deal_cards(deck)
         # test_hand = [['D', '10'], ['H', 'J']]
@@ -134,18 +135,9 @@ def play_21():
         player_hand = [['Diamonds', '10'], ['Hearts', 'Jack']]
         dealer_hand = [['Clubs', '8'], ['Spades', 'Queen']]
 
-        # Establish values
+        # CALCULATE CARD AND HAND VALUES
         player_card_values, player_updated_hand_worth = calculate_values(player_hand, player_initial_hand_worth)
         # dealer_card_values, dealer_initial_hand_worth = calculate_values(dealer_hand, dealer_initial_hand_worth)
-
-
-
-        # print(player_hand, player_card_values, player_initial_hand_worth)
-        # print(dealer_hand, dealer_card_values, dealer_initial_hand_worth)
-
-        # values_and_suits_string = details_of_cards_in_hand(player_hand)
-
-        # details_of_cards_in_hand(dealer_hand)
 
         player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
         dealer_all_cards_except_last, dealer_last_card = details_of_cards_in_hand(dealer_hand)
@@ -154,9 +146,28 @@ def play_21():
 
         prompt(f"Your hand contains {all_the_players_cards}.\n")
         prompt(f"Your hand is worth {player_updated_hand_worth} points.\n")
-
-        # dealer_all_cards_except_last, dealer_last_card = get_details_of_dealer_cards(dealer_hand)
         prompt(f"One of the dealer's cards is {dealer_last_card}.\n")
+
+        # LOOP 2 - PLAYER TURN
+        while True:
+            while True:
+                prompt('Would you like to hit or stay? Enter H for hit and S for stay.\n')
+                choice = input().strip().lower()
+                if choice in ('h', 's'):
+                    break
+
+                prompt("That's not a valid choice. Please try again\n.")
+                time.sleep(1.5)
+                # break
+
+
+
+
+
+
+        #break - # end loop 2 - player turn
+
+
             
 
 
