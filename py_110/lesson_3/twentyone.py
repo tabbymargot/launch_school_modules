@@ -35,6 +35,8 @@ INITIAL_CARDS_IN_HAND = 2
 
 MAX_WINNING_SCORE = 21
 
+DEALER_MINIMUM_SCORE = 17
+
 def prompt(message):
     print(f'==> {message}')
 
@@ -69,13 +71,16 @@ def shuffle(deck):
     # print(deck)
 
 def deal_cards(deck, number_of_cards):
-    cards = []
+    card_list = []
     for _ in range(number_of_cards):
         card = random.choice(deck)
-        cards.append(card)
+        card_list.append(card)
         deck.remove(card)
 
-    return cards
+    if len(card_list) == 1:
+        return card_list[0]
+
+    return card_list
 
 def calculate_values(hand_cards):
     card_values = []
@@ -114,8 +119,6 @@ def details_of_cards_in_hand(hand):
 
     return all_cards_except_last, last_card
 
-# def all_the_cards(all_cards_except_last, last_card):
-#     return ', '.join(all_cards_except_last) + " and " + last_card
 
 def get_player_card_string(player_hand):
     player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
@@ -141,7 +144,7 @@ def play_21():
     player_starting_score = 0
     dealer_starting_score = 0
     initial_deal = 2
-    additional_deal = 1
+    additional_cards = 1
 
     # WELCOME MESSAGE
     
@@ -161,7 +164,8 @@ def play_21():
 
         # CALCULATE CARD AND HAND VALUES
         player_cards_numeric_values, player_score = calculate_values(player_hand)
-        # dealer_card_values, dealer_starting_score = calculate_values(dealer_hand, dealer_starting_score)
+        dealer_cards_numeric_values, dealer_score = calculate_values(dealer_hand)
+        print(f'TOG dealer score: {dealer_score}')
 
         player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
         dealer_all_cards_except_last, dealer_last_card = details_of_cards_in_hand(dealer_hand)
@@ -172,23 +176,19 @@ def play_21():
 
         prompt(f"Your hand contains {all_the_players_cards}.\n")
         prompt(f"Your hand is worth {player_score} points.\n")
-        prompt(f"One of the dealer's cards is {dealer_last_card}.\n")
+        prompt(f"One of the dealer's card_list is {dealer_last_card}.\n")
 
         # LOOP 2 - PLAYER TURN
         while True:
             player_move = get_player_move()
             if player_move == 'h':
-                additional_card = deal_cards(deck, additional_deal)[0]
-                player_hand.append(additional_card)
+                player_hand.append(deal_cards(deck, additional_cards))
 
                 prompt(f"Your hand now contains {get_player_card_string(player_hand)}.\n")
 
                 player_cards_numeric_values, player_score = calculate_values(player_hand)
 
-                if player_score == MAX_WINNING_SCORE:
-                    prompt('Congratulations, you have won the game!\n')
-                    break
-                elif player_score > MAX_WINNING_SCORE:
+                if player_score > MAX_WINNING_SCORE:
                     prompt(f"That was a bad choice: your score is now {player_score} and you've busted!\n")
                     break
 
@@ -197,9 +197,38 @@ def play_21():
                 break # end loop 2 - player turn
         
         # LOOP 3 - DEALER TURN
-        dealer_cards_numeric_values, dealer_score = calculate_values(dealer_hand)
-        print(dealer_cards_numeric_values)
-        print(dealer_score)
+        while True:
+            # Break if dealer score higher than player score
+            # Move this to hit or stay function? Do same with player turn?
+            
+            print(f'LOOP dealer score: {dealer_score}')
+
+            if dealer_score < DEALER_MINIMUM_SCORE:
+                dealer_hand.append(deal_cards(deck, additional_cards))
+
+            elif dealer_score <= MAX_WINNING_SCORE:
+                if dealer_score < player_score:
+                    dealer_hand.append(deal_cards(deck, additional_cards))
+            
+            elif dealer_score > MAX_WINNING_SCORE:
+                prompt('Dealer busts!')
+                break
+
+            # Move the rest to a calculate winner function
+
+            if dealer_score == player_score:
+                # prompt("It's a tie!")
+                break
+                # store final dealer score
+
+            if dealer_score > player_score:
+                # prompt('Dealer wins!')
+                break
+                # store final dealer score
+
+            dealer_cards_numeric_values, dealer_score = calculate_values(dealer_hand)
+
+            
         
 
 
