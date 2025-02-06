@@ -32,6 +32,8 @@ HIGH_VALUE_ACE = 11
 
 CARDS_IN_HAND = 2
 
+MAX_WINNING_SCORE = 21
+
 def prompt(message):
     print(f'==> {message}')
 
@@ -74,48 +76,47 @@ def deal_cards(deck):
 
     return hand
 
-def card_and_hand_values(hand, hand_total_value):
+def calculate_values(hand_cards, hand_total_worth):
     card_values = []
 
-    for card in hand:
+    for card in hand_cards:
         card_string_value = card[1]
         
         if card_string_value == 'Ace':
-            card_value = get_ace_value(hand_total_value)
+            card_value = get_ace_value(hand_total_worth)
         else:
             card_value = INTEGER_VALUES[card_string_value]
 
-        hand_total_value += card_value
+        hand_total_worth += card_value
         card_values.append(card_value)
 
-    return card_values, hand_total_value
+    return card_values, hand_total_worth
 
-def get_ace_value(hand_total_value):
-    if (hand_total_value + HIGH_VALUE_ACE) <= 21:
+def get_ace_value(hand_total_worth):
+    if (hand_total_worth + HIGH_VALUE_ACE) <= MAX_WINNING_SCORE:
         return HIGH_VALUE_ACE
     else:
         return INTEGER_VALUES['Ace']
     
 def details_of_cards_in_hand(hand):
-    all_cards_except_last = []
+    all_cards = []
 
     for card in hand:
         suit = card[0]
         value = card[1]
-        value_of_suit_string = f'the {value} of {suit}'
+        all_cards.append(f'the {value} of {suit}')
 
-        if card != hand[-1]:
-            all_cards_except_last.append(value_of_suit_string)
+    all_cards_except_last = all_cards[:-1]
+    last_card = all_cards[-1]
 
-    return ', '.join(all_cards_except_last) + " and " + value_of_suit_string
+    return all_cards_except_last, last_card
+
         
-    
-
 
 def play_21():
     deck = initialise_deck()
-    player_hand_total_value = 0
-    dealer_hand_total_value = 0
+    player_initial_hand_worth = 0
+    dealer_initial_hand_worth = 0
 
     # Welcome message
     
@@ -125,25 +126,37 @@ def play_21():
     #     shuffle(deck)
     #     pprint(deck, compact= True)
 
-        # Deal cards
-        player_hand = [['Diamonds', '10'], ['Hearts', 'Jack'], ['Hearts', 'Ace']]
+        # Deal all_cards
+        # player_hand = deal_cards(deck)
         # dealer_hand = deal_cards(deck)
-        # test_hand = [['D', 'Ace'], ['H', 'Ace']]
+        # test_hand = [['D', '10'], ['H', 'J']]
         # test_hand2 = [['D', '10'], ['H', 'J'], ['H', 'Ace']]
+        player_hand = [['Diamonds', '10'], ['Hearts', 'Jack']]
+        dealer_hand = [['Clubs', '8'], ['Spades', 'Queen']]
 
         # Establish values
-        player_card_values, player_hand_total_value = card_and_hand_values(player_hand, player_hand_total_value)
-        # dealer_card_values, dealer_hand_total_value = card_and_hand_values(dealer_hand, dealer_hand_total_value)
+        player_card_values, player_updated_hand_worth = calculate_values(player_hand, player_initial_hand_worth)
+        # dealer_card_values, dealer_initial_hand_worth = calculate_values(dealer_hand, dealer_initial_hand_worth)
 
 
 
-        # print(player_hand, player_card_values, player_hand_total_value)
-        # print(dealer_hand, dealer_card_values, dealer_hand_total_value)
+        # print(player_hand, player_card_values, player_initial_hand_worth)
+        # print(dealer_hand, dealer_card_values, dealer_initial_hand_worth)
 
-        values_and_suits_string = details_of_cards_in_hand(player_hand)
+        # values_and_suits_string = details_of_cards_in_hand(player_hand)
 
-        prompt(f"Your hand contains {values_and_suits_string}.\n")
-        prompt(f"Your hand is worth {player_hand_total_value} points.\n")
+        # details_of_cards_in_hand(dealer_hand)
+
+        player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
+        dealer_all_cards_except_last, dealer_last_card = details_of_cards_in_hand(dealer_hand)
+
+        all_the_players_cards = ', '.join(player_all_cards_except_last) + " and " + player_last_card
+
+        prompt(f"Your hand contains {all_the_players_cards}.\n")
+        prompt(f"Your hand is worth {player_updated_hand_worth} points.\n")
+
+        # dealer_all_cards_except_last, dealer_last_card = get_details_of_dealer_cards(dealer_hand)
+        prompt(f"One of the dealer's cards is {dealer_last_card}.\n")
             
 
 
@@ -172,7 +185,7 @@ def play_21():
         # If dealer busts, player wins.
 
 
-        # Compare cards and declare winner.
+        # Compare all_cards and declare winner.
 
         # Play again?
 
