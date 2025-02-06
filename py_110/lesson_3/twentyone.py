@@ -31,7 +31,7 @@ INTEGER_VALUES = {
 
 HIGH_VALUE_ACE = 11
 
-CARDS_IN_HAND = 2
+INITIAL_CARDS_IN_HAND = 2
 
 MAX_WINNING_SCORE = 21
 
@@ -68,14 +68,14 @@ def shuffle(deck):
     return random.shuffle(deck)
     # print(deck)
 
-def deal_cards(deck):
-    hand = []
-    for _ in range(CARDS_IN_HAND):
+def deal_cards(deck, number_of_cards):
+    cards = []
+    for _ in range(number_of_cards):
         card = random.choice(deck)
-        hand.append(card)
+        cards.append(card)
         deck.remove(card)
 
-    return hand
+    return cards
 
 def calculate_values(hand_cards, hand_total_worth):
     card_values = []
@@ -91,6 +91,7 @@ def calculate_values(hand_cards, hand_total_worth):
         hand_total_worth += card_value
         card_values.append(card_value)
 
+    # TODO - remove card_values if it's not being used anywhere
     return card_values, hand_total_worth
 
 def get_ace_value(hand_total_worth):
@@ -112,12 +113,28 @@ def details_of_cards_in_hand(hand):
 
     return all_cards_except_last, last_card
 
+def all_the_cards(all_cards_except_last, last_card):
+    return ', '.join(all_cards_except_last) + " and " + last_card
+
+def get_player_move():
+    while True:
+        prompt('Would you like to hit or stay? Enter H for hit and S for stay.\n')
+        move = input().strip().lower()
+        if move in ('h', 's'):
+            return move
+
+        prompt("That's not a valid choice. Please try again\n.")
+        time.sleep(1.5)
+
+
         
 
 def play_21():
     deck = initialise_deck()
     player_initial_hand_worth = 0
     dealer_initial_hand_worth = 0
+    initial_deal = 2
+    additional_deal = 1
 
     # WELCOME MESSAGE
     
@@ -128,44 +145,47 @@ def play_21():
     #     pprint(deck, compact= True)
 
         # DEAL ALL CARDS
-        # player_hand = deal_cards(deck)
-        # dealer_hand = deal_cards(deck)
+        # player_hand = deal_cards(deck, initial_deal)
+        # dealer_hand = deal_cards(deck, initial_deal)
         # test_hand = [['D', '10'], ['H', 'J']]
         # test_hand2 = [['D', '10'], ['H', 'J'], ['H', 'Ace']]
-        player_hand = [['Diamonds', '10'], ['Hearts', 'Jack']]
+        player_hand = [['Diamonds', '2'], ['Hearts', '3']]
         dealer_hand = [['Clubs', '8'], ['Spades', 'Queen']]
 
         # CALCULATE CARD AND HAND VALUES
-        player_card_values, player_updated_hand_worth = calculate_values(player_hand, player_initial_hand_worth)
+        player_cards_numeric_values, player_score = calculate_values(player_hand, player_initial_hand_worth)
         # dealer_card_values, dealer_initial_hand_worth = calculate_values(dealer_hand, dealer_initial_hand_worth)
 
         player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
         dealer_all_cards_except_last, dealer_last_card = details_of_cards_in_hand(dealer_hand)
 
-        all_the_players_cards = ', '.join(player_all_cards_except_last) + " and " + player_last_card
+        all_the_players_cards = all_the_cards(player_all_cards_except_last, player_last_card)
 
         prompt(f"Your hand contains {all_the_players_cards}.\n")
-        prompt(f"Your hand is worth {player_updated_hand_worth} points.\n")
+        prompt(f"Your hand is worth {player_score} points.\n")
         prompt(f"One of the dealer's cards is {dealer_last_card}.\n")
 
         # LOOP 2 - PLAYER TURN
         while True:
-            while True:
-                prompt('Would you like to hit or stay? Enter H for hit and S for stay.\n')
-                choice = input().strip().lower()
-                if choice in ('h', 's'):
-                    break
+            player_move = get_player_move()
+            if player_move == 'h':
+                additional_card = deal_cards(deck, additional_deal)[0]
+                player_hand.append(additional_card)
 
-                prompt("That's not a valid choice. Please try again\n.")
-                time.sleep(1.5)
-                # break
+                player_cards_numeric_values, player_score = calculate_values(player_hand, player_score)
+
+                player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
+
+                all_the_players_cards = all_the_cards(player_all_cards_except_last, player_last_card)
+
+                prompt(f"Your hand now contains {all_the_players_cards}, and is worth {player_score} points.\n")
 
 
 
 
 
 
-        #break - # end loop 2 - player turn
+            # break # end loop 2 - player turn
 
 
             
