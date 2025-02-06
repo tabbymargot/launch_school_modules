@@ -131,8 +131,6 @@ Algorithm:
     If the player score is < 21:
         - SHOW THEM THE CARD AND THE UPDATED HAND VALUE
         - Go back to the start of the loop
-    If their score is 21 they have won:
-        Show them message and ask if they want to play again.
     If their score is over 21 they have bust:
         Show them message and ask if they want to play again.
 
@@ -142,8 +140,20 @@ Algorithm:
 
 DEALER TURN
 
+Problem: The dealer must follow a strict rule for determining whether to hit or stay: hit until the total is at least 17. If the dealer busts, then the player wins.
 
+Algorithm:
+    If current score < 17:
+        Hit
+    If current score >= 17 and < player_score
+        Hit
+    If current score >= 17 and > player_score
+        If current score <= 21
+            Dealer wins
+        Else:
+            Dealer busts, player wins
 
+    
 
 
 - Ask player to hit or stay.
