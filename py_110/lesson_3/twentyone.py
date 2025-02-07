@@ -72,10 +72,10 @@ def initialise_deck():
 #TODO - add code to clear terminal display
 def shuffle(deck):
     return random.shuffle(deck)
-    # print(deck)
 
 def deal_cards(deck, number_of_cards):
     card_list = []
+    #TODO cards should be from top of deck!!!
     for _ in range(number_of_cards):
         card = random.choice(deck)
         card_list.append(card)
@@ -87,7 +87,6 @@ def deal_cards(deck, number_of_cards):
     return card_list
 
 def calculate_values(hand_cards):
-    # card_values = []
     hand_score = 0
 
     for card in hand_cards:
@@ -99,9 +98,7 @@ def calculate_values(hand_cards):
             card_value = INTEGER_VALUES[card_string_value]
 
         hand_score += card_value
-        # card_values.append(card_value)
 
-    # TODO - remove card_values if it's not being used anywhere
     return hand_score
 
 def get_ace_value(hand_total_worth):
@@ -135,7 +132,7 @@ def print_hand_info(all_the_players_cards, player_score, dealer_last_card):
     prompt(f"One of the dealer's card_list is {dealer_last_card}.\n")
     time.sleep(1)
 
-def player_turn(deck, player_hand, additional_cards):
+def player_turn(player_score, player_hand, deck, additional_cards):
     while True:
         player_move = get_player_move()
         if player_move == 'h':
@@ -155,7 +152,10 @@ def player_turn(deck, player_hand, additional_cards):
             prompt(f'Your new score is {player_score}.\n')
             time.sleep(1)
         else:
-            break # end loop 2 - player turn
+            break
+
+    return player_score
+            # break # end loop 2 - player turn
 
 def print_updated_player_hand(player_all_cards_except_last, player_last_card):
     player_cards = ', '.join(player_all_cards_except_last) + " and " + player_last_card
@@ -164,12 +164,6 @@ def print_updated_player_hand(player_all_cards_except_last, player_last_card):
     time.sleep(1)
 
     prompt(f"Your hand now contains {player_cards}.\n")
-
-
-# def get_player_card_string(player_hand):
-#     player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
-
-#     return ', '.join(player_all_cards_except_last) + " and " + player_last_card
 
 
 def get_player_move():
@@ -186,6 +180,20 @@ def print_busted_message(player_score):
     prompt(f'Your new score is {player_score}.\n')
     time.sleep(1)
     prompt(f"Oh no - you've busted! That means the dealer's the winner.\n")
+
+def dealer_turn(dealer_score, dealer_hand, deck, additional_cards):
+    while dealer_score <= MAX_WINNING_SCORE:
+
+            if dealer_score < DEALER_MINIMUM_SCORE:
+                prompt(f'The dealer has {dealer_score} points, so I\'m just dealing them another card...\n')
+                time.sleep(2)
+                dealer_hand.append(deal_cards(deck, additional_cards))
+                dealer_score = calculate_values(dealer_hand)
+                print(f'LOOP dealer score: {dealer_score}')
+                
+            else:
+                break
+    return dealer_score
 
 def establish_result(player_score, dealer_score):
     if dealer_score > MAX_WINNING_SCORE:
@@ -231,30 +239,19 @@ def player_wants_to_continue():
 
 def play_21():
     deck = initialise_deck()
-    player_starting_score = 0
-    dealer_starting_score = 0
     initial_deal = 2
     additional_cards = 1
 
-    # WELCOME MESSAGE
+    #TODO WELCOME MESSAGE
     
-
-    # LOOP 1 - CONTINUE PLAYING
     while True:
-    #     shuffle(deck)
-    #     pprint(deck, compact= True)
-
-        # DEAL ALL CARDS
+        # TODO - when I shuffle the deck it breaks the program
+        # deck = shuffle(deck)
         player_hand = deal_cards(deck, initial_deal)
         dealer_hand = deal_cards(deck, initial_deal)
-        # test_hand = [['D', '10'], ['H', 'J']]
-        # test_hand2 = [['D', '10'], ['H', 'J'], ['H', 'Ace']]
-        # player_hand = [['Diamonds', '2'], ['Hearts', '3']]
-        # dealer_hand = [['Clubs', '8'], ['Spades', 'Queen']]
-
-        # CALCULATE CARD AND HAND VALUES
         player_score = calculate_values(player_hand)
         dealer_score = calculate_values(dealer_hand)
+
         print(f'TOG dealer score: {dealer_score}')
 
         player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
@@ -264,25 +261,12 @@ def play_21():
 
         print_hand_info(all_the_players_cards, player_score, dealer_last_card)
 
-
-        # LOOP 2 - PLAYER TURN
-        player_turn(deck, player_hand, additional_cards)
+        player_score = player_turn(player_score, player_hand, deck, additional_cards)
         
         if player_score > MAX_WINNING_SCORE:
             break
-        
-        # LOOP 3 - DEALER TURN
-        while dealer_score <= MAX_WINNING_SCORE:
 
-            if dealer_score < DEALER_MINIMUM_SCORE:
-                prompt(f'The dealer has {dealer_score} points, so I\'m just dealing them another card...\n')
-                time.sleep(2)
-                dealer_hand.append(deal_cards(deck, additional_cards))
-                dealer_score = calculate_values(dealer_hand)
-                print(f'LOOP dealer score: {dealer_score}')
-                
-            else:
-                break
+        dealer_score = dealer_turn(dealer_score, dealer_hand, deck, additional_cards)
 
         result = establish_result(player_score, dealer_score)
 
@@ -296,39 +280,5 @@ def play_21():
         else:
             prompt("OK then, see you again soon!")
             break
-
-            
-        
-
-
-
-        # Loop 2 - player turn
-
-
-
-
-
-            # break - end loop 2
-
-        # If player bust, dealer wins.
-
-        # Loop 3 - dealer turn
-
-
-
-
-
-            # break - end loop 2
-
-        # If dealer busts, player wins.
-
-
-        # Compare all_cards and declare winner.
-
-        # Play again?
-
-        # break # End loop 1
-
-    # Goodbye message
 
 play_21()
