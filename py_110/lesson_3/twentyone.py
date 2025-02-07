@@ -37,6 +37,10 @@ MAX_WINNING_SCORE = 21
 
 DEALER_MINIMUM_SCORE = 17
 
+# INITIAL_DEAL = 2
+
+# ADDITIONAL_CARDS = 1
+
 def prompt(message):
     print(f'==> {message}')
 
@@ -131,27 +135,27 @@ def print_hand_info(all_the_players_cards, player_score, dealer_last_card):
     prompt(f"One of the dealer's card_list is {dealer_last_card}.\n")
     time.sleep(1)
 
-# def player_turn(player_hand, additional_cards):
-#     while True:
-#         player_move = get_player_move()
-#         if player_move == 'h':
-#             new_card = deal_cards(deck, additional_cards)
-#             player_hand.append(new_card)
+def player_turn(deck, player_hand, additional_cards):
+    while True:
+        player_move = get_player_move()
+        if player_move == 'h':
+            new_card = deal_cards(deck, additional_cards)
+            player_hand.append(new_card)
 
-#             player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
+            player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
 
-#             print_updated_player_hand(player_all_cards_except_last, player_last_card)
+            print_updated_player_hand(player_all_cards_except_last, player_last_card)
 
-#             player_score = calculate_values(player_hand)
+            player_score = calculate_values(player_hand)
 
-#             if player_score > MAX_WINNING_SCORE:
-#                 print_busted_message(player_score)
-#                 break
+            if player_score > MAX_WINNING_SCORE:
+                print_busted_message(player_score)
+                break
 
-#             prompt(f'Your new score is {player_score}.\n')
-#             time.sleep(1)
-#         else:
-#             break # end loop 2 - player turn
+            prompt(f'Your new score is {player_score}.\n')
+            time.sleep(1)
+        else:
+            break # end loop 2 - player turn
 
 def print_updated_player_hand(player_all_cards_except_last, player_last_card):
     player_cards = ', '.join(player_all_cards_except_last) + " and " + player_last_card
@@ -262,28 +266,8 @@ def play_21():
 
 
         # LOOP 2 - PLAYER TURN
-        while True:
-            player_move = get_player_move()
-            if player_move == 'h':
-                new_card = deal_cards(deck, additional_cards)
-                player_hand.append(new_card)
-
-                player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
-
-                print_updated_player_hand(player_all_cards_except_last, player_last_card)
-
-                player_score = calculate_values(player_hand)
-
-                if player_score > MAX_WINNING_SCORE:
-                    print_busted_message(player_score)
-                    break
-
-                prompt(f'Your new score is {player_score}.\n')
-                time.sleep(1)
-            else:
-                break # end loop 2 - player turn
-
-        # print(f'PRELOOP dealer score: {dealer_score}')
+        player_turn(deck, player_hand, additional_cards)
+        
         if player_score > MAX_WINNING_SCORE:
             break
         
