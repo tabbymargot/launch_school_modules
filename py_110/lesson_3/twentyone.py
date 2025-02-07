@@ -71,13 +71,15 @@ def initialise_deck():
 
 #TODO - add code to clear terminal display
 def shuffle(deck):
-    return random.shuffle(deck)
+    random.shuffle(deck)
+    return deck
 
 def deal_cards(deck, number_of_cards):
     card_list = []
     #TODO cards should be from top of deck!!!
     for _ in range(number_of_cards):
-        card = random.choice(deck)
+        # card = random.choice(deck)
+        card = deck[0]
         card_list.append(card)
         deck.remove(card)
 
@@ -129,7 +131,7 @@ def print_hand_info(all_the_players_cards, player_score, dealer_last_card):
     prompt(f"Your hand is worth {player_score} points.\n")
     time.sleep(1)
 
-    prompt(f"One of the dealer's card_list is {dealer_last_card}.\n")
+    prompt(f"One of the dealer's two cards is {dealer_last_card}.\n")
     time.sleep(1)
 
 def player_turn(player_score, player_hand, deck, additional_cards):
@@ -146,7 +148,7 @@ def player_turn(player_score, player_hand, deck, additional_cards):
             player_score = calculate_values(player_hand)
 
             if player_score > MAX_WINNING_SCORE:
-                print_busted_message(player_score)
+                # print_busted_message(player_score)
                 break
 
             prompt(f'Your new score is {player_score}.\n')
@@ -245,8 +247,7 @@ def play_21():
     #TODO WELCOME MESSAGE
     
     while True:
-        # TODO - when I shuffle the deck it breaks the program
-        # deck = shuffle(deck)
+        deck = shuffle(deck)
         player_hand = deal_cards(deck, initial_deal)
         dealer_hand = deal_cards(deck, initial_deal)
         player_score = calculate_values(player_hand)
@@ -263,7 +264,9 @@ def play_21():
 
         player_score = player_turn(player_score, player_hand, deck, additional_cards)
         
+        #TODO - need to move this into the messages function. At the moment the game stops after this message prints.
         if player_score > MAX_WINNING_SCORE:
+            print_busted_message(player_score)
             break
 
         dealer_score = dealer_turn(dealer_score, dealer_hand, deck, additional_cards)
