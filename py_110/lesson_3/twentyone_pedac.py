@@ -128,13 +128,14 @@ Algorithm:
 
 2. IF PLAYER HAS CHOSEN TO HIT, DEAL THEM A NEW CARD
 
-    If the player score is < 21:
+    If the player score is <= 21:
         - SHOW THEM THE CARD AND THE UPDATED HAND VALUE
-        - Go back to the start of the loop
+        - Go back to the start of the loop so they can choose to hit or stay.
     If their score is over 21 they have bust:
-        Show them message and ask if they want to play again.
+        break
 
 3. IF PLAYER HAS CHOSEN TO STAY, MOVE ON TO THE DEALER'S TURN
+    break
 
 **************
 
@@ -143,15 +144,11 @@ DEALER TURN
 Problem: The dealer must follow a strict rule for determining whether to hit or stay: hit until the total is at least 17. If the dealer busts, then the player wins.
 
 Algorithm:
-    If current score < 17:
-        Hit
-    If current score >= 17 and < player_score
-        Hit
-    If current score >= 17 and > player_score
-        If current score <= 21
-            Dealer wins
-        Else:
-            Dealer busts, player wins
+    While dealer score < 17
+        If current score < 17:
+            Hit
+        Else
+            break
 
     
 
@@ -159,6 +156,23 @@ Algorithm:
 - Ask player to hit or stay.
 - If stay, stop asking.
 - Otherwise, go to #1.
+
+CALCULATE WINNER
+If player score > dealer score
+    player wins
+Elif dealer score > player score
+    dealer wins
+Else
+    it's a tie.
+
+PRINT MESSAGE STATING WINNER
+    If player won:
+        Congratulations
+    If player lost
+        commiserations
+    Else
+        State its a tie
+
 
 
 
