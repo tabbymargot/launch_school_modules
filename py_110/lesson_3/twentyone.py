@@ -83,7 +83,7 @@ def deal_cards(deck, number_of_cards):
     return card_list
 
 def calculate_values(hand_cards):
-    card_values = []
+    # card_values = []
     hand_score = 0
 
     for card in hand_cards:
@@ -95,10 +95,10 @@ def calculate_values(hand_cards):
             card_value = INTEGER_VALUES[card_string_value]
 
         hand_score += card_value
-        card_values.append(card_value)
+        # card_values.append(card_value)
 
     # TODO - remove card_values if it's not being used anywhere
-    return card_values, hand_score
+    return hand_score
 
 def get_ace_value(hand_total_worth):
     if (hand_total_worth + HIGH_VALUE_ACE) <= MAX_WINNING_SCORE:
@@ -119,6 +119,8 @@ def details_of_cards_in_hand(hand):
 
     return all_cards_except_last, last_card
 
+
+
 def print_hand_info(all_the_players_cards, player_score, dealer_last_card):
     prompt(f"Your hand contains {all_the_players_cards}.\n")
     time.sleep(1)
@@ -128,6 +130,36 @@ def print_hand_info(all_the_players_cards, player_score, dealer_last_card):
 
     prompt(f"One of the dealer's card_list is {dealer_last_card}.\n")
     time.sleep(1)
+
+# def player_turn(player_hand, additional_cards):
+#     while True:
+#         player_move = get_player_move()
+#         if player_move == 'h':
+#             new_card = deal_cards(deck, additional_cards)
+#             player_hand.append(new_card)
+
+#             player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
+
+#             print_updated_player_hand(player_all_cards_except_last, player_last_card)
+
+#             player_score = calculate_values(player_hand)
+
+#             if player_score > MAX_WINNING_SCORE:
+#                 print_busted_message(player_score)
+#                 break
+
+#             prompt(f'Your new score is {player_score}.\n')
+#             time.sleep(1)
+#         else:
+#             break # end loop 2 - player turn
+
+def print_updated_player_hand(player_all_cards_except_last, player_last_card):
+    player_cards = ', '.join(player_all_cards_except_last) + " and " + player_last_card
+
+    prompt(f"Your new card is {player_last_card}.\n")
+    time.sleep(1)
+
+    prompt(f"Your hand now contains {player_cards}.\n")
 
 
 # def get_player_card_string(player_hand):
@@ -166,18 +198,32 @@ def print_result(result, player_score, dealer_score):
         prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
         time.sleep(1.5)
         prompt("The dealer busted, so congratulations, you're the winner!\n")
+        time.sleep(1.5)
     elif result == 'player_wins':
         prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
         time.sleep(1.5)
         prompt("Congratulations, you're the winner!\n")
+        time.sleep(1.5)
     elif result == 'dealer_wins':
         prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
         time.sleep(1.5)
         prompt("Oh no, that means you lost!\n")
+        time.sleep(1.5)
     else:
         prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
         time.sleep(1.5)
         prompt("It's a tie! (Could be worse.)\n")
+        time.sleep(1.5)
+
+def player_wants_to_continue():
+    while True:
+        prompt('Would you like to continue playing? Enter Y for yes and N for no.\n')
+        answer = input().strip().lower()
+        if answer in ('y', 'n'):
+            return answer
+
+        prompt("That's not a valid choice. Please try again.\n")
+        time.sleep(1.5)
 
 def play_21():
     deck = initialise_deck()
@@ -203,8 +249,8 @@ def play_21():
         # dealer_hand = [['Clubs', '8'], ['Spades', 'Queen']]
 
         # CALCULATE CARD AND HAND VALUES
-        player_cards_numeric_values, player_score = calculate_values(player_hand)
-        dealer_cards_numeric_values, dealer_score = calculate_values(dealer_hand)
+        player_score = calculate_values(player_hand)
+        dealer_score = calculate_values(dealer_hand)
         print(f'TOG dealer score: {dealer_score}')
 
         player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
@@ -215,9 +261,6 @@ def play_21():
         print_hand_info(all_the_players_cards, player_score, dealer_last_card)
 
 
-
-        
-
         # LOOP 2 - PLAYER TURN
         while True:
             player_move = get_player_move()
@@ -225,16 +268,11 @@ def play_21():
                 new_card = deal_cards(deck, additional_cards)
                 player_hand.append(new_card)
 
-                all_cards_except_last, last_card = details_of_cards_in_hand(player_hand)
+                player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
 
-                player_cards = ', '.join(player_all_cards_except_last) + " and " + player_last_card
+                print_updated_player_hand(player_all_cards_except_last, player_last_card)
 
-                prompt(f"Your new card is {last_card}.\n")
-                time.sleep(1)
-
-                prompt(f"Your hand now contains {player_cards}.\n")
-
-                player_cards_numeric_values, player_score = calculate_values(player_hand)
+                player_score = calculate_values(player_hand)
 
                 if player_score > MAX_WINNING_SCORE:
                     print_busted_message(player_score)
@@ -253,17 +291,27 @@ def play_21():
         while dealer_score <= MAX_WINNING_SCORE:
 
             if dealer_score < DEALER_MINIMUM_SCORE:
+                prompt(f'The dealer has {dealer_score} points, so I\'m just dealing them another card...\n')
+                time.sleep(2)
                 dealer_hand.append(deal_cards(deck, additional_cards))
-                dealer_cards_numeric_values, dealer_score = calculate_values(dealer_hand)
+                dealer_score = calculate_values(dealer_hand)
                 print(f'LOOP dealer score: {dealer_score}')
+                
             else:
                 break
 
         result = establish_result(player_score, dealer_score)
 
         print_result(result, player_score, dealer_score)
-            
 
+        answer = player_wants_to_continue()
+
+        if answer == 'y':
+            prompt("Great, let\'s continue!\n")
+            time.sleep(1.5)
+        else:
+            prompt("OK then, see you again soon!")
+            break
 
             
         
@@ -295,7 +343,7 @@ def play_21():
 
         # Play again?
 
-        break # End loop 1
+        # break # End loop 1
 
     # Goodbye message
 
