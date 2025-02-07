@@ -65,7 +65,7 @@ def initialise_deck():
     #  ['S', '7'], ['S', '8'], ['S', '9'], ['S', '10'], ['S', 'J'], ['S', 'Q'],
     #  ['S', 'K'], ['S', 'A11']]
 
-
+#TODO - add code to clear terminal display
 def shuffle(deck):
     return random.shuffle(deck)
     # print(deck)
@@ -175,58 +175,57 @@ def play_21():
         all_the_players_cards =  ', '.join(player_all_cards_except_last) + " and " + player_last_card
 
         prompt(f"Your hand contains {all_the_players_cards}.\n")
+        time.sleep(1)
+
         prompt(f"Your hand is worth {player_score} points.\n")
+        time.sleep(1)
+
         prompt(f"One of the dealer's card_list is {dealer_last_card}.\n")
+        time.sleep(1)
 
         # LOOP 2 - PLAYER TURN
         while True:
             player_move = get_player_move()
             if player_move == 'h':
-                player_hand.append(deal_cards(deck, additional_cards))
+                new_card = deal_cards(deck, additional_cards)
+                player_hand.append(new_card)
 
+                all_cards_except_last, last_card = details_of_cards_in_hand(player_hand)
+
+                prompt(f"Your new card is {last_card}.\n")
+                time.sleep(1)
+
+                # Maybe get rid of this function now I already have all_cards_except_last and last_card
                 prompt(f"Your hand now contains {get_player_card_string(player_hand)}.\n")
+                
 
                 player_cards_numeric_values, player_score = calculate_values(player_hand)
 
                 if player_score > MAX_WINNING_SCORE:
-                    prompt(f"That was a bad choice: your score is now {player_score} and you've busted!\n")
                     break
 
-                prompt(f'Your new score is {player_score}')
+                prompt(f'Your new score is {player_score}.\n')
+                time.sleep(1)
             else:
                 break # end loop 2 - player turn
+
+        print(f'PRELOOP dealer score: {dealer_score}')
+        if player_score > MAX_WINNING_SCORE:
+            break #(player bust)
         
         # LOOP 3 - DEALER TURN
-        while True:
+        while dealer_score <= MAX_WINNING_SCORE:
             # Break if dealer score higher than player score
             # Move this to hit or stay function? Do same with player turn?
-            
-            print(f'LOOP dealer score: {dealer_score}')
 
             if dealer_score < DEALER_MINIMUM_SCORE:
                 dealer_hand.append(deal_cards(deck, additional_cards))
-
-            elif dealer_score <= MAX_WINNING_SCORE:
-                if dealer_score < player_score:
-                    dealer_hand.append(deal_cards(deck, additional_cards))
+                dealer_cards_numeric_values, dealer_score = calculate_values(dealer_hand)
+                print(f'LOOP dealer score: {dealer_score}')
+            else:
+                break
             
-            elif dealer_score > MAX_WINNING_SCORE:
-                prompt('Dealer busts!')
-                break
 
-            # Move the rest to a calculate winner function
-
-            if dealer_score == player_score:
-                # prompt("It's a tie!")
-                break
-                # store final dealer score
-
-            if dealer_score > player_score:
-                # prompt('Dealer wins!')
-                break
-                # store final dealer score
-
-            dealer_cards_numeric_values, dealer_score = calculate_values(dealer_hand)
 
             
         
