@@ -119,11 +119,21 @@ def details_of_cards_in_hand(hand):
 
     return all_cards_except_last, last_card
 
+def print_hand_info(all_the_players_cards, player_score, dealer_last_card):
+    prompt(f"Your hand contains {all_the_players_cards}.\n")
+    time.sleep(1)
 
-def get_player_card_string(player_hand):
-    player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
+    prompt(f"Your hand is worth {player_score} points.\n")
+    time.sleep(1)
 
-    return ', '.join(player_all_cards_except_last) + " and " + player_last_card
+    prompt(f"One of the dealer's card_list is {dealer_last_card}.\n")
+    time.sleep(1)
+
+
+# def get_player_card_string(player_hand):
+#     player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
+
+#     return ', '.join(player_all_cards_except_last) + " and " + player_last_card
 
 
 def get_player_move():
@@ -136,8 +146,38 @@ def get_player_move():
         prompt("That's not a valid choice. Please try again\n.")
         time.sleep(1.5)
 
+def print_busted_message(player_score):
+    prompt(f'Your new score is {player_score}.\n')
+    time.sleep(1)
+    prompt(f"Oh no - you've busted! That means the dealer's the winner.\n")
 
-        
+def establish_result(player_score, dealer_score):
+    if dealer_score > MAX_WINNING_SCORE:
+        return 'dealer_busted'
+    elif player_score > dealer_score:
+        return 'player_wins'
+    elif dealer_score > player_score:
+        return 'dealer_wins'
+    else:
+        return 'tie'
+    
+def print_result(result, player_score, dealer_score):
+    if result == 'dealer_busted':
+        prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
+        time.sleep(1.5)
+        prompt("The dealer busted, so congratulations, you're the winner!\n")
+    elif result == 'player_wins':
+        prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
+        time.sleep(1.5)
+        prompt("Congratulations, you're the winner!\n")
+    elif result == 'dealer_wins':
+        prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
+        time.sleep(1.5)
+        prompt("Oh no, that means you lost!\n")
+    else:
+        prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
+        time.sleep(1.5)
+        prompt("It's a tie! (Could be worse.)\n")
 
 def play_21():
     deck = initialise_deck()
@@ -170,18 +210,13 @@ def play_21():
         player_all_cards_except_last, player_last_card = details_of_cards_in_hand(player_hand)
         dealer_all_cards_except_last, dealer_last_card = details_of_cards_in_hand(dealer_hand)
 
-        # all_the_players_cards = all_the_cards(player_all_cards_except_last, player_last_card)
-
         all_the_players_cards =  ', '.join(player_all_cards_except_last) + " and " + player_last_card
 
-        prompt(f"Your hand contains {all_the_players_cards}.\n")
-        time.sleep(1)
+        print_hand_info(all_the_players_cards, player_score, dealer_last_card)
 
-        prompt(f"Your hand is worth {player_score} points.\n")
-        time.sleep(1)
 
-        prompt(f"One of the dealer's card_list is {dealer_last_card}.\n")
-        time.sleep(1)
+
+        
 
         # LOOP 2 - PLAYER TURN
         while True:
@@ -192,16 +227,17 @@ def play_21():
 
                 all_cards_except_last, last_card = details_of_cards_in_hand(player_hand)
 
+                player_cards = ', '.join(player_all_cards_except_last) + " and " + player_last_card
+
                 prompt(f"Your new card is {last_card}.\n")
                 time.sleep(1)
 
-                # Maybe get rid of this function now I already have all_cards_except_last and last_card
-                prompt(f"Your hand now contains {get_player_card_string(player_hand)}.\n")
-                
+                prompt(f"Your hand now contains {player_cards}.\n")
 
                 player_cards_numeric_values, player_score = calculate_values(player_hand)
 
                 if player_score > MAX_WINNING_SCORE:
+                    print_busted_message(player_score)
                     break
 
                 prompt(f'Your new score is {player_score}.\n')
@@ -209,14 +245,12 @@ def play_21():
             else:
                 break # end loop 2 - player turn
 
-        print(f'PRELOOP dealer score: {dealer_score}')
+        # print(f'PRELOOP dealer score: {dealer_score}')
         if player_score > MAX_WINNING_SCORE:
-            break #(player bust)
+            break
         
         # LOOP 3 - DEALER TURN
         while dealer_score <= MAX_WINNING_SCORE:
-            # Break if dealer score higher than player score
-            # Move this to hit or stay function? Do same with player turn?
 
             if dealer_score < DEALER_MINIMUM_SCORE:
                 dealer_hand.append(deal_cards(deck, additional_cards))
@@ -224,6 +258,10 @@ def play_21():
                 print(f'LOOP dealer score: {dealer_score}')
             else:
                 break
+
+        result = establish_result(player_score, dealer_score)
+
+        print_result(result, player_score, dealer_score)
             
 
 
