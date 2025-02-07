@@ -198,7 +198,9 @@ def dealer_turn(dealer_score, dealer_hand, deck, additional_cards):
     return dealer_score
 
 def establish_result(player_score, dealer_score):
-    if dealer_score > MAX_WINNING_SCORE:
+    if player_score > MAX_WINNING_SCORE:
+        return 'player_busted'
+    elif dealer_score > MAX_WINNING_SCORE:
         return 'dealer_busted'
     elif player_score > dealer_score:
         return 'player_wins'
@@ -208,26 +210,32 @@ def establish_result(player_score, dealer_score):
         return 'tie'
     
 def print_result(result, player_score, dealer_score):
-    if result == 'dealer_busted':
-        prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
-        time.sleep(1.5)
-        prompt("The dealer busted, so congratulations, you're the winner!\n")
-        time.sleep(1.5)
-    elif result == 'player_wins':
-        prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
-        time.sleep(1.5)
-        prompt("Congratulations, you're the winner!\n")
-        time.sleep(1.5)
-    elif result == 'dealer_wins':
-        prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
-        time.sleep(1.5)
-        prompt("Oh no, that means you lost!\n")
-        time.sleep(1.5)
-    else:
-        prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
-        time.sleep(1.5)
-        prompt("It's a tie! (Could be worse.)\n")
-        time.sleep(1.5)
+    match result:
+        case'player_busted':
+            prompt(f'Your new score is {player_score}.\n')
+            time.sleep(1)
+            prompt(f"Oh no - you've busted! That means the dealer's the winner.\n")
+            time.sleep(1)
+        case 'dealer_busted':
+            prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
+            time.sleep(1.5)
+            prompt("The dealer busted, so congratulations, you're the winner!\n")
+            time.sleep(1.5)
+        case 'player_wins':
+            prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
+            time.sleep(1.5)
+            prompt("Congratulations, you're the winner!\n")
+            time.sleep(1.5)
+        case 'dealer_wins':
+            prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
+            time.sleep(1.5)
+            prompt("Oh no, that means you lost!\n")
+            time.sleep(1.5)
+        case 'tie':
+            prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
+            time.sleep(1.5)
+            prompt("It's a tie! (Could be worse.)\n")
+            time.sleep(1.5)
 
 def player_wants_to_continue():
     while True:
@@ -266,12 +274,11 @@ def play_21():
         
         #TODO - need to move this into the messages function. At the moment the game stops after this message prints.
         if player_score > MAX_WINNING_SCORE:
-            print_busted_message(player_score)
-            break
+            result = establish_result(player_score, dealer_score)
+        else:
+            dealer_score = dealer_turn(dealer_score, dealer_hand, deck, additional_cards)
 
-        dealer_score = dealer_turn(dealer_score, dealer_hand, deck, additional_cards)
-
-        result = establish_result(player_score, dealer_score)
+            result = establish_result(player_score, dealer_score)
 
         print_result(result, player_score, dealer_score)
 
