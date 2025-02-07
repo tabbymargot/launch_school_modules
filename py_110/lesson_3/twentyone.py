@@ -14,7 +14,7 @@ ALL_CARDS = {
     }
 
 INTEGER_VALUES = {
-    'Ace': 1,
+    # 'Ace': 1,
     '2': 2,
     '3': 3,
     '4': 4,
@@ -29,17 +29,11 @@ INTEGER_VALUES = {
     'King': 10,
 }
 
+LOW_VALUE_ACE = 1
 HIGH_VALUE_ACE = 11
-
 INITIAL_CARDS_IN_HAND = 2
-
 MAX_WINNING_SCORE = 21
-
 DEALER_MINIMUM_SCORE = 17
-
-# INITIAL_DEAL = 2
-
-# ADDITIONAL_CARDS = 1
 
 def prompt(message):
     print(f'==> {message}')
@@ -103,11 +97,11 @@ def calculate_values(hand_cards):
 
     return hand_score
 
-def get_ace_value(hand_total_worth):
-    if (hand_total_worth + HIGH_VALUE_ACE) <= MAX_WINNING_SCORE:
+def get_ace_value(hand_total_score):
+    if (hand_total_score + HIGH_VALUE_ACE) <= MAX_WINNING_SCORE:
         return HIGH_VALUE_ACE
     else:
-        return INTEGER_VALUES['Ace']
+        return LOW_VALUE_ACE
     
 def details_of_cards_in_hand(hand):
     all_cards = []
@@ -272,12 +266,10 @@ def play_21():
 
         player_score = player_turn(player_score, player_hand, deck, additional_cards)
         
-        #TODO - need to move this into the messages function. At the moment the game stops after this message prints.
         if player_score > MAX_WINNING_SCORE:
             result = establish_result(player_score, dealer_score)
         else:
             dealer_score = dealer_turn(dealer_score, dealer_hand, deck, additional_cards)
-
             result = establish_result(player_score, dealer_score)
 
         print_result(result, player_score, dealer_score)
