@@ -35,7 +35,6 @@ DEALER_MINIMUM_SCORE = 17
 def prompt(message):
     print(f'==> {message}')
 
-
 def initialise_deck():
     deck = []
 
@@ -190,9 +189,9 @@ def dealer_turn(dealer_score, dealer_hand, deck, additional_cards, player_score)
 
 def establish_result(player_score, dealer_score):
     if player_score > MAX_WINNING_SCORE:
-        return 'player_busted'
+        return 'player_bust'
     elif dealer_score > MAX_WINNING_SCORE:
-        return 'dealer_busted'
+        return 'dealer_bust'
     elif player_score > dealer_score:
         return 'player_wins'
     elif dealer_score > player_score:
@@ -202,12 +201,12 @@ def establish_result(player_score, dealer_score):
     
 def print_result(result, player_score, dealer_score):
     match result:
-        case'player_busted':
+        case'player_bust':
             prompt(f'Your new score is {player_score}.\n')
             time.sleep(1)
             prompt(f"Oh no - you're bust! \U0001F62D That means the dealer's the winner.\n")
             time.sleep(1)
-        case 'dealer_busted':
+        case 'dealer_bust':
             prompt(f'You scored {player_score} and the dealer scored {dealer_score}.\n')
             time.sleep(1.5)
             prompt("The dealer's bust, so congratulations, you're the winner! \U0001F3C6 \n")
@@ -247,7 +246,7 @@ def play_21():
     
     while True:
         print_dealing_and_shuffling()
-        
+
         deck = shuffle(deck)
         player_hand = deal_cards(deck, initial_deal)
         dealer_hand = deal_cards(deck, initial_deal)
