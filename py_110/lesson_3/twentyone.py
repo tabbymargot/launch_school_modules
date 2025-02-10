@@ -97,6 +97,10 @@ def print_updated_player_score(player_score, dealer_last_card):
             f"cards is {dealer_last_card}.\n")
     time.sleep(1)
 
+def print_updated_dealer_score(dealer_score, dealer_last_card):
+    prompt(f"The dealer's new score is {dealer_score}.\n")
+    time.sleep(1)
+
 def calculate_ace_value(hand_total_score):
     if (hand_total_score + HIGH_VALUE_ACE) <= MAX_WINNING_SCORE:
         return HIGH_VALUE_ACE
@@ -127,7 +131,7 @@ def print_hand_info(all_the_players_cards, player_score, dealer_last_card):
     time.sleep(1)
 
 def player_turn(player_score, player_hand, deck,
-                additional_cards, player_last_card):
+                additional_cards, player_last_card, dealer_last_card):
     while True:
         player_move = get_player_move()
         if player_move == 'h':
@@ -136,8 +140,7 @@ def player_turn(player_score, player_hand, deck,
             prompt('Dealing additional card...\n')
             time.sleep(1)
 
-            new_card = deal_cards(deck, additional_cards)
-            player_hand.append(new_card)
+            player_hand = get_new_card(deck, additional_cards, player_hand)
 
             player_all_cards_except_last, player_last_card = \
             details_of_cards_in_hand(player_hand)
@@ -150,7 +153,7 @@ def player_turn(player_score, player_hand, deck,
             if player_score > MAX_WINNING_SCORE:
                 break
 
-            print_updated_player_score(player_score, player_last_card)
+            print_updated_player_score(player_score, dealer_last_card)
         else:
             break
 
@@ -181,38 +184,36 @@ def get_player_move():
         prompt("That's not a valid choice. Please try again\n.")
         time.sleep(1.5)
 
+def get_new_card(deck, additional_cards, hand):
+    new_card = deal_cards(deck, additional_cards)
+    hand.append(new_card)
+
+    return hand
+
 def dealer_turn(dealer_score, deck, dealer_hand,
                 additional_cards, player_score, dealer_all_cards_except_last, dealer_last_card):
-    # TODO - The dealer's outputted score is incorrect. Need to fix it.
     while dealer_score <= MAX_WINNING_SCORE:
         dealer_cards = ', '.join(dealer_all_cards_except_last) + \
         " and " + dealer_last_card
 
         prompt(f"The dealer's hand contains {dealer_cards}.\n")
 
-        if dealer_score < DEALER_MINIMUM_SCORE:
-            prompt(f"The dealer has {dealer_score} points, so I'm just " \
-            "dealing them another card...\n")
-            time.sleep(2)
-            dealer_hand.append(deal_cards(deck, additional_cards))
-            dealer_score = calculate_values(dealer_hand)
-
-            print_updated_dealer_hand(dealer_all_cards_except_last, dealer_last_card)
-            time.sleep(2)
-
-        elif dealer_score < player_score:
-            prompt(f"The dealer has {dealer_score} points. That's a " \
-            "lower score than you have, so I'm just dealing them " \
-            "another card...\n")
-            time.sleep(2)
-            dealer_hand.append(deal_cards(deck, additional_cards))
-            dealer_score = calculate_values(dealer_hand)
-
-            print_updated_dealer_hand(dealer_all_cards_except_last, dealer_last_card)
-            time.sleep(2)
-
-        else:
+        if dealer_score >= DEALER_MINIMUM_SCORE:
             break
+
+        prompt(f"The dealer has {dealer_score} points, so I'm just " \
+        "dealing them another card...\n") 
+        time.sleep(1)
+
+        dealer_hand = get_new_card(deck, additional_cards, dealer_hand)
+
+        dealer_all_cards_except_last, dealer_last_card = \
+        details_of_cards_in_hand(dealer_hand)
+
+        print_updated_dealer_hand(dealer_all_cards_except_last, \
+        dealer_last_card)
+
+        dealer_score = calculate_values(dealer_hand)
 
     return dealer_score
 
@@ -294,6 +295,7 @@ def play_21():
         deck = shuffle(deck)
         player_hand = deal_cards(deck, initial_deal)
         dealer_hand = deal_cards(deck, initial_deal)
+        print(f'DH: {dealer_hand}')
         player_score = calculate_values(player_hand)
         dealer_score = calculate_values(dealer_hand)
 
@@ -310,7 +312,7 @@ def play_21():
         print_hand_info(all_the_players_cards, player_score, dealer_last_card)
 
         player_score = player_turn(
-        player_score, player_hand, deck, additional_cards, dealer_last_card
+        player_score, player_hand, deck, additional_cards, player_last_card, dealer_last_card
         )
 
         if player_score > MAX_WINNING_SCORE:
