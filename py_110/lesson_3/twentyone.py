@@ -311,7 +311,6 @@ def play_21():
         player_last_card, dealer_last_card
         )
 
-
         if player_score > MAX_WINNING_SCORE:
             result = establish_result(player_score, dealer_score)
         else:
