@@ -76,8 +76,8 @@ def detect_winner(board):
                 and board[sq3] == HUMAN_MARKER):
             return PLAYER
         if (board[sq1] == COMPUTER_MARKER
-                  and board[sq2] == COMPUTER_MARKER
-                  and board[sq3] == COMPUTER_MARKER):
+                and board[sq2] == COMPUTER_MARKER
+                and board[sq3] == COMPUTER_MARKER):
             return COMPUTER
 
     return None
