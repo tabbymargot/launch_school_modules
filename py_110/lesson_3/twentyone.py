@@ -53,9 +53,9 @@ def print_welcome_message():
 
 def print_dealing_and_shuffling():
     prompt("Shuffling cards...\n")
-    time.sleep(2)
+    time.sleep(1.5)
     prompt("Dealing cards...\n")
-    time.sleep(2)
+    time.sleep(1.5)
 
 def shuffle(deck):
     random.shuffle(deck)
@@ -95,10 +95,6 @@ def print_updated_player_score(player_score, dealer_last_card):
 
     prompt(f"As a reminder, one of the dealer's two " \
             f"cards is {dealer_last_card}.\n")
-    time.sleep(1)
-
-def print_updated_dealer_score(dealer_score, dealer_last_card):
-    prompt(f"The dealer's new score is {dealer_score}.\n")
     time.sleep(1)
 
 def calculate_ace_value(hand_total_score):
@@ -168,7 +164,7 @@ def print_updated_player_hand(player_all_cards_except_last, player_last_card):
 
     prompt(f"Your hand now contains {player_cards}.\n")
 
-def print_updated_dealer_hand(dealer_all_cards_except_last, dealer_last_card):
+def print_dealers_new_card(dealer_last_card):
 
     prompt(f"The dealer's new card is {dealer_last_card}.\n")
     time.sleep(1)
@@ -190,8 +186,8 @@ def get_new_card(deck, additional_cards, hand):
 
     return hand
 
-def dealer_turn(dealer_score, deck, dealer_hand,
-                additional_cards, player_score, dealer_all_cards_except_last, dealer_last_card):
+def dealer_turn(dealer_score, deck, dealer_hand, additional_cards,
+                dealer_all_cards_except_last, dealer_last_card):
     while dealer_score <= MAX_WINNING_SCORE:
         dealer_cards = ', '.join(dealer_all_cards_except_last) + \
         " and " + dealer_last_card
@@ -210,8 +206,7 @@ def dealer_turn(dealer_score, deck, dealer_hand,
         dealer_all_cards_except_last, dealer_last_card = \
         details_of_cards_in_hand(dealer_hand)
 
-        print_updated_dealer_hand(dealer_all_cards_except_last, \
-        dealer_last_card)
+        print_dealers_new_card(dealer_last_card)
 
         dealer_score = calculate_values(dealer_hand)
 
@@ -295,7 +290,6 @@ def play_21():
         deck = shuffle(deck)
         player_hand = deal_cards(deck, initial_deal)
         dealer_hand = deal_cards(deck, initial_deal)
-        print(f'DH: {dealer_hand}')
         player_score = calculate_values(player_hand)
         dealer_score = calculate_values(dealer_hand)
 
@@ -303,7 +297,8 @@ def play_21():
         details_of_cards_in_hand(player_hand)
         )
 
-        dealer_all_cards_except_last, dealer_last_card = ( details_of_cards_in_hand(dealer_hand)
+        dealer_all_cards_except_last, dealer_last_card = (
+            details_of_cards_in_hand(dealer_hand)
         )
 
         all_the_players_cards = ', '.join(player_all_cards_except_last) \
@@ -312,14 +307,19 @@ def play_21():
         print_hand_info(all_the_players_cards, player_score, dealer_last_card)
 
         player_score = player_turn(
-        player_score, player_hand, deck, additional_cards, player_last_card, dealer_last_card
+        player_score, player_hand, deck, additional_cards,
+        player_last_card, dealer_last_card
         )
+
 
         if player_score > MAX_WINNING_SCORE:
             result = establish_result(player_score, dealer_score)
         else:
-            dealer_score = dealer_turn(dealer_score, deck, dealer_hand,
-                additional_cards, player_score, dealer_all_cards_except_last, dealer_last_card)
+            dealer_score = dealer_turn(
+            dealer_score, deck, dealer_hand, additional_cards,
+            dealer_all_cards_except_last, dealer_last_card
+            )
+
             result = establish_result(player_score, dealer_score)
 
         print_result(result, player_score, dealer_score)
