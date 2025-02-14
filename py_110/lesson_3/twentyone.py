@@ -75,7 +75,21 @@ def deal_cards(deck, number_of_cards):
     return card_list
 
 def calculate_values(hand_cards):
+    """ 
+    Need to:
+    Separate the cards into a list with the aces and a list without the aces
+    Get the total score of the non-ace cards
+    Pass that total score into calculate_ace_value along with the list of aces
+    That function will return the value of the aces
+    Add that return value to the score of the non-ace cards
+    Return the total
+
+    """
+    card_scores = []
     hand_score = 0
+    print(f'Hcards: {hand_cards}')
+    # number_of_aces = count_aces_in_hand(hand_cards)
+    # print(f'No. of aces: {number_of_aces}')
 
     for card in hand_cards:
         card_string_value = card[1]
@@ -85,9 +99,34 @@ def calculate_values(hand_cards):
         else:
             card_value = INTEGER_VALUES[card_string_value]
 
-        hand_score += card_value
+        card_scores.append(card_value)
+        # hand_score = sum(card_scores)
+        # print(f'card_scores1: {card_scores}')
+        if (hand_score > MAX_WINNING_SCORE) and (HIGH_VALUE_ACE in card_scores):
+            recalculate_ace_value(card_scores)
+            # for idx, score in enumerate(card_scores):
+            #     if score == HIGH_VALUE_ACE:
+            #         card_scores[idx] = LOW_VALUE_ACE
+            #         print(f'ACEscore: {card_scores[idx]}')
+        # hand_score += card_value
+
+    # print(f'card_scores2: {card_scores}')h
+    hand_score = sum(card_scores)
+    
+    # if hand_score > MAX_WINNING_SCORE and number_of_aces >= 2:
+    #     hand_score -= 10
+    
+    print(f'Hscore: {hand_score}')
 
     return hand_score
+
+# def recalculate_ace_value(card_scores):
+#     for idx, score in enumerate(card_scores):
+#         if score == HIGH_VALUE_ACE:
+#             card_scores[idx] = LOW_VALUE_ACE
+#             # print(f'ACEscore: {card_scores[idx]}')
+#     return card_scores
+
 
 def print_updated_player_score(player_score, dealer_last_card):
     prompt(f'Your new score is {player_score}.\n')
@@ -98,10 +137,35 @@ def print_updated_player_score(player_score, dealer_last_card):
     time.sleep(1)
 
 def calculate_ace_value(hand_total_score):
-    if (hand_total_score + HIGH_VALUE_ACE) <= MAX_WINNING_SCORE:
-        return HIGH_VALUE_ACE
+    # if (hand_total_score + HIGH_VALUE_ACE) <= MAX_WINNING_SCORE:
+    #     return HIGH_VALUE_ACE
 
-    return LOW_VALUE_ACE
+    # return LOW_VALUE_ACE
+    for ace in aces:
+    if (score + sum(aces_values) + HIGH_VALUE_ACE) <= 21: # 20
+        aces_values.append(HIGH_VALUE_ACE) 
+        print(f'IF 1 score: {score + sum(aces_values)}')
+        # continue
+
+    elif (score + sum(aces_values) + LOW_VALUE_ACE) <= 21:
+        aces_values.append(LOW_VALUE_ACE)
+        print(f'IF 2 score: {score + sum(aces_values)}')
+
+    elif ((score + sum(aces_values) + LOW_VALUE_ACE) > 21):
+        for idx, value in enumerate(aces_values):
+            if value == HIGH_VALUE_ACE:
+                aces_values[idx] = LOW_VALUE_ACE
+                break
+        
+        aces_values.append(LOW_VALUE_ACE)
+        print(f'IF 3 score: {score + sum(aces_values)}')
+    
+    # This function should return the value(s) of the aces
+
+
+
+print(aces_values)
+print(score)
 
 def details_of_cards_in_hand(hand):
     all_cards = []
@@ -181,8 +245,10 @@ def get_player_move():
         time.sleep(1.5)
 
 def get_new_card(deck, additional_cards, hand):
-    new_card = deal_cards(deck, additional_cards)
-    hand.append(new_card)
+    # new_card = deal_cards(deck, additional_cards)
+    # hand.append(new_card)
+
+    hand.append(['Spades', 'Ace'])
 
     return hand
 
@@ -282,14 +348,16 @@ def play_21():
     initial_deal = 2
     additional_cards = 1
 
-    print_welcome_message()
+    # print_welcome_message()
 
     while True:
-        print_dealing_and_shuffling()
+        # print_dealing_and_shuffling()
 
         deck = shuffle(deck)
         player_hand = deal_cards(deck, initial_deal)
         dealer_hand = deal_cards(deck, initial_deal)
+        # player_hand = [['Hearts', 'Ace'], ['Clubs', 'Ace']]
+        # dealer_hand = [['Hearts', '9'], ['Clubs', '5']]
         player_score = calculate_values(player_hand)
         dealer_score = calculate_values(dealer_hand)
 
