@@ -91,7 +91,7 @@ def calculate_value_of_hand(cards_in_hand):
     return non_aces_score + aces_score
 
 def print_updated_player_score(player_score, dealer_last_card):
-    prompt(f'Your new score_without_aces is {player_score}.\n')
+    prompt(f'Your new score is {player_score}.\n')
     time.sleep(1)
 
     prompt(f"As a reminder, one of the dealer's two " \
@@ -108,14 +108,16 @@ def calculate_ace_values(aces, non_aces_score):
         elif (non_aces_score + sum(aces_values) + LOW_VALUE_ACE) <= MAX_WINNING_SCORE:
             aces_values.append(LOW_VALUE_ACE)
 
-        elif (non_aces_score + sum(aces_values) + LOW_VALUE_ACE) > MAX_WINNING_SCORE:
-            if HIGH_VALUE_ACE in aces_values:
-                for idx, value in enumerate(aces_values):
-                    if value == HIGH_VALUE_ACE:
-                        aces_values[idx] = LOW_VALUE_ACE
-                        break
+        elif HIGH_VALUE_ACE in aces_values:
+            for idx, value in enumerate(aces_values):
+                if value == HIGH_VALUE_ACE:
+                    aces_values[idx] = LOW_VALUE_ACE
+                    break
             
             aces_values.append(LOW_VALUE_ACE)
+        
+        else:
+            pass
 
     return sum(aces_values)
 
@@ -243,7 +245,7 @@ def establish_result(player_score, dealer_score):
 def print_result(result, player_score, dealer_score):
     match result:
         case'player_bust':
-            prompt(f'Your new score_without_aces is {player_score}.\n')
+            prompt(f'Your new score is {player_score}.\n')
             time.sleep(1.5)
             prompt("Oh no - you're bust! \U0001F62D That means the " \
             "dealer's the winner.\n")
