@@ -101,11 +101,13 @@ def print_updated_player_score(player_score, dealer_last_card):
 def calculate_ace_values(aces, non_aces_score):
     aces_values = []
 
-    for ace in aces:
-        if (non_aces_score + sum(aces_values) + HIGH_VALUE_ACE) <= MAX_WINNING_SCORE:
-            aces_values.append(HIGH_VALUE_ACE) 
+    for _ in aces:
+        if ((non_aces_score + sum(aces_values) + HIGH_VALUE_ACE)
+        <= MAX_WINNING_SCORE):
+            aces_values.append(HIGH_VALUE_ACE)
 
-        elif (non_aces_score + sum(aces_values) + LOW_VALUE_ACE) <= MAX_WINNING_SCORE:
+        elif ((non_aces_score + sum(aces_values) + LOW_VALUE_ACE)
+        <= MAX_WINNING_SCORE):
             aces_values.append(LOW_VALUE_ACE)
 
         elif HIGH_VALUE_ACE in aces_values:
@@ -113,9 +115,9 @@ def calculate_ace_values(aces, non_aces_score):
                 if value == HIGH_VALUE_ACE:
                     aces_values[idx] = LOW_VALUE_ACE
                     break
-            
+
             aces_values.append(LOW_VALUE_ACE)
-        
+
         else:
             pass
 
