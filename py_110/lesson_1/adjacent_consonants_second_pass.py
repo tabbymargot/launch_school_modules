@@ -1,6 +1,6 @@
+"""  
 # Given a list of strings, sort the list based on the highest number of adjacent consonants a string contains and return the sorted list. If two strings contain the same highest number of adjacent consonants, they should retain their original order in relation to each other. Consonants are considered adjacent if they are next to each other in the same word or if there is a space between two consonants in adjacent words.
 
-"""  
 PROBLEM
 Inputs - list of strings
 Outputs - list of sorted strings
