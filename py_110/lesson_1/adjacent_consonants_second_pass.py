@@ -77,8 +77,8 @@ def sort_by_consonant_count(my_list):
                         counter += 1
 
                 elif (clean_word[idx + 1] not in vowels) or (clean_word[idx - 1] not in vowels):
-
                     counter += 1
+                    
         counts[word] = counter
 
     lst = sorted(counts.items(), key=sort_key, reverse= True)
