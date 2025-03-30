@@ -82,8 +82,7 @@ def sort_by_consonant_count(my_list):
         counts[word] = counter
 
     lst = sorted(counts.items(), key=sort_key, reverse= True)
-    new_lst = [key for key, value in lst]
-    print(list(new_lst))
+    return [key for key, value in lst]
 
 # my_list = ['aa', 'baa', 'ccaa', 'dddaa']
 # print(sort_by_consonant_count(my_list))
