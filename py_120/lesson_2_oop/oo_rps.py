@@ -17,7 +17,7 @@ class Player:
 
             while True:
                 choice = input(prompt).lower()
-                if choice in Player.CHOICES
+                if choice in Player.CHOICES:
                     break
 
                 print(f'Sorry, {choice} is not valid')
