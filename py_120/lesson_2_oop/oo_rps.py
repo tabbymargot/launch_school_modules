@@ -4,7 +4,6 @@ class Player:
     CHOICES = ('rock', 'paper', 'scissors')
 
     def __init__(self, player_type):
-        # maybe a "name"? what about a "move"?
         self._player_type = player_type.lower() # stores state that distinguishes the players. 
         self.move = None # this attribute will be updated in the choose() method. But it's good practice to initialise it in init, so that we can get an overview of all the instance variables an instance will have. Notice also that it's PUBLIC.
 
@@ -69,15 +68,25 @@ class RPSGame:
             print('Computer wins!')
         else:
             print("It's a tie")
+
+    def _play_again(self):
+        answer = input('Would you like to play again? (y/n) ')
+        return answer.lower().startswith('y')
     
     def _display_goodbye_message(self):
         print('Thanks for playing Rock Paper Scissors. Goodbye!')
 
     def play(self):
         self._display_welcome_message()
-        self._human.choose() # The value of self._human (a Player object) is now a collaborator object of the RPSGame object (because an instance of RPSGame has called choose() on it). Previously (line 47) it was just stored data.
-        self._computer.choose()
-        self._display_winner()
+
+        while True:
+            self._human.choose() # The value of self._human (a Player object) is now a collaborator object of the RPSGame object (because an instance of RPSGame has called choose() on it). Previously (line 47) it was just stored data.
+            self._computer.choose()
+            self._display_winner()
+
+            if not self._play_again(): # This method is part of the orchestration of the game, so makes sense to define it inside this RPSGame class.
+                break
+
         self._display_goodbye_message()
 
 RPSGame().play()
