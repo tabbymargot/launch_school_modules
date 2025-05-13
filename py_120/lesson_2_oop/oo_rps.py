@@ -44,7 +44,7 @@ class Rule:
 
 class RPSGame:
     def __init__(self):
-        self._human = Player('human') # Player is instantiated in this class (instead of the Player class) to follow the principle of dependency direction - RPSGame depends on Players, but Players don't depend on RPSGame - this is covered later in PY120
+        self._human = Player('human') # Player is instantiated from inside this class (instead of inside the Player class) to follow the principle of dependency direction - RPSGame depends on Players, but Players don't depend on RPSGame - this is covered later in PY120
         self._computer = Player('computer')
 
     def _display_welcome_message(self):
