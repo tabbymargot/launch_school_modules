@@ -3,68 +3,65 @@ import random
 class Player:
     CHOICES = ('rock', 'paper', 'scissors')
 
-    def __init__(self, player_type):
-        self._player_type = player_type.lower() # stores state that distinguishes the players. 
-        self.move = None # this attribute will be updated in the choose() method. But it's good practice to initialise it in init, so that we can get an overview of all the instance variables an instance will have. Notice also that it's PUBLIC.
-
-    def _is_human(self):
-        return self._player_type == 'human'
-
-    def choose(self): # a PUBLIC method since we'll be calling it from inside the RPSGame class
-        if self._is_human():
-            prompt = 'Please choose rock, paper, or scissors: '
-
-            while True:
-                choice = input(prompt).lower()
-                if choice in Player.CHOICES:
-                    break
-
-                print(f'Sorry, {choice} is not valid')
-
-            self.move = choice
-        else:
-            self.move = random.choice(Player.CHOICES)
-
-
-class Move: 
     def __init__(self):
-        # This seems like we need something to keep track
-        # of the choice... a move object can be "paper", "rock" or "scissors"
-        pass
+        self.move = None
 
-class Rule:
+    # is_human and choose removed
+
+class Computer:
+    def __init__(self): # Note that the code runs even if __init__ isn't defined here, as __init__ from the Player class is defaulted to.
+        super().__init__()
+
+    def choose(self):
+        self.move = random.choice(Player.CHOICES)
+
+class Human:
     def __init__(self):
-        # not sure what the "state" of a rule object should be
-        pass
+        super().__init__()
 
-    # not sure where "compare" goes yet
-    def compare(self, move1, move2):
-        pass
+    def choose(self):
+        prompt = 'Please choose rock, paper, or scissors: '
+
+        while True:
+            choice = input(prompt).lower()
+            if choice.lower() in Player.CHOICES:
+                break
+
+            print(f'Sorry, {choice} is not valid')
+
+        self.move = choice
 
 class RPSGame:
     def __init__(self):
-        self._human = Player('human') # Player is instantiated from inside this class (instead of inside the Player class) to follow the principle of dependency direction - RPSGame depends on Players, but Players don't depend on RPSGame - this is covered later in PY120
-        self._computer = Player('computer')
+        self._human = Human()
+        self._computer = Computer()
 
     def _display_welcome_message(self):
         print('Welcome to Rock Paper Scissors!')
 
-    def _display_winner(self):
+    def _human_wins(self):
         human_move = self._human.move
         computer_move = self._computer.move
 
-        print(f'You chose: {human_move}')
-        print(f'The computer chose: {computer_move}')
+        return ((human_move == 'rock' and computer_move == 'scissors') or
+                (human_move == 'paper' and computer_move == 'rock') or
+                (human_move == 'scissors' and computer_move == 'paper'))
 
-        if ((human_move == 'rock' and computer_move == 'scissors') or
-            (human_move == 'paper' and computer_move == 'rock') or
-            (human_move == 'scissors' and computer_move == 'paper')):
+    def _computer_wins(self):
+        human_move = self._human.move
+        computer_move = self._computer.move
 
+        return ((computer_move == 'rock' and human_move == 'scissors') or
+                (computer_move == 'paper' and human_move == 'rock') or
+                (computer_move == 'scissors' and human_move == 'paper'))
+
+    def _display_winner(self):
+        print(f'You chose: {self._human.move}')
+        print(f'The computer chose: {self._computer.move}')
+
+        if self._human_wins():
             print('You win!')
-        elif ((computer_move == 'rock' and human_move == 'scissors') or
-            (computer_move == 'paper' and human_move == 'rock') or
-            (computer_move == 'scissors' and human_move == 'paper')):
-
+        elif self._computer_wins():
             print('Computer wins!')
         else:
             print("It's a tie")
