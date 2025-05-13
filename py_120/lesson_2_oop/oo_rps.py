@@ -55,7 +55,7 @@ class RPSGame:
 
     def play(self):
         self._display_welcome_message()
-        self._human.choose() # The value of self._human is now a collaborator object of the RPSGame object (because an instance of RPSGame has called choose() on it). Previously (line 47) it was just stored data.
+        self._human.choose() # The value of self._human (a Player object) is now a collaborator object of the RPSGame object (because an instance of RPSGame has called choose() on it). Previously (line 47) it was just stored data.
         self._computer.choose()
         # display_winner()
         self._display_goodbye_message()
