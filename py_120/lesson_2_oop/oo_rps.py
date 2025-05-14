@@ -5,6 +5,7 @@ class Player:
 
     def __init__(self):
         self.move = None
+        self.score = 0
 
     # is_human and choose removed
 
@@ -65,10 +66,21 @@ class RPSGame:
 
         if self._human_wins():
             print('You win!')
+            self._human.score += 1
         elif self._computer_wins():
             print('Computer wins!')
+            self._computer.score += 1
         else:
             print("It's a tie")
+
+        print(f'Human score: {self._human.score}')
+        print(f'Computer score: {self._computer.score}')
+
+    def _display_overall_winner(self):
+        if self._human.score == 3:
+            print('You are the overall winner!')
+        else:
+            print('The computer is the overall winner!')
 
     def _play_again(self):
         answer = input('Would you like to play again? (y/n) ')
@@ -81,16 +93,19 @@ class RPSGame:
         self._display_welcome_message()
 
         while True:
-            self._human.choose() # The value of self._human (a Player object)
-            # is now a collaborator object of the RPSGame object (because an
-            # instance of RPSGame has called choose() on it). Previously it was
-            # just stored data.
-            self._computer.choose()
-            self._display_winner()
+            while (self._human.score and self._computer.score) < 3:
+                # print(f'Human score: {self._human.score}')
+                # print(f'Computer score: {self._computer.score}')
+                self._human.choose() # The value of self._human (a Player object)
+                # is now a collaborator object of the RPSGame object (because an
+                # instance of RPSGame has called choose() on it). Previously it was
+                # just stored data.
+                self._computer.choose()
+                self._display_winner()
 
-            if not self._play_again(): # This method is part of the
-                # orchestration of the game, so makes sense to define it inside
-                # this RPSGame class.
+            self._display_overall_winner()
+
+            if not self._play_again(): # This method is part of the orchestration of the game, so makes sense to define it inside this RPSGame class.
                 break
 
         self._display_goodbye_message()
