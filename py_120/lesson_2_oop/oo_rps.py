@@ -40,7 +40,7 @@ class RPSGame:
         print('Welcome to Rock Paper Scissors!')
 
     def _human_wins(self):
-        human_move = self._human.move
+        human_move = self._human.move # human_move references the move attribute belonging to the human object, but move is not in itself an attribute of the RPSGame object.
         computer_move = self._computer.move
 
         return ((human_move == 'rock' and computer_move == 'scissors') or
