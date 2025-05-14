@@ -8,14 +8,16 @@ class Player:
 
     # is_human and choose removed
 
-class Computer:
-    def __init__(self): # Note that the code runs even if __init__ isn't defined here, as __init__ from the Player class is defaulted to.
+class Computer(Player):
+    def __init__(self): # Note that the code runs even if __init__ isn't
+                        # defined here, as __init__ from the Player class
+                        # is defaulted to.
         super().__init__()
 
     def choose(self):
         self.move = random.choice(Player.CHOICES)
 
-class Human:
+class Human(Player):
     def __init__(self):
         super().__init__()
 
@@ -40,7 +42,9 @@ class RPSGame:
         print('Welcome to Rock Paper Scissors!')
 
     def _human_wins(self):
-        human_move = self._human.move # human_move references the move attribute belonging to the human object, but move is not in itself an attribute of the RPSGame object.
+        human_move = self._human.move # human_move references the move
+        # attribute belonging to the human object, but move is not in
+        # itself an attribute of the RPSGame object.
         computer_move = self._computer.move
 
         return ((human_move == 'rock' and computer_move == 'scissors') or
@@ -69,7 +73,7 @@ class RPSGame:
     def _play_again(self):
         answer = input('Would you like to play again? (y/n) ')
         return answer.lower().startswith('y')
-    
+
     def _display_goodbye_message(self):
         print('Thanks for playing Rock Paper Scissors. Goodbye!')
 
@@ -77,11 +81,16 @@ class RPSGame:
         self._display_welcome_message()
 
         while True:
-            self._human.choose() # The value of self._human (a Player object) is now a collaborator object of the RPSGame object (because an instance of RPSGame has called choose() on it). Previously (line 47) it was just stored data.
+            self._human.choose() # The value of self._human (a Player object)
+            # is now a collaborator object of the RPSGame object (because an
+            # instance of RPSGame has called choose() on it). Previously it was
+            # just stored data.
             self._computer.choose()
             self._display_winner()
 
-            if not self._play_again(): # This method is part of the orchestration of the game, so makes sense to define it inside this RPSGame class.
+            if not self._play_again(): # This method is part of the
+                # orchestration of the game, so makes sense to define it inside
+                # this RPSGame class.
                 break
 
         self._display_goodbye_message()
