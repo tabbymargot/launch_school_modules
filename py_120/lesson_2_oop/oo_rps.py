@@ -12,44 +12,32 @@ class Move:
     def __init__(current_move_instance):
         pass
 
+    def _is_winning_move(current_move_instance, player_move):
+        return player_move in current_move_instance.WINNING_MOVES[current_move_instance._name]
+
 class Rock(Move):
     def __init__(current_rock_instance):
         current_rock_instance._name = 'rock'
-
-    def _is_winning_move(current_rock_instance, player_move):
-        return player_move in current_rock_instance.WINNING_MOVES[current_rock_instance._name]
     
 class Paper(Move):
     def __init__(current_paper_instance):
         super().__init__()
         current_paper_instance._name = 'paper'
 
-    def _is_winning_move(current_paper_instance, player_move):
-        return player_move in current_paper_instance.WINNING_MOVES[current_paper_instance._name]
-
 class Scissors(Move):
     def __init__(current_scissors_instance):
         super().__init__()
         current_scissors_instance._name = 'scissors'
-
-    def _is_winning_move(current_scissors_instance, player_move):
-        return player_move in current_scissors_instance.WINNING_MOVES[current_scissors_instance._name]
     
 class Lizard(Move):
     def __init__(current_lizard_instance):
         super().__init__()
         current_lizard_instance._name = 'lizard'
 
-    def _is_winning_move(current_lizard_instance, player_move):
-        return player_move in current_lizard_instance.WINNING_MOVES[current_lizard_instance._name]
-
 class Spock(Move):
     def __init__(current_spock_instance):
         super().__init__()
         current_spock_instance._name = 'spock'
-
-    def _is_winning_move(current_spock_instance, player_move):
-        return player_move in current_spock_instance.WINNING_MOVES[current_spock_instance._name]
 
 class Player:
     CHOICES = ('rock', 'paper', 'scissors', 'lizard', 'spock')
