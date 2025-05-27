@@ -1,5 +1,56 @@
 import random
 
+class Move:
+    WINNING_MOVES = {
+        'rock': ['scissors', 'lizard'],
+        'paper': ['rock', 'spock'],
+        'scissors': ['paper', 'lizard'],
+        'lizard': ['paper', 'spock'],
+        'spock': ['scissors', 'rock']
+    }
+
+    def __init__(current_move_instance):
+        pass
+
+class Rock(Move):
+    def __init__(current_rock_instance):
+        current_rock_instance._name = 'rock'
+
+    def _is_winning_move(current_rock_instance, player_move):
+        return player_move in current_rock_instance.WINNING_MOVES[current_rock_instance._name]
+    
+class Paper(Move):
+    def __init__(current_paper_instance):
+        super().__init__()
+        current_paper_instance._name = 'paper'
+
+    def _is_winning_move(current_paper_instance, player_move):
+        return player_move in current_paper_instance.WINNING_MOVES[current_paper_instance._name]
+
+class Scissors(Move):
+    def __init__(current_scissors_instance):
+        super().__init__()
+        current_scissors_instance._name = 'scissors'
+
+    def _is_winning_move(current_scissors_instance, player_move):
+        return player_move in current_scissors_instance.WINNING_MOVES[current_scissors_instance._name]
+    
+class Lizard(Move):
+    def __init__(current_lizard_instance):
+        super().__init__()
+        current_lizard_instance._name = 'lizard'
+
+    def _is_winning_move(current_lizard_instance, player_move):
+        return player_move in current_lizard_instance.WINNING_MOVES[current_lizard_instance._name]
+
+class Spock(Move):
+    def __init__(current_spock_instance):
+        super().__init__()
+        current_spock_instance._name = 'spock'
+
+    def _is_winning_move(current_spock_instance, player_move):
+        return player_move in current_spock_instance.WINNING_MOVES[current_spock_instance._name]
+
 class Player:
     CHOICES = ('rock', 'paper', 'scissors', 'lizard', 'spock')
 
@@ -18,6 +69,7 @@ class Computer(Player):
                         # defined here, as __init__ from the Player class
                         # is defaulted to.
         super().__init__()
+        current_computer_instance.move = None
 
     def choose(current_computer_instance):
         current_computer_instance.move = random.choice(Player.CHOICES)
@@ -25,6 +77,7 @@ class Computer(Player):
 class Human(Player):
     def __init__(current_human_instance):
         super().__init__()
+        current_human_instance.move = None
 
     def choose(current_human_instance):
         prompt = 'Please choose rock, paper, scissors, lizard or spock: '
@@ -44,31 +97,45 @@ class RPSGame:
     def __init__(current_rpsgame_instance):
         current_rpsgame_instance._human = Human()
         current_rpsgame_instance._computer = Computer()
+        current_rpsgame_instance._move = Move()
+        current_rpsgame_instance._rock = Rock()
+        current_rpsgame_instance._paper = Paper()
+        current_rpsgame_instance._scissors = Scissors()
+        current_rpsgame_instance._lizard = Lizard()
+        current_rpsgame_instance._spock = Spock()
 
     def _display_welcome_message(current_rpsgame_instance):
         print('Welcome to Rock Paper Scissors Lizard Spock!')
 
     def _human_wins(current_rpsgame_instance):
         human_move = current_rpsgame_instance._human.move # human_move references the move
-        # attribute belonging to the human object, but move is not in
-        # itself an attribute of the RPSGame object.
         computer_move = current_rpsgame_instance._computer.move
-
-        return ((human_move == 'rock' and (computer_move == 'scissors' or      computer_move == 'lizard')) or
-                (human_move == 'paper' and (computer_move == 'rock' or computer_move == 'spock')) or
-                (human_move == 'scissors' and (computer_move == 'paper' or computer_move == 'lizard')) or
-                (human_move == 'spock' and (computer_move == 'scissors' or computer_move == 'rock')) or
-                (human_move == 'lizard' and (computer_move == 'paper' or computer_move == 'spock')))
-
+        
+        if human_move == 'rock':
+            return current_rpsgame_instance._rock._is_winning_move(computer_move)
+        elif human_move == 'paper':
+            return current_rpsgame_instance._paper._is_winning_move(computer_move)
+        elif human_move == 'scissors':
+            return current_rpsgame_instance._scissors._is_winning_move(computer_move)
+        elif human_move == 'lizard':
+            return current_rpsgame_instance._lizard._is_winning_move(computer_move)
+        elif human_move == 'spock':
+            return current_rpsgame_instance._spock._is_winning_move(computer_move)
+        
     def _computer_wins(current_rpsgame_instance):
         human_move = current_rpsgame_instance._human.move
         computer_move = current_rpsgame_instance._computer.move
 
-        return ((computer_move == 'rock' and (human_move == 'scissors' or      human_move == 'lizard')) or
-                (computer_move == 'paper' and (human_move == 'rock' or human_move == 'spock')) or
-                (computer_move == 'scissors' and (human_move == 'paper' or human_move == 'lizard')) or
-                (computer_move == 'spock' and (human_move == 'scissors' or human_move == 'rock')) or
-                (computer_move == 'lizard' and (human_move == 'paper' or human_move == 'spock')))
+        if computer_move == 'rock':
+            return current_rpsgame_instance._rock._is_winning_move(human_move)
+        elif computer_move == 'paper':
+            return current_rpsgame_instance._paper._is_winning_move(human_move)
+        elif computer_move == 'scissors':
+            return current_rpsgame_instance._scissors._is_winning_move(human_move)
+        elif computer_move == 'lizard':
+            return current_rpsgame_instance._lizard._is_winning_move(human_move)
+        elif computer_move == 'spock':
+            return current_rpsgame_instance._spock._is_winning_move(human_move)
 
     def _display_winner(current_rpsgame_instance):
         print(f'You chose: {current_rpsgame_instance._human.move}')
@@ -104,7 +171,7 @@ class RPSGame:
 
         while True:
             while current_rpsgame_instance._human.score < 3 and current_rpsgame_instance._computer.score < 3:
-                current_rpsgame_instance._human.choose() # The value of self._human (a Player object) is now a collaborator object of the RPSGame object (because an instance of RPSGame has called choose() on it).Previously it was just stored data.
+                current_rpsgame_instance._human.choose() 
                 current_rpsgame_instance._computer.choose()
                 current_rpsgame_instance._display_winner()
 
@@ -119,3 +186,5 @@ class RPSGame:
         current_rpsgame_instance._display_goodbye_message()
 
 RPSGame().play()
+
+# print(RPSGame().WINNING_MOVES)
