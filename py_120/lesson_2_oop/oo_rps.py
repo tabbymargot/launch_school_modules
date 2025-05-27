@@ -79,11 +79,11 @@ class RPSGame:
     WINNING_SCORE = 3
 
     MOVES = {
-        'rock': Rock('rock'),
-        'paper': Paper('paper'),
-        'scissors': Scissors('scissors'), 
-        'lizard': Lizard('lizard'),
-        'spock': Spock('spock'),
+        'rock': Rock,
+        'paper': Paper,
+        'scissors': Scissors, 
+        'lizard': Lizard,
+        'spock': Spock,
     }
 
     def __init__(current_rpsgame_instance):
@@ -99,7 +99,7 @@ class RPSGame:
 
         for move, object_constructor in RPSGame.MOVES.items():
             if human_move == move:
-                return object_constructor._is_winning_move(computer_move)
+                return object_constructor(move)._is_winning_move(computer_move)
         
     def _computer_wins(current_rpsgame_instance):
         human_move = current_rpsgame_instance._human.move
@@ -107,7 +107,7 @@ class RPSGame:
 
         for move, object_constructor in RPSGame.MOVES.items():
             if computer_move == move:
-                return object_constructor._is_winning_move(human_move)
+                return object_constructor(move)._is_winning_move(human_move)
 
     def _display_winner(current_rpsgame_instance):
         print(f'You chose: {current_rpsgame_instance._human.move}')
