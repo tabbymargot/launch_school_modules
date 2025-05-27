@@ -9,30 +9,30 @@ class Move:
         'spock': ['scissors', 'rock']
     }
 
-    def __init__(current_move_instance, name):
-        current_move_instance._name = name
+    def __init__(self, name):
+        self._name = name
 
-    def _is_winning_move(current_move_instance, player_move):
-        return player_move in current_move_instance.WINNING_MOVES[current_move_instance._name]
+    def _is_winning_move(self, player_move):
+        return player_move in self.WINNING_MOVES[self._name]
 
 class Rock(Move):
-    def __init__(current_rock_instance, name):
+    def __init__(self, name):
         super().__init__(name)
     
 class Paper(Move):
-    def __init__(current_paper_instance, name):
+    def __init__(self, name):
         super().__init__(name)
 
 class Scissors(Move):
-    def __init__(current_scissors_instance, name):
+    def __init__(self, name):
         super().__init__(name)
     
 class Lizard(Move):
-    def __init__(current_lizard_instance, name):
+    def __init__(self, name):
         super().__init__(name)
 
 class Spock(Move):
-    def __init__(current_spock_instance, name):
+    def __init__(self, name):
         super().__init__(name)
 
 class Player:
@@ -99,6 +99,7 @@ class RPSGame:
 
         for move, object_constructor in RPSGame.MOVES.items():
             if human_move == move:
+                # Instantiates the Move object, passing in the move which will become its name attribute. The Move object then invokes _is_winning_move().
                 return object_constructor(move)._is_winning_move(computer_move)
         
     def _computer_wins(current_rpsgame_instance):
