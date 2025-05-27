@@ -97,18 +97,18 @@ class RPSGame:
         human_move = current_rpsgame_instance._human.move # human_move references the move
         computer_move = current_rpsgame_instance._computer.move
 
-        for move, object_constructor in RPSGame.MOVES.items():
+        for move, move_class in RPSGame.MOVES.items():
             if human_move == move:
                 # Instantiates the Move object, passing in the move which will become its name attribute. The Move object then invokes _is_winning_move().
-                return object_constructor(move)._is_winning_move(computer_move)
+                return move_class(move)._is_winning_move(computer_move)
         
     def _computer_wins(current_rpsgame_instance):
         human_move = current_rpsgame_instance._human.move
         computer_move = current_rpsgame_instance._computer.move
 
-        for move, object_constructor in RPSGame.MOVES.items():
+        for move, move_class in RPSGame.MOVES.items():
             if computer_move == move:
-                return object_constructor(move)._is_winning_move(human_move)
+                return move_class(move)._is_winning_move(human_move)
 
     def _display_winner(current_rpsgame_instance):
         print(f'You chose: {current_rpsgame_instance._human.move}')
