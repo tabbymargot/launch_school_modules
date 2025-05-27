@@ -78,6 +78,7 @@ class Human(Player):
 class RPSGame:
     WINNING_SCORE = 3
 
+    # Each of the values in this dictionary is a class.
     MOVES = {
         'rock': Rock,
         'paper': Paper,
