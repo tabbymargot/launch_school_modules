@@ -1,20 +1,49 @@
 class Square:
-    def __init__(self):
-        # STUB
-        # We need some way to keep track of this square's
-        #   marker.
-        pass
+    INITIAL_MARKER = " "
+    HUMAN_MARKER = "X"
+    COMPUTER_MARKER = "O"
+
+    def __init__(self, marker=INITIAL_MARKER):
+        self.marker = marker
+
+    def __str__(self):
+        # Printing the square will now print its marker instead of the entire object. This is more helpful.
+        return self.marker
 
 class Board:
     def __init__(self):
-        # STUB
-        # We need a way to model the 3x3 grid. Perhaps
-        #   "squares"?
-        # What data structure should we use? A list? A
-        #   dictionary? Something else?
-        # What should the data structure store? Strings?
-        #   Numbers? Square objects?
-        pass
+        self.squares = {
+            1: Square(),
+            2: Square(),
+            3: Square("X"), # testing -- remove "X" later
+            4: Square(),
+            5: Square("O"), # testing -- remove "O" later
+            6: Square(),
+            7: Square("X"), # testing -- remove "X" later
+            8: Square(),
+            9: Square(),
+        }
+
+    def display(self):
+        print()
+        print("     |     |")
+        print(f"  {self.squares[1]}  |"
+            f"  {self.squares[2]}  |"
+            f"  {self.squares[3]}")
+        print("     |     |")
+        print("-----+-----+-----")
+        print("     |     |")
+        print(f"  {self.squares[4]}  |"
+            f"  {self.squares[5]}  |"
+            f"  {self.squares[6]}")
+        print("     |     |")
+        print("-----+-----+-----")
+        print("     |     |")
+        print(f"  {self.squares[7]}  |"
+            f"  {self.squares[8]}  |"
+            f"  {self.squares[9]}")
+        print("     |     |")
+        print()
 
 class Row:
     def __init__(self):
@@ -66,12 +95,14 @@ class Computer(Player):
         pass
 
 class TTTGame:
+    def __init__(self):
+      self.board = Board()
+      
     def play(self):
-        # SPIKE
         self.display_welcome_message()
 
         while True:
-            self.display_board()
+            self.board.display()
 
             self.first_player_moves()
             if self.is_game_over():
@@ -83,7 +114,7 @@ class TTTGame:
 
             break   # Execute loop only once for now
 
-        self.display_board()
+        self.board.display()
         self.display_results()
         self.display_goodbye_message()
 
@@ -99,9 +130,19 @@ class TTTGame:
         pass
 
     def display_board(self):
-        # STUB
-        # Display the board, including its current state.
-        pass
+        print()
+        print("     |     |     ")
+        print("  O  |     |  O  ")
+        print("     |     |     ")
+        print("-----+-----+-----")
+        print("     |     |     ")
+        print("     |  X  |     ")
+        print("     |     |     ")
+        print("-----+-----+-----")
+        print("     |     |     ")
+        print("  X  |     |     ")
+        print("     |     |     ")
+        print()
 
     def first_player_moves(self):
         # STUB
@@ -120,3 +161,5 @@ class TTTGame:
 
 game = TTTGame()
 game.play()
+
+# _______________________
