@@ -131,12 +131,16 @@ class TTTGame:
         else:
             print("A tie game. How boring.")
 
+    def join_or(self, valid_choices, delimiter=", ", word='or'):
+        choices_list = [str(choice) for choice in valid_choices]
+        initial_choices_str = delimiter.join(choices_list[:-1])
+
+        return f'{initial_choices_str} {word} {choices_list[-1]}'
+
     def human_moves(self):
         valid_choices = self.board.unused_squares()
         while True:
-            choices_list = [str(choice) for choice in valid_choices]
-            choices_str = ", ".join(choices_list)
-            prompt = f"Choose a square ({choices_str}): "
+            prompt = f"Choose a square {self.join_or(valid_choices)}: "
             choice = input(prompt)
 
             try:
@@ -175,5 +179,3 @@ class TTTGame:
 
 game = TTTGame()
 game.play()
-
-# _______________________
