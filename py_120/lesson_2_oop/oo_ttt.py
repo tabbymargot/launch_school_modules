@@ -30,6 +30,9 @@ class Square:
 
 class Board:
     def __init__(self):
+        self.reset()
+
+    def reset(self):
         self.squares = {key: Square() for key in range(1, 10)}
 
     def display(self):
@@ -65,8 +68,14 @@ class Board:
         return len(self.unused_squares()) == 0
 
     def count_markers_for(self, player, keys):
-        markers = [self.squares[key].marker for key in keys]
-        return markers.count(player.marker)
+        # Create list of markers_in_row
+        markers_in_row = [self.squares[key].marker for key in keys]
+        # Return how many markers_in_row there are for that player
+        return markers_in_row.count(player.marker)
+    
+    def find_empty_square(self, markers_in_row):
+        empty_square_index = markers_in_row.index(Square.INITIAL_MARKER)
+        return empty_square_index + 1
 
 class Player:
     def __init__(self, marker):
@@ -99,24 +108,41 @@ class TTTGame:
 
     def play(self):
         self.display_welcome_message()
-
         while True:
+            while True:
+                self.board.display()
+
+                self.human_moves()
+                if self.is_game_over():
+                    break
+
+                self.computer_moves()
+                if self.is_game_over():
+                    break
+
+                # clear_screen()
+
             self.board.display()
+            self.display_results()
 
-            self.human_moves()
-            if self.is_game_over():
+            if self.play_again() == 'n':
                 break
 
-            self.computer_moves()
-            if self.is_game_over():
-                break
+            self.board.reset() # The suggested solution puts this at the top of the loop. Is it OK here?
 
-            clear_screen()
-
-        self.board.display()
-        self.display_results()
         self.display_goodbye_message()
 
+    def play_again(self):
+        while True:
+            player_input = input('Would you like to play again? Enter y or n. ').lower()
+
+            if player_input in ('y', 'n'):
+                break
+
+            print("Sorry, that's not a valid response.")
+        
+        return player_input
+        
     def display_welcome_message(self):
         print("Welcome to Tic Tac Toe!")
 
