@@ -113,6 +113,7 @@ class TTTGame:
                 self.board.display()
 
                 self.human_moves()
+                self.board.display() # Delete when not needed
                 if self.is_game_over():
                     break
 
@@ -181,10 +182,73 @@ class TTTGame:
 
         self.board.mark_square_at(choice, self.human.marker)
 
+    def get_squares_in_row(self, row):
+        squares_in_row = {square: self.board.squares[square].marker 
+                for square in row}
+
+        markers_in_row = list(squares_in_row.values())
+
+        return squares_in_row, markers_in_row
+
     def computer_moves(self):
-        valid_choices = self.board.unused_squares()
-        choice = random.choice(valid_choices)
-        self.board.mark_square_at(choice, self.computer.marker)
+        computer_has_moved = False
+
+        # while computer_has_moved == False:
+        for row in TTTGame.POSSIBLE_WINNING_ROWS:
+            squares_in_row, markers_in_row = self.get_squares_in_row(row)
+
+            number_of_computer_markers = markers_in_row.count(Square.COMPUTER_MARKER)
+
+            number_of_human_markers = markers_in_row.count(Square.HUMAN_MARKER) # NOTE: Creates dependency with Square
+
+            # print(f'Current squares: {squares_in_row}')
+            # print(f'Current markers: {markers_in_row}')
+            # print(f'Computer markers: {number_of_computer_markers}')
+            # print(f'Human markers: {number_of_human_markers}')
+            # input('Enter')
+
+            if number_of_computer_markers == 2:
+                # self.board.display()
+                # input("Enter 2")
+                # self.board.display()
+                # print(f'2 comp markers')
+                # input("enter 3")
+
+                if Square.INITIAL_MARKER in markers_in_row:
+                    at_threat_square = [position 
+                                        for position, marker in squares_in_row.items() 
+                                        if marker == Square.INITIAL_MARKER]
+                    
+                    self.board.mark_square_at(at_threat_square[0], self.computer.marker)
+                    print(f'Comp has moved aggressively: {at_threat_square[0]}')
+                    
+                    computer_has_moved = True
+                    break
+            
+        if computer_has_moved == False:
+            for row in TTTGame.POSSIBLE_WINNING_ROWS:
+                squares_in_row, markers_in_row = self.get_squares_in_row(row)
+
+                number_of_computer_markers = markers_in_row.count(Square.COMPUTER_MARKER)
+
+                number_of_human_markers = markers_in_row.count(Square.HUMAN_MARKER) # NOTE: Creates dependency with Square
+                if number_of_human_markers == 2:
+                # If the third square in the row is empty
+                    if Square.INITIAL_MARKER in markers_in_row:
+                        at_threat_square = [position 
+                                            for position, marker in squares_in_row.items() 
+                                            if marker == Square.INITIAL_MARKER]
+                        
+                        self.board.mark_square_at(at_threat_square[0], self.computer.marker)
+                        print(f'Comp has moved defensively: {at_threat_square[0]}')
+                        computer_has_moved = True
+                        break
+
+        if computer_has_moved == False:
+            valid_choices = self.board.unused_squares()
+            choice = random.choice(valid_choices)
+            self.board.mark_square_at(choice, self.computer.marker)
+            print('Comp has moved randomly')
 
     def is_game_over(self):
         return self.board.is_full() or self.someone_won()
