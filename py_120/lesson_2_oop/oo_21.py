@@ -6,18 +6,38 @@ class Card:
         pass
 
 class Deck:
-    def __init__(self):
-        # STUB
-        # What attributes does a deck need? A collection of
-        #   52 cards?
-        # Some data structure, like a list or dictionary,
-        #   might be required.
-        pass
+    VALUES_AS_STRINGS = (['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'])
 
-    def deal(self):
-        # STUB
-        # Does the dealer or the deck deal the cards?
-        pass
+    ALL_CARDS = {
+        'Clubs': VALUES_AS_STRINGS,
+        'Diamonds': VALUES_AS_STRINGS,
+        'Hearts': VALUES_AS_STRINGS,
+        'Spades': VALUES_AS_STRINGS,
+        }
+
+    INTEGER_VALUES = {
+        '2': 2,
+        '3': 3,
+        '4': 4,
+        '5': 5,
+        '6': 6,
+        '7': 7,
+        '8': 8,
+        '9': 9,
+        '10': 10,
+        'Jack': 10,
+        'Queen': 10,
+        'King': 10,
+    }
+    def __init__(self):
+        self.deck = []
+
+        for suit, values in self.ALL_CARDS.items():
+            for value in values:
+                card = [suit, value]
+                self.deck.append(card)
+
+        # print(self.deck)  
 
 class Participant:
     def __init__(self):
@@ -28,13 +48,6 @@ class Participant:
         #   from Player and Dealer?
         pass
 
-class Player(Participant):
-    def __init__(self):
-        # STUB
-        # What additional attributes might a player need?
-        # Score? Hand? Amount of money available?
-        pass
-
     def hit(self):
         # STUB
         pass
@@ -50,27 +63,19 @@ class Player(Participant):
     def score(self):
         # STUB
         pass
+
+class Player(Participant):
+    def __init__(self):
+        pass
+    
 
 class Dealer(Participant):
     def __init__(self):
-        # STUB
-        # Very similar to a Player; do we need this?
         pass
 
-    def hit(self):
+    def deal(self):
         # STUB
-        pass
-
-    def stay(self):
-        # STUB
-        pass
-
-    def is_busted(self):
-        # STUB
-        pass
-
-    def score(self):
-        # STUB
+        # Does the dealer or the deck deal the cards?
         pass
 
     def hide(self):
@@ -81,17 +86,15 @@ class Dealer(Participant):
         # STUB
         pass
 
-    def deal(self):
-        # STUB
-        # Does the dealer or the deck deal?
-        pass
-
 class TwentyOneGame:
     def __init__(self):
         # STUB
         # What attributes does the game need? A deck? Two
         #   participants?
-        pass
+        self.deck = Deck()
+        self.dealer = Dealer()
+        self.player = Player()
+
 
     def display_welcome_message(self):
         print("Welcome to 21!")
