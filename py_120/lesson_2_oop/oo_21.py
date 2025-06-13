@@ -93,6 +93,9 @@ class TwentyOneGame:
         #   participants?
         pass
 
+    def display_welcome_message(self):
+        print("Welcome to 21!")
+
     def start(self):
         # SPIKE
         self.display_welcome_message()
@@ -136,13 +139,8 @@ class TwentyOneGame:
         # STUB
         pass
 
-    def display_welcome_message(self):
-        # STUB
-        pass
-
     def display_goodbye_message(self):
-        # STUB
-        pass
+        print("Thanks for playing 21! Goodbye!")
 
     def display_result(self):
         # STUB
