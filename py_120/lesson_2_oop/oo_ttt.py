@@ -190,7 +190,6 @@ class TTTGame:
 
         return squares_in_row, markers_in_row
     
-    # TODO: move this into the Player class? Will need to update self.computer.marker on last line. Also - how to access the board
     def place_marker(self, squares_in_row):
                 empty_square = [position 
                                 for position, marker in squares_in_row.items() 
@@ -201,28 +200,30 @@ class TTTGame:
     def computer_moves(self):
         computer_has_moved = False
 
+        # Computer first checks for any winning options
         for row in TTTGame.POSSIBLE_WINNING_ROWS:
             squares_in_row, markers_in_row = self.get_squares_in_row(row)
 
-            number_of_computer_markers = markers_in_row.count(Square.COMPUTER_MARKER)
-
-            if number_of_computer_markers == 2:
+            # If there are 2 computer markers in the the row
+            if markers_in_row.count(Square.COMPUTER_MARKER) == 2:
                 if Square.INITIAL_MARKER in markers_in_row:
+                    # TODO: can I use the mark_square_at method instead?
                     self.place_marker(squares_in_row)
                 
                     print(f'Comp has moved aggressively.')
                     
                     computer_has_moved = True
                     break
-            
+
+        # Computer then checks for rows that need defending  
         if computer_has_moved == False:
             for row in TTTGame.POSSIBLE_WINNING_ROWS:
                 squares_in_row, markers_in_row = self.get_squares_in_row(row)
 
-                number_of_human_markers = markers_in_row.count(Square.HUMAN_MARKER) # NOTE: Creates dependency with Square
-                if number_of_human_markers == 2:
-                # If the third square in the row is empty
+                # If there are 2 human markers in the the row
+                if markers_in_row.count(Square.HUMAN_MARKER) == 2:
                     if Square.INITIAL_MARKER in markers_in_row:
+                        # TODO: can I use the mark_square_at method instead?
                         self.place_marker(squares_in_row)
                        
                         print(f'Comp has moved defensively.')
