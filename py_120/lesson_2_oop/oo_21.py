@@ -8,19 +8,6 @@ class Card:
         pass
 
 class Hand:
-    def __init__(self):
-        self.cards = []
-
-class Deck:
-    VALUES_AS_STRINGS = (['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'])
-
-    ALL_CARDS = {
-        'Clubs': VALUES_AS_STRINGS,
-        'Diamonds': VALUES_AS_STRINGS,
-        'Hearts': VALUES_AS_STRINGS,
-        'Spades': VALUES_AS_STRINGS,
-        }
-
     INTEGER_VALUES = {
         '2': 2,
         '3': 3,
@@ -35,6 +22,68 @@ class Deck:
         'Queen': 10,
         'King': 10,
     }
+
+    LOW_VALUE_ACE = 1
+    HIGH_VALUE_ACE = 11
+    MAX_WINNING_SCORE = 21
+
+    def __init__(self):
+        self.cards = []
+
+    def calculate_value(self):
+        aces = []
+        non_aces = []
+
+        for card in self.cards:
+            if card[1] == 'Ace':
+                aces.append(card)
+            else:
+                non_aces.append(card)
+
+        non_aces_values = [self.INTEGER_VALUES[card[1]] for card in non_aces]
+        non_aces_score = sum(non_aces_values)
+
+        aces_score = self.calculate_ace_values(aces, non_aces_score)
+        print(non_aces_score)
+        print(aces_score)
+
+        print(non_aces_score + aces_score)
+    
+    def calculate_ace_values(self, aces, non_aces_score):
+        aces_values = []
+
+        for _ in aces:
+            if ((non_aces_score + sum(aces_values) + self.HIGH_VALUE_ACE)
+            <= self.MAX_WINNING_SCORE):
+                aces_values.append(self.HIGH_VALUE_ACE)
+
+            elif ((non_aces_score + sum(aces_values) + self.LOW_VALUE_ACE)
+            <= self.MAX_WINNING_SCORE):
+                aces_values.append(self.LOW_VALUE_ACE)
+
+            elif self.HIGH_VALUE_ACE in aces_values:
+                for idx, value in enumerate(aces_values):
+                    if value == self.HIGH_VALUE_ACE:
+                        aces_values[idx] = self.LOW_VALUE_ACE
+                        break
+
+                aces_values.append(self.LOW_VALUE_ACE)
+
+            else:
+                pass
+
+        return sum(aces_values)
+
+class Deck:
+    VALUES_AS_STRINGS = (['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'])
+
+    ALL_CARDS = {
+        'Clubs': VALUES_AS_STRINGS,
+        'Diamonds': VALUES_AS_STRINGS,
+        'Hearts': VALUES_AS_STRINGS,
+        'Spades': VALUES_AS_STRINGS,
+        }
+
     def __init__(self):
         self.cards = []
 
@@ -131,6 +180,7 @@ class TwentyOneGame:
 
         self.deal_cards(self.dealer)
         print(self.dealer.hand.cards)
+        self.player.hand.calculate_value()
 
         self.show_cards()
 
@@ -150,9 +200,6 @@ class TwentyOneGame:
 
     def deal_cards(self, participant):
         self.dealer.deal(self.deck, participant)
-
-    # def deal_dealers_cards(self):
-    #     self.dealer.deal(self.deck, self.dealer)
 
     def show_cards(self):
         # STUB
