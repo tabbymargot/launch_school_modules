@@ -1,3 +1,4 @@
+# TODO: use prompt instead of print
 import random
 
 class Card:
@@ -6,6 +7,10 @@ class Card:
         # What attributes does a card need? Rank? Suit?
         #   Points?
         pass
+
+class Score:
+    # STUB: Move the calculations from Hand into here?
+    pass
 
 class Hand:
     INTEGER_VALUES = {
@@ -27,8 +32,11 @@ class Hand:
     HIGH_VALUE_ACE = 11
     MAX_WINNING_SCORE = 21
 
+    most_recently_dealt_card = None
+
     def __init__(self):
         self.cards = []
+        self.score = None
 
     def calculate_value(self):
         aces = []
@@ -44,10 +52,11 @@ class Hand:
         non_aces_score = sum(non_aces_values)
 
         aces_score = self.calculate_ace_values(aces, non_aces_score)
-        print(non_aces_score)
-        print(aces_score)
+        # print(non_aces_score)
+        # print(aces_score)
 
-        print(non_aces_score + aces_score)
+        self.score = non_aces_score + aces_score
+        # print(non_aces_score + aces_score)
     
     def calculate_ace_values(self, aces, non_aces_score):
         aces_values = []
@@ -73,6 +82,21 @@ class Hand:
                 pass
 
         return sum(aces_values)
+    
+    def card_details(self):
+        all_cards = []
+
+        for card in self.cards:
+            suit = card[0]
+            value = card[1]
+            all_cards.append(f'the {value} of {suit}')
+
+        all_player_cards_except_last = all_cards[:-1]
+        player_last_card = all_cards[-1]
+
+        return all_player_cards_except_last, player_last_card
+
+    
 
 class Deck:
     VALUES_AS_STRINGS = (['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'])
@@ -130,7 +154,7 @@ class Dealer(Participant):
         super().__init__()
 
     def deal(self, deck, participant):
-        # random.shuffle(deck.cards)
+        random.shuffle(deck.cards)
         print(participant.hand.cards)
         
         for _ in range(self.INITIAL_DEAL):
@@ -180,7 +204,12 @@ class TwentyOneGame:
 
         self.deal_cards(self.dealer)
         print(self.dealer.hand.cards)
+
         self.player.hand.calculate_value()
+        self.dealer.hand.calculate_value()
+
+        print (self.player.hand.score)
+        print (self.dealer.hand.score)
 
         self.show_cards()
 
@@ -202,8 +231,24 @@ class TwentyOneGame:
         self.dealer.deal(self.deck, participant)
 
     def show_cards(self):
-        # STUB
-        pass
+        all_player_cards_except_last, player_last_card = self.player.hand.card_details()
+
+        all_dealer_cards_except_last, dealer_last_card = self.dealer.hand.card_details()
+
+        all_the_players_cards = ', '.join(all_player_cards_except_last) \
+        + " and " + player_last_card
+
+        # all_the_dealers_cards = ', '.join(all_dealer_cards_except_last) \
+        # + " and " + dealer_last_card
+
+        print(f"Your hand contains {all_the_players_cards}.\n")
+        # time.sleep(1)
+
+        print(f"Your hand is worth {self.player.hand.score} points.\n")
+        # time.sleep(1)
+
+        print(f"One of the dealer's two cards is {dealer_last_card}.\n")
+        # time.sleep(1)
 
     def player_turn(self):
         # STUB
