@@ -9,11 +9,7 @@ class Card:
         #   Points?
         pass
 
-class Score:
-    # STUB: Move the calculations from Hand into here?
-    pass
-
-class Hand:
+class Hand():
     INTEGER_VALUES = {
         '2': 2,
         '3': 3,
@@ -148,8 +144,6 @@ class Player(Participant):
         super().__init__()
     
 class Dealer(Participant):
-    INITIAL_DEAL = 2
-    SUBSEQUENT_DEAL = 1
 
     def __init__(self):
         super().__init__()
@@ -158,13 +152,13 @@ class Dealer(Participant):
         random.shuffle(deck.cards)
 
         if len(participant.hand.cards) == 0:
-            number_of_cards = Dealer.INITIAL_DEAL
+            number_of_cards_to_deal = 2
         else:
-            number_of_cards = Dealer.SUBSEQUENT_DEAL
+            number_of_cards_to_deal = 1
 
         # print(f'First: {participant.hand.cards}')
         
-        for _ in range(number_of_cards):
+        for _ in range(number_of_cards_to_deal):
             card = deck.cards[0]
             participant.hand.cards.append(card)
             deck.cards.remove(card)
