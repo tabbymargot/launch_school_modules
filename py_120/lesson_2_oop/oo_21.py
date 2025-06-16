@@ -3,11 +3,18 @@ import os
 import random
 
 class Card:
-    def __init__(self):
-        # STUB
-        # What attributes does a card need? Rank? Suit?
-        #   Points?
-        pass
+    # VALUES_AS_STRINGS = (['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'])
+
+    # ALL_CARDS = {
+    #     'Clubs': VALUES_AS_STRINGS,
+    #     'Diamonds': VALUES_AS_STRINGS,
+    #     'Hearts': VALUES_AS_STRINGS,
+    #     'Spades': VALUES_AS_STRINGS,
+    #     }
+    def __init__(self, suit, str_value):
+        self.suit = suit
+        self.str_value = str_value
+        # self.score = score
 
 class Hand():
     INTEGER_VALUES = {
@@ -41,7 +48,7 @@ class Hand():
         non_aces = []
 
         for card in self.cards:
-            if card[1] == 'Ace':
+            if list(card)[1] == 'Ace':
                 aces.append(card)
             else:
                 non_aces.append(card)
@@ -95,6 +102,22 @@ class Hand():
         return all_player_cards_except_last, player_last_card
 
 class Deck:
+    SCORES = {
+        'Ace': (1, 11),
+        '2': 2,
+        '3': 3,
+        '4': 4,
+        '5': 5,
+        '6': 6,
+        '7': 7,
+        '8': 8,
+        '9': 9,
+        '10': 10,
+        'Jack': 10,
+        'Queen': 10,
+        'King': 10,
+    }
+     
     VALUES_AS_STRINGS = (['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'])
 
     ALL_CARDS = {
@@ -107,12 +130,20 @@ class Deck:
     def __init__(self):
         self.cards = []
 
+        # Initialise the deck's cards with their suits and values
         for suit, values in self.ALL_CARDS.items():
             for value in values:
-                card = [suit, value]
-                self.cards.append(card)
+                cards = Card(suit, value)
+                self.cards.append(cards)
 
-        # print(self.cards)  
+        # Then add a score attribute to each card
+        # TODO: refactor using properties
+        for card in self.cards:
+            card.score = self.SCORES[card.str_value]
+            print(vars(card)) 
+
+        # print(vars(self.cards[0]))  
+        print(len(self.cards))
 
 class Participant:
     def __init__(self):
