@@ -204,8 +204,10 @@ class TwentyOneGame:
         # TODO: WHILE player wants to continue
         # TODO: Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
 
-        self.deal_cards(self.player)
-        self.deal_cards(self.dealer)
+        # self.deal_cards(self.player)
+        # self.deal_cards(self.dealer)
+        self.dealer.deal(self.player)
+        self.dealer.deal(self.dealer)
 
         self.player.hand.calculate_value()
         self.dealer.hand.calculate_value()
@@ -227,8 +229,8 @@ class TwentyOneGame:
 
         self.display_goodbye_message()
 
-    def deal_cards(self, participant):
-        self.dealer.deal(participant)
+    # def deal_cards(self, participant):
+    #     self.dealer.deal(participant)
 
     def show_cards(self):
         self.prompt(f"Your hand contains the {self.player.hand.get_card_details()} and {self.player.hand.get_last_dealt_card_details()}.\n")
@@ -291,7 +293,7 @@ class TwentyOneGame:
     def dealer_turn(self):
         # while self.dealer.hand.score <= self.MAX_WINNING_SCORE:
         while not self.dealer.is_busted():
-            self. display_dealer_hand_info('Dealer hand')
+            self.display_dealer_hand_info('Dealer hand')
 
             self.dealer.hand.calculate_value()
 
