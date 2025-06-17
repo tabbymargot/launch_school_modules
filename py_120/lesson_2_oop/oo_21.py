@@ -147,16 +147,9 @@ class Participant:
         #   from Player and Dealer?
         self.hand = Hand()
 
-    def stay(self):
-        # STUB
-        pass
-
     def is_busted(self):
         return self.hand.score > self.MAX_WINNING_SCORE
 
-    def score(self):
-        # STUB
-        pass
 
 class Player(Participant):
     def __init__(self):
@@ -188,23 +181,12 @@ class Dealer(Participant):
             participant.hand.all_cards_except_last = participant.hand.cards[:-1]
             participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
             
-    def hide(self):
-        # STUB
-        pass
-
-    def reveal(self):
-        # STUB
-        pass
 
 class TwentyOneGame:
     MAX_WINNING_SCORE = 21
     DEALER_MINIMUM_SCORE = 17
 
     def __init__(self):
-        # STUB
-        # What attributes does the game need? A deck? Two
-        #   participants?
-        # self.deck = Deck()
         self.dealer = Dealer()
         self.player = Player()
 
@@ -215,7 +197,6 @@ class TwentyOneGame:
         self.prompt("Welcome to 21!")
 
     def start(self):
-        # SPIKE
         self.display_welcome_message()
 
         # TODO: When the program starts, give the player 5 dollars with which to bet. Deduct 1 dollar each time she loses, and add 1 dollar each time she wins. The program should quit when she is broke (0 dollars) or rich (has a total of 10 dollars).
@@ -310,26 +291,34 @@ class TwentyOneGame:
     def dealer_turn(self):
         # while self.dealer.hand.score <= self.MAX_WINNING_SCORE:
         while not self.dealer.is_busted():
-
-            self.prompt(f"The dealer's hand contains the {self.dealer.hand.get_card_details()} and {self.dealer.hand.get_last_dealt_card_details()}.\n")
+            self. display_dealer_hand_info('Dealer hand')
 
             self.dealer.hand.calculate_value()
 
             if self.dealer.hand.score >= self.DEALER_MINIMUM_SCORE:
                 break
-
-            self.prompt(f"The dealer has {self.dealer.hand.score} points, so I'm just " \
-            "dealing them another card...\n") 
-            # time.sleep(1)
+            
+            self. display_dealer_hand_info('Current score')
 
             self.dealer.deal(self.dealer)
             self.dealer.hand.calculate_value()
             
-            self.prompt(f"The dealer's new card is {self.dealer.hand.get_last_dealt_card_details()}, and their new score is {self.dealer.hand.score}.\n")
+            self. display_dealer_hand_info('Latest card, updated score')
+
             # time.sleep(1)
         # print(f'The dealers final score 2: {self.dealer.hand.score}')
         #TODO: I shouldn't have to return this
         # return self.dealer.hand.score
+
+    def display_dealer_hand_info(self, required_info):
+        match required_info:
+            case 'Dealer hand':
+                self.prompt(f"The dealer's hand contains the {self.dealer.hand.get_card_details()} and {self.dealer.hand.get_last_dealt_card_details()}.\n")
+            case 'Current score':
+                self.prompt(f"The dealer has {self.dealer.hand.score} points, so I'm just " \
+                "dealing them another card...\n") 
+            case 'Latest card, updated score':
+                self.prompt(f"The dealer's new card is {self.dealer.hand.get_last_dealt_card_details()}.\n")
 
     def display_goodbye_message(self):
         print("Thanks for playing 21! Goodbye!")
