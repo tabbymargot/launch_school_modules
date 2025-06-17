@@ -6,9 +6,9 @@ import random
 
 class Card:
     def __init__(self):
-        self._suit = None
-        self._str_value = None
-        self._score = None
+        self.suit = None
+        self.str_value = None
+        self.score = None
 
     @property
     def suit(self):
@@ -178,6 +178,7 @@ class Dealer(Participant):
             participant.hand.cards.append(card)
             self.deck.cards.remove(card)
 
+            # TODO: extract this to a method? Put the method in Hand, and use getters and setters to reassign the attributes.
             participant.hand.all_cards_except_last = participant.hand.cards[:-1]
             participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
             
@@ -204,8 +205,6 @@ class TwentyOneGame:
         # TODO: WHILE player wants to continue
         # TODO: Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
 
-        # self.deal_cards(self.player)
-        # self.deal_cards(self.dealer)
         self.dealer.deal(self.player)
         self.dealer.deal(self.dealer)
 
@@ -229,8 +228,6 @@ class TwentyOneGame:
 
         self.display_goodbye_message()
 
-    # def deal_cards(self, participant):
-    #     self.dealer.deal(participant)
 
     def show_cards(self):
         self.prompt(f"Your hand contains the {self.player.hand.get_card_details()} and {self.player.hand.get_last_dealt_card_details()}.\n")
