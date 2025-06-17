@@ -12,6 +12,7 @@ class Card:
 
         # TODO: create getters and setters?
 
+
 class Hand():
     #TODO: there are now 2 constants with the same name
     MAX_WINNING_SCORE = 21
@@ -213,12 +214,13 @@ class TwentyOneGame:
         if self.player.hand.score > self.MAX_WINNING_SCORE:
             result = self.establish_result()
         else:
-            dealer_score = self.dealer_turn()
-            print(f'The dealers final score 1: {dealer_score}')
+            # dealer_score = self.dealer_turn()
+            # print(f'The dealers final score 1: {dealer_score}')
+            self.dealer_turn()
             result = self.establish_result()
 
         # result = self.establish_result(player_score, dealer_score)
-        print(f'This is the result: {result}')
+        # print(f'This is the result: {result}')
 
         self.display_result(result)
 
@@ -257,9 +259,9 @@ class TwentyOneGame:
 
                 self.player.hand.calculate_value()
 
-                player_score = self.player.hand.score
+                # player_score = self.player.hand.score
 
-                if player_score > self.MAX_WINNING_SCORE:
+                if self.player.hand.score > self.MAX_WINNING_SCORE:
                     break
 
                 self.print_updated_player_score()
@@ -312,9 +314,9 @@ class TwentyOneGame:
             
             self.prompt(f"The dealer's new card is {self.dealer.hand.get_last_dealt_card_details()}, and their new score is {self.dealer.hand.score}.\n")
             # time.sleep(1)
-        print(f'The dealers final score 2: {self.dealer.hand.score}')
+        # print(f'The dealers final score 2: {self.dealer.hand.score}')
         #TODO: I shouldn't have to return this
-        return self.dealer.hand.score
+        # return self.dealer.hand.score
 
     def display_goodbye_message(self):
         print("Thanks for playing 21! Goodbye!")
