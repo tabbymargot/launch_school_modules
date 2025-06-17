@@ -5,12 +5,35 @@ import os
 import random
 
 class Card:
-    def __init__(self, suit, str_value, score):
-        self.suit = suit
-        self.str_value = str_value
-        self.score = score
+    def __init__(self):
+        self._suit = None
+        self._str_value = None
+        self._score = None
 
-        # TODO: create getters and setters?
+    @property
+    def suit(self):
+        return self._suit
+    
+    @suit.setter
+    def suit(self, suit):
+        self._suit = suit
+
+    @property
+    def str_value(self):
+        return self._str_value
+    
+    @str_value.setter
+    def str_value(self, str_value):
+        self._str_value = str_value
+
+    @property
+    def score(self):
+        return self._score
+    
+    @score.setter
+    def score(self, score):
+        self._score = score
+
 
 
 class Hand():
@@ -103,8 +126,14 @@ class Deck:
             values_and_scores = zip(self.STR_VALUES, self.SCORES)
 
             for str_value, score in values_and_scores:
-                self.cards.append(Card(suit, str_value, score))
-            
+                # self.cards.append(Card(suit, str_value, score))
+                card = Card()
+                card.suit = suit
+                card.str_value = str_value
+                card.score = score
+
+                self.cards.append(card)
+
             # for card in self.cards:
             #     print(vars(card))
 
