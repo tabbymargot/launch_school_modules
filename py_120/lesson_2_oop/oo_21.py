@@ -147,10 +147,6 @@ class Participant:
         #   from Player and Dealer?
         self.hand = Hand()
 
-    def hit(self):
-        # STUB
-        pass
-
     def stay(self):
         # STUB
         pass
@@ -170,9 +166,10 @@ class Dealer(Participant):
 
     def __init__(self):
         super().__init__()
+        self.deck = Deck()
 
-    def deal(self, deck, participant):
-        random.shuffle(deck.cards)
+    def deal(self, participant):
+        random.shuffle(self.deck.cards)
 
         # for card in deck.cards:
         #     print(vars(card))
@@ -183,10 +180,10 @@ class Dealer(Participant):
             number_of_cards_to_deal = 1
         
         for _ in range(number_of_cards_to_deal):
-            card = deck.cards[0]
+            card = self.deck.cards[0]
 
             participant.hand.cards.append(card)
-            deck.cards.remove(card)
+            self.deck.cards.remove(card)
 
             participant.hand.all_cards_except_last = participant.hand.cards[:-1]
             participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
@@ -207,7 +204,7 @@ class TwentyOneGame:
         # STUB
         # What attributes does the game need? A deck? Two
         #   participants?
-        self.deck = Deck()
+        # self.deck = Deck()
         self.dealer = Dealer()
         self.player = Player()
 
@@ -250,7 +247,7 @@ class TwentyOneGame:
         self.display_goodbye_message()
 
     def deal_cards(self, participant):
-        self.dealer.deal(self.deck, participant)
+        self.dealer.deal(participant)
 
     def show_cards(self):
         self.prompt(f"Your hand contains the {self.player.hand.get_card_details()} and {self.player.hand.get_last_dealt_card_details()}.\n")
@@ -268,16 +265,7 @@ class TwentyOneGame:
 
             # TODO: Move hit / stay to Participant class?
             if player_move == 'h':
-                os.system('clear')
-
-                self.prompt('Dealing additional card...\n')
-                # time.sleep(1)
-
-                self.dealer.deal(self.deck, self.player)
-
-                self.print_updated_player_hand()
-
-                self.player.hand.calculate_value()
+                self.player_hit()
 
                 # if self.player.hand.score > self.MAX_WINNING_SCORE:
                 if self.player.is_busted():
@@ -298,8 +286,16 @@ class TwentyOneGame:
             self.prompt("That's not a valid choice. Please try again\n.")
             # time.sleep(1.5)
 
-    def print_updated_player_hand(self):
+    def player_hit(self):
+        os.system('clear')
 
+        self.prompt('Dealing additional card...\n')
+        # time.sleep(1)
+        self.dealer.deal(self.player)
+        self.print_updated_player_hand()
+        self.player.hand.calculate_value()
+
+    def print_updated_player_hand(self):
         self.prompt(f"Your hand now contains the {self.player.hand.get_card_details()} and {self.player.hand.get_last_dealt_card_details()}.\n")
 
     def print_updated_player_score(self):
@@ -326,7 +322,7 @@ class TwentyOneGame:
             "dealing them another card...\n") 
             # time.sleep(1)
 
-            self.dealer.deal(self.deck, self.dealer)
+            self.dealer.deal(self.dealer)
             self.dealer.hand.calculate_value()
             
             self.prompt(f"The dealer's new card is {self.dealer.hand.get_last_dealt_card_details()}, and their new score is {self.dealer.hand.score}.\n")
