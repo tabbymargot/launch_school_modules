@@ -34,13 +34,11 @@ class Card:
     def score(self, score):
         self._score = score
 
-
-
 class Hand():
     #TODO: there are now 2 constants with the same name
     MAX_WINNING_SCORE = 21
 
-    most_recently_dealt_card = None
+    # most_recently_dealt_card = None
 
     def __init__(self):
         self.cards = []
@@ -126,7 +124,6 @@ class Deck:
             values_and_scores = zip(self.STR_VALUES, self.SCORES)
 
             for str_value, score in values_and_scores:
-                # self.cards.append(Card(suit, str_value, score))
                 card = Card()
                 card.suit = suit
                 card.str_value = str_value
@@ -140,6 +137,8 @@ class Deck:
             # print(len(self.cards))
 
 class Participant:
+    MAX_WINNING_SCORE = 21
+
     def __init__(self):
         # STUB
         # What attributes does a participant require? Score?
@@ -157,8 +156,7 @@ class Participant:
         pass
 
     def is_busted(self):
-        # STUB
-        pass
+        return self.hand.score > self.MAX_WINNING_SCORE
 
     def score(self):
         # STUB
@@ -236,20 +234,14 @@ class TwentyOneGame:
 
         self.show_cards()
 
-        # player_score = self.player_turn()
         self.player_turn()
-        # print(f'Player score: {player_score}')
 
-        if self.player.hand.score > self.MAX_WINNING_SCORE:
+        # if self.player.hand.score > self.MAX_WINNING_SCORE:
+        if self.player.is_busted():
             result = self.establish_result()
         else:
-            # dealer_score = self.dealer_turn()
-            # print(f'The dealers final score 1: {dealer_score}')
             self.dealer_turn()
             result = self.establish_result()
-
-        # result = self.establish_result(player_score, dealer_score)
-        # print(f'This is the result: {result}')
 
         self.display_result(result)
 
@@ -273,8 +265,7 @@ class TwentyOneGame:
     def player_turn(self):
         while True:
             player_move = self.get_player_move()
-            # print(player_move)
-            # break
+
             # TODO: Move hit / stay to Participant class?
             if player_move == 'h':
                 os.system('clear')
@@ -288,16 +279,13 @@ class TwentyOneGame:
 
                 self.player.hand.calculate_value()
 
-                # player_score = self.player.hand.score
-
-                if self.player.hand.score > self.MAX_WINNING_SCORE:
+                # if self.player.hand.score > self.MAX_WINNING_SCORE:
+                if self.player.is_busted():
                     break
 
                 self.print_updated_player_score()
             else:
                 break
-
-        # return self.player.hand.score
 
     def get_player_move(self):
         while True:
@@ -324,7 +312,8 @@ class TwentyOneGame:
 
     
     def dealer_turn(self):
-        while self.dealer.hand.score <= self.MAX_WINNING_SCORE:
+        # while self.dealer.hand.score <= self.MAX_WINNING_SCORE:
+        while not self.dealer.is_busted():
 
             self.prompt(f"The dealer's hand contains the {self.dealer.hand.get_card_details()} and {self.dealer.hand.get_last_dealt_card_details()}.\n")
 
@@ -338,7 +327,6 @@ class TwentyOneGame:
             # time.sleep(1)
 
             self.dealer.deal(self.deck, self.dealer)
-
             self.dealer.hand.calculate_value()
             
             self.prompt(f"The dealer's new card is {self.dealer.hand.get_last_dealt_card_details()}, and their new score is {self.dealer.hand.score}.\n")
