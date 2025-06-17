@@ -1,4 +1,6 @@
 # TODO: make the deck a collaborator object of Dealer rather than passing it in as an argument to the various methods?
+
+# TODO: check no methods return a value and also have side effects
 import os
 import random
 
@@ -154,28 +156,12 @@ class Dealer(Participant):
         
         for _ in range(number_of_cards_to_deal):
             card = deck.cards[0]
+
             participant.hand.cards.append(card)
             deck.cards.remove(card)
-            print(card in deck.cards)
+
             participant.hand.all_cards_except_last = participant.hand.cards[:-1]
             participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
-        # print(f'Second: {participant.hand.cards}') 
-
-        # TODO: what is this code doing?
-        if len(participant.hand.cards) == 1:
-            return participant.hand.cards[0]
-
-        return participant.hand
-    
-    # player_hand = Dealer.deal_new_card(self, self.deck, self.player)
-
-    # TODO: I shouldn't need the method below - delete when ready
-    def deal_new_card(self, deck, participant):
-        updated_hand = Dealer.deal(self, deck, participant)
-        # print(f'NC: {updated_hand.cards}')
-        # participant.hand.cards.append(new_card)
-
-        return participant.hand
             
     def hide(self):
         # STUB
@@ -213,16 +199,10 @@ class TwentyOneGame:
         # TODO: Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
 
         self.deal_cards(self.player)
-        # print(self.player.hand.cards)
-
         self.deal_cards(self.dealer)
-        # print(self.dealer.hand.cards)
 
         self.player.hand.calculate_value()
         self.dealer.hand.calculate_value()
-
-        # print (self.player.hand.score)
-        # print (self.dealer.hand.score)
 
         self.show_cards()
 
