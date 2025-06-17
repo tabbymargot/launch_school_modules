@@ -3,37 +3,14 @@ import os
 import random
 
 class Card:
-    # VALUES_AS_STRINGS = (['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'])
-
-    # ALL_CARDS = {
-    #     'Clubs': VALUES_AS_STRINGS,
-    #     'Diamonds': VALUES_AS_STRINGS,
-    #     'Hearts': VALUES_AS_STRINGS,
-    #     'Spades': VALUES_AS_STRINGS,
-    #     }
     def __init__(self, suit, str_value, score):
         self.suit = suit
         self.str_value = str_value
         self.score = score
 
-class Hand():
-    INTEGER_VALUES = {
-        '2': 2,
-        '3': 3,
-        '4': 4,
-        '5': 5,
-        '6': 6,
-        '7': 7,
-        '8': 8,
-        '9': 9,
-        '10': 10,
-        'Jack': 10,
-        'Queen': 10,
-        'King': 10,
-    }
+        # TODO: create getters and setters?
 
-    LOW_VALUE_ACE = 1
-    HIGH_VALUE_ACE = 11
+class Hand():
     #TODO: there are now 2 constants with the same name
     MAX_WINNING_SCORE = 21
 
@@ -42,18 +19,20 @@ class Hand():
     def __init__(self):
         self.cards = []
         self.score = None
+        self.all_cards_except_last = None
+        self.most_recently_dealt_card = None
 
     def calculate_value(self):
         aces = []
         non_aces = []
 
         for card in self.cards:
-            if list(card)[1] == 'Ace':
+            if card.str_value == 'Ace':
                 aces.append(card)
             else:
                 non_aces.append(card)
 
-        non_aces_values = [self.INTEGER_VALUES[card[1]] for card in non_aces]
+        non_aces_values = [card.score for card in non_aces]
         non_aces_score = sum(non_aces_values)
 
         aces_score = self.calculate_ace_values(aces, non_aces_score)
@@ -61,45 +40,52 @@ class Hand():
         # print(aces_score)
 
         self.score = non_aces_score + aces_score
+        # print(f'This is the score: {self.score}')
         # print(non_aces_score + aces_score)
     
     def calculate_ace_values(self, aces, non_aces_score):
         aces_values = []
 
-        for _ in aces:
-            if ((non_aces_score + sum(aces_values) + self.HIGH_VALUE_ACE)
-            <= self.MAX_WINNING_SCORE):
-                aces_values.append(self.HIGH_VALUE_ACE)
+        for ace in aces:
+            low_value_ace = ace.score[0]
+            high_value_ace = ace.score[1]
 
-            elif ((non_aces_score + sum(aces_values) + self.LOW_VALUE_ACE)
+            if ((non_aces_score + sum(aces_values) + high_value_ace)
             <= self.MAX_WINNING_SCORE):
-                aces_values.append(self.LOW_VALUE_ACE)
+                aces_values.append(high_value_ace)
 
-            elif self.HIGH_VALUE_ACE in aces_values:
+            elif ((non_aces_score + sum(aces_values) + low_value_ace)
+            <= self.MAX_WINNING_SCORE):
+                aces_values.append(low_value_ace)
+
+            elif high_value_ace in aces_values:
                 for idx, value in enumerate(aces_values):
-                    if value == self.HIGH_VALUE_ACE:
-                        aces_values[idx] = self.LOW_VALUE_ACE
+                    if value == high_value_ace:
+                        aces_values[idx] = low_value_ace
                         break
 
-                aces_values.append(self.LOW_VALUE_ACE)
+                aces_values.append(low_value_ace)
 
             else:
                 pass
 
         return sum(aces_values)
     
-    def card_details(self):
-        all_cards = []
+    def get_card_details(self):
+        card_details = []
 
-        for card in self.cards:
-            suit = card[0]
-            value = card[1]
-            all_cards.append(f'the {value} of {suit}')
+        for card in self.all_cards_except_last:
+            suit = card.suit
+            value = card.str_value
+            card_details.append(f'the {value} of {suit}')
 
-        all_player_cards_except_last = all_cards[:-1]
-        player_last_card = all_cards[-1]
+        return card_details
 
-        return all_player_cards_except_last, player_last_card
+    def get_last_dealt_card_details(self):
+        suit = self.most_recently_dealt_card.suit
+        value = self.most_recently_dealt_card.str_value
+
+        return f'the {value} of {suit}'
 
 class Deck:
     SUITS = ('Clubs', 'Diamonds', 'Hearts', 'Spades')
@@ -107,15 +93,19 @@ class Deck:
     SCORES = ((1, 11), 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10)
 
     def __init__(self):
+        self.cards = []
+
         # Create 52 card objects and add to a list, self.cards
         for suit in self.SUITS:
             values_and_scores = zip(self.STR_VALUES, self.SCORES)
 
-            self.cards =    [Card(suit, str_value, score) 
-                            for str_value, score in values_and_scores]
+            for str_value, score in values_and_scores:
+                self.cards.append(Card(suit, str_value, score))
             
             # for card in self.cards:
             #     print(vars(card))
+
+            # print(len(self.cards))
 
 class Participant:
     def __init__(self):
@@ -154,27 +144,32 @@ class Dealer(Participant):
     def deal(self, deck, participant):
         random.shuffle(deck.cards)
 
+        # for card in deck.cards:
+        #     print(vars(card))
+
         if len(participant.hand.cards) == 0:
             number_of_cards_to_deal = 2
         else:
             number_of_cards_to_deal = 1
-
-        # print(f'First: {participant.hand.cards}')
         
         for _ in range(number_of_cards_to_deal):
             card = deck.cards[0]
             participant.hand.cards.append(card)
             deck.cards.remove(card)
             print(card in deck.cards)
-
+            participant.hand.all_cards_except_last = participant.hand.cards[:-1]
+            participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
         # print(f'Second: {participant.hand.cards}') 
 
+        # TODO: what is this code doing?
         if len(participant.hand.cards) == 1:
             return participant.hand.cards[0]
 
         return participant.hand
     
     # player_hand = Dealer.deal_new_card(self, self.deck, self.player)
+
+    # TODO: I shouldn't need the method below - delete when ready
     def deal_new_card(self, deck, participant):
         updated_hand = Dealer.deal(self, deck, participant)
         # print(f'NC: {updated_hand.cards}')
@@ -244,12 +239,6 @@ class TwentyOneGame:
         # result = self.establish_result(player_score, dealer_score)
         print(f'This is the result: {result}')
 
-        # self.dealer_turn()
-            # The dealer doesn't play at all if the player busts.
-            # Display the dealer's hand, sincluding the hidden card, and report his point total.
-            # Redisplay the dealer's hand and point total and each time he hits.
-            # Display the results when the dealer stays.
-
         self.display_result(result)
 
         # TODO: After each game is over, ask the player if they want to play again. Start a new game if they say yes, else end the game.
@@ -260,24 +249,13 @@ class TwentyOneGame:
         self.dealer.deal(self.deck, participant)
 
     def show_cards(self):
-        all_player_cards_except_last, player_last_card = self.player.hand.card_details()
-
-        #TODO: only the second variable is used.
-        all_dealer_cards_except_last, dealer_last_card = self.dealer.hand.card_details()
-
-        all_the_players_cards = ', '.join(all_player_cards_except_last) \
-        + " and " + player_last_card
-
-        # all_the_dealers_cards = ', '.join(all_dealer_cards_except_last) \
-        # + " and " + dealer_last_card
-
-        self.prompt(f"Your hand contains {all_the_players_cards}.\n")
+        self.prompt(f"Your hand contains the {self.player.hand.get_card_details()} and {self.player.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
 
         self.prompt(f"Your hand is worth {self.player.hand.score} points.\n")
         # time.sleep(1)
 
-        self.prompt(f"One of the dealer's two cards is {dealer_last_card}.\n")
+        self.prompt(f"One of the dealer's two cards is {self.dealer.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
 
     def player_turn(self):
@@ -292,16 +270,9 @@ class TwentyOneGame:
                 self.prompt('Dealing additional card...\n')
                 # time.sleep(1)
 
-                player_hand = Dealer.deal_new_card(self, self.deck, self.player)
-                print(f'PHC: {player_hand.cards}')
+                self.dealer.deal(self.deck, self.player)
 
-                # player_all_cards_except_last, player_last_card = \
-                # print(self.player.hand.card_details())
-
-                all_player_cards_except_last, player_last_card = self.player.hand.card_details()
-
-                self.print_updated_player_hand(all_player_cards_except_last, \
-                player_last_card)
+                self.print_updated_player_hand()
 
                 self.player.hand.calculate_value()
 
@@ -327,40 +298,23 @@ class TwentyOneGame:
             self.prompt("That's not a valid choice. Please try again\n.")
             # time.sleep(1.5)
 
-    def print_updated_player_hand(self, player_all_cards_except_last, player_last_card):
-        player_cards = ', '.join(player_all_cards_except_last) + \
-        " and " + player_last_card
+    def print_updated_player_hand(self):
 
-        self.prompt(f"Your new card is {player_last_card}.\n")
-        # time.sleep(1)
-
-        self.prompt(f"Your hand now contains {player_cards}.\n")
+        self.prompt(f"Your hand now contains the {self.player.hand.get_card_details()} and {self.player.hand.get_last_dealt_card_details()}.\n")
 
     def print_updated_player_score(self):
         self.prompt(f'Your new score is {self.player.hand.score}.\n')
         # time.sleep(1)
 
-        #TODO: only the second variable is used.
-        all_dealer_cards_except_last, dealer_last_card = self.dealer.hand.card_details()
-
         self.prompt(f"As a reminder, one of the dealer's two " \
-                f"cards is {dealer_last_card}.\n")
+                f"cards is {self.dealer.hand.get_last_dealt_card_details()}.\n")
         # # time.sleep(1)
 
     
     def dealer_turn(self):
-        print(f'Dealer score: {self.dealer.hand.score}')
         while self.dealer.hand.score <= self.MAX_WINNING_SCORE:
 
-            #TODO: Find a better way to get the values below
-            all_dealer_cards_except_last, dealer_last_card = self.dealer.hand.card_details()
-
-            dealer_cards = ', '.join(all_dealer_cards_except_last) + \
-            " and " + dealer_last_card
-
-            self.prompt(f"The dealer's hand contains {dealer_cards}.\n")
-
-            # print(f'Dealers original score: {self.dealer.hand.score}')
+            self.prompt(f"The dealer's hand contains the {self.dealer.hand.get_card_details()} and {self.dealer.hand.get_last_dealt_card_details()}.\n")
 
             self.dealer.hand.calculate_value()
 
@@ -371,19 +325,11 @@ class TwentyOneGame:
             "dealing them another card...\n") 
             # time.sleep(1)
 
+            self.dealer.deal(self.deck, self.dealer)
+
+            self.dealer.hand.calculate_value()
             
-
-            dealer_hand = self.dealer.deal_new_card(self.deck, self.dealer)
-            # print(f'Dealer hand: {dealer_hand.cards}')
-             
-
-            all_dealer_cards_except_last, dealer_last_card = self.dealer.hand.card_details()
-
-            # self.dealer.hand.calculate_value()
-
-            # dealer_score = self.dealer.hand.score
-
-            # self.prompt(f"The dealer's new card is {dealer_last_card}, and their new score is {dealer_score}.\n")
+            self.prompt(f"The dealer's new card is {self.dealer.hand.get_last_dealt_card_details()}, and their new score is {self.dealer.hand.score}.\n")
             # time.sleep(1)
         print(f'The dealers final score 2: {self.dealer.hand.score}')
         #TODO: I shouldn't have to return this
