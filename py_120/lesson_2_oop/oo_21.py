@@ -206,10 +206,11 @@ class TwentyOneGame:
 
         self.show_cards()
 
-        player_score = self.player_turn()
-        print(f'Player score: {player_score}')
+        # player_score = self.player_turn()
+        self.player_turn()
+        # print(f'Player score: {player_score}')
 
-        if player_score > self.MAX_WINNING_SCORE:
+        if self.player.hand.score > self.MAX_WINNING_SCORE:
             result = self.establish_result()
         else:
             dealer_score = self.dealer_turn()
@@ -265,7 +266,7 @@ class TwentyOneGame:
             else:
                 break
 
-        return self.player.hand.score
+        # return self.player.hand.score
 
     def get_player_move(self):
         while True:
