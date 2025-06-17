@@ -313,6 +313,7 @@ class TwentyOneGame:
             player_move = self.get_player_move()
             # print(player_move)
             # break
+            # TODO: Move hit / stay to Participant class?
             if player_move == 'h':
                 os.system('clear')
 
