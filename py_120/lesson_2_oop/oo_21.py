@@ -363,7 +363,6 @@ class TwentyOneGame:
                 f"cards is {self.dealer.hand.get_last_dealt_card_details()}.\n")
         # # time.sleep(1)
 
-    
     def dealer_turn(self):
         # while self.dealer.hand.score <= self.MAX_WINNING_SCORE:
         while not self.dealer.is_busted():
@@ -398,17 +397,13 @@ class TwentyOneGame:
         print("Thanks for playing 21! Goodbye!")
 
     def establish_result(self):
-        # Is it necessary to define variables here?
-        player_score = self.player.hand.score
-        dealer_score = self.dealer.hand.score
-
-        if player_score > self.MAX_WINNING_SCORE:
+        if self.player.hand.score > self.MAX_WINNING_SCORE:
             return 'player_bust'
-        if dealer_score > self.MAX_WINNING_SCORE:
+        if self.dealer.hand.score > self.MAX_WINNING_SCORE:
             return 'dealer_bust'
-        if player_score > dealer_score:
+        if self.player.hand.score > self.dealer.hand.score:
             return 'player_wins'
-        if dealer_score > player_score:
+        if self.dealer.hand.score > self.player.hand.score:
             return 'dealer_wins'
 
         return 'tie'
