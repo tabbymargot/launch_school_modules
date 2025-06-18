@@ -45,6 +45,12 @@ class Hand():
         self.score = None
         self.all_cards_except_last = None
         self.most_recently_dealt_card = None
+        # self.aces = []
+        # self.non_aces = []
+        # self.aces_score = None
+        # self.non_aces_score = None
+        # self.low_value_ace = None
+        # self.high_value_ace = None
 
     @property
     def cards(self):
@@ -78,6 +84,54 @@ class Hand():
     def most_recently_dealt_card(self, most_recently_dealt_card):
         self._most_recently_dealt_card = most_recently_dealt_card
 
+    # @property
+    # def aces(self):
+    #     return self._aces
+    
+    # @aces.setter
+    # def aces(self, aces):
+    #     self._aces = aces
+
+    # @property
+    # def non_aces(self):
+    #     return self._non_aces
+    
+    # @non_aces.setter
+    # def non_aces(self, non_aces):
+    #     self._non_aces = non_aces
+
+    # @property
+    # def aces_score(self):
+    #     return self._aces_score
+    
+    # @aces_score.setter
+    # def aces_score(self, aces_score):
+    #     self._aces_score = aces_score
+
+    # @property
+    # def non_aces_score(self):
+    #     return self._non_aces_score
+    
+    # @non_aces_score.setter
+    # def non_aces_score(self, non_aces_score):
+    #     self._non_aces_score = non_aces_score
+
+    # @property
+    # def low_value_ace(self):
+    #     return self._low_value_ace
+    
+    # @low_value_ace.setter
+    # def low_value_ace(self, low_value_ace):
+    #     self._low_value_ace = low_value_ace
+
+    # @property
+    # def high_value_ace(self):
+    #     return self._high_value_ace
+    
+    # @high_value_ace.setter
+    # def high_value_ace(self, high_value_ace):
+    #     self._high_value_ace = high_value_ace
+
     def calculate_value(self):
         aces = []
         non_aces = []
@@ -88,8 +142,7 @@ class Hand():
             else:
                 non_aces.append(card)
 
-        non_aces_values = [card.score for card in non_aces]
-        non_aces_score = sum(non_aces_values)
+        non_aces_score = sum([card.score for card in non_aces])
 
         aces_score = self.calculate_ace_values(aces, non_aces_score)
         # print(non_aces_score)
@@ -267,6 +320,9 @@ class TwentyOneGame:
         self.prompt(f"Your hand is worth {self.player.hand.score} points.\n")
         # time.sleep(1)
 
+        print(f'DH2: {self.dealer.hand.score}')
+        print(f'Dealer hand 1: {self.dealer.hand.get_card_details()} and {self.dealer.hand.get_last_dealt_card_details()}.\n')
+
         self.prompt(f"One of the dealer's two cards is {self.dealer.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
 
@@ -321,9 +377,14 @@ class TwentyOneGame:
     def dealer_turn(self):
         # while self.dealer.hand.score <= self.MAX_WINNING_SCORE:
         while not self.dealer.is_busted():
+            print(f'Dealer hand 2: {self.dealer.hand.get_card_details()} and {self.dealer.hand.get_last_dealt_card_details()}.\n')
+
+            print(f'DH3: {self.dealer.hand.score}')
+
             self.display_dealer_hand_info('Dealer hand')
 
             self.dealer.hand.calculate_value()
+            print(f'DH1: {self.dealer.hand.score}')
 
             if self.dealer.hand.score >= self.DEALER_MINIMUM_SCORE:
                 break
