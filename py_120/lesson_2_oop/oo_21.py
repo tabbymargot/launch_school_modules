@@ -145,12 +145,8 @@ class Hand():
         non_aces_score = sum([card.score for card in non_aces])
 
         aces_score = self.calculate_ace_values(aces, non_aces_score)
-        # print(non_aces_score)
-        # print(aces_score)
 
         self.score = non_aces_score + aces_score
-        # print(f'This is the score: {self.score}')
-        # print(non_aces_score + aces_score)
     
     def calculate_ace_values(self, aces, non_aces_score):
         aces_values = []
@@ -216,11 +212,6 @@ class Deck:
 
                 self.cards.append(card)
 
-            # for card in self.cards:
-            #     print(vars(card))
-
-            # print(len(self.cards))
-
 class Participant:
     MAX_WINNING_SCORE = 21
 
@@ -248,9 +239,6 @@ class Dealer(Participant):
 
     def deal(self, participant):
         random.shuffle(self.deck.cards)
-
-        # for card in deck.cards:
-        #     print(vars(card))
 
         if len(participant.hand.cards) == 0:
             number_of_cards_to_deal = 2
@@ -320,9 +308,6 @@ class TwentyOneGame:
         self.prompt(f"Your hand is worth {self.player.hand.score} points.\n")
         # time.sleep(1)
 
-        print(f'DH2: {self.dealer.hand.score}')
-        print(f'Dealer hand 1: {self.dealer.hand.get_details_of_all_cards_except_last()} and {self.dealer.hand.get_last_dealt_card_details()}.\n')
-
         self.prompt(f"One of the dealer's two cards is {self.dealer.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
 
@@ -377,14 +362,10 @@ class TwentyOneGame:
     def dealer_turn(self):
         # while self.dealer.hand.score <= self.MAX_WINNING_SCORE:
         while not self.dealer.is_busted():
-            print(f'Dealer hand 2: {self.dealer.hand.get_details_of_all_cards_except_last()} and {self.dealer.hand.get_last_dealt_card_details()}.\n')
-
-            print(f'DH3: {self.dealer.hand.score}')
 
             self.display_dealer_hand_info('Dealer hand')
 
             self.dealer.hand.calculate_value()
-            print(f'DH1: {self.dealer.hand.score}')
 
             if self.dealer.hand.score >= self.DEALER_MINIMUM_SCORE:
                 break
@@ -397,9 +378,6 @@ class TwentyOneGame:
             self. display_dealer_hand_info('Latest card, updated score')
 
             # time.sleep(1)
-        # print(f'The dealers final score 2: {self.dealer.hand.score}')
-        #TODO: I shouldn't have to return this
-        # return self.dealer.hand.score
 
     def display_dealer_hand_info(self, required_info):
         match required_info:
