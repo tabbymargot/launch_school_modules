@@ -180,7 +180,7 @@ class Hand():
 
         return sum(aces_values)
     
-    def get_card_details(self):
+    def get_details_of_all_cards_except_last(self):
         card_details = []
 
         for card in self.all_cards_except_last:
@@ -188,7 +188,7 @@ class Hand():
             value = card.str_value
             card_details.append(f'the {value} of {suit}')
 
-        return card_details
+        return ', '.join([details for details in card_details])
 
     def get_last_dealt_card_details(self):
         suit = self.most_recently_dealt_card.suit
@@ -314,14 +314,14 @@ class TwentyOneGame:
 
 
     def show_cards(self):
-        self.prompt(f"Your hand contains the {self.player.hand.get_card_details()} and {self.player.hand.get_last_dealt_card_details()}.\n")
+        self.prompt(f"Your hand contains the {self.player.hand.get_details_of_all_cards_except_last()} and {self.player.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
 
         self.prompt(f"Your hand is worth {self.player.hand.score} points.\n")
         # time.sleep(1)
 
         print(f'DH2: {self.dealer.hand.score}')
-        print(f'Dealer hand 1: {self.dealer.hand.get_card_details()} and {self.dealer.hand.get_last_dealt_card_details()}.\n')
+        print(f'Dealer hand 1: {self.dealer.hand.get_details_of_all_cards_except_last()} and {self.dealer.hand.get_last_dealt_card_details()}.\n')
 
         self.prompt(f"One of the dealer's two cards is {self.dealer.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
@@ -363,7 +363,7 @@ class TwentyOneGame:
         self.player.hand.calculate_value()
 
     def print_updated_player_hand(self):
-        self.prompt(f"Your hand now contains the {self.player.hand.get_card_details()} and {self.player.hand.get_last_dealt_card_details()}.\n")
+        self.prompt(f"Your hand now contains the {self.player.hand.get_details_of_all_cards_except_last()} and {self.player.hand.get_last_dealt_card_details()}.\n")
 
     def print_updated_player_score(self):
         self.prompt(f'Your new score is {self.player.hand.score}.\n')
@@ -377,7 +377,7 @@ class TwentyOneGame:
     def dealer_turn(self):
         # while self.dealer.hand.score <= self.MAX_WINNING_SCORE:
         while not self.dealer.is_busted():
-            print(f'Dealer hand 2: {self.dealer.hand.get_card_details()} and {self.dealer.hand.get_last_dealt_card_details()}.\n')
+            print(f'Dealer hand 2: {self.dealer.hand.get_details_of_all_cards_except_last()} and {self.dealer.hand.get_last_dealt_card_details()}.\n')
 
             print(f'DH3: {self.dealer.hand.score}')
 
@@ -404,7 +404,7 @@ class TwentyOneGame:
     def display_dealer_hand_info(self, required_info):
         match required_info:
             case 'Dealer hand':
-                self.prompt(f"The dealer's hand contains the {self.dealer.hand.get_card_details()} and {self.dealer.hand.get_last_dealt_card_details()}.\n")
+                self.prompt(f"The dealer's hand contains the {self.dealer.hand.get_details_of_all_cards_except_last()} and {self.dealer.hand.get_last_dealt_card_details()}.\n")
             case 'Current score':
                 self.prompt(f"The dealer has {self.dealer.hand.score} points, so I'm just " \
                 "dealing them another card...\n") 
