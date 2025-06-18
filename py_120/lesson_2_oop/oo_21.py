@@ -1,4 +1,4 @@
-# TODO: make the deck a collaborator object of Dealer rather than passing it in as an argument to the various methods?
+
 
 # TODO: check no methods return a value and also have side effects
 import json
@@ -7,6 +7,8 @@ with open('oo_21.json', 'r') as file:
 
 import os
 import random
+
+MAX_WINNING_SCORE = 21
 
 class Card:
     def __init__(self):
@@ -40,7 +42,7 @@ class Card:
 
 class Hand():
     #TODO: there are now 2 constants with the same name
-    MAX_WINNING_SCORE = 21
+    # MAX_WINNING_SCORE = 21
 
     # most_recently_dealt_card = None
 
@@ -49,12 +51,6 @@ class Hand():
         self.score = None
         self.all_cards_except_last = None
         self.most_recently_dealt_card = None
-        # self.aces = []
-        # self.non_aces = []
-        # self.aces_score = None
-        # self.non_aces_score = None
-        # self.low_value_ace = None
-        # self.high_value_ace = None
 
     @property
     def cards(self):
@@ -88,54 +84,6 @@ class Hand():
     def most_recently_dealt_card(self, most_recently_dealt_card):
         self._most_recently_dealt_card = most_recently_dealt_card
 
-    # @property
-    # def aces(self):
-    #     return self._aces
-    
-    # @aces.setter
-    # def aces(self, aces):
-    #     self._aces = aces
-
-    # @property
-    # def non_aces(self):
-    #     return self._non_aces
-    
-    # @non_aces.setter
-    # def non_aces(self, non_aces):
-    #     self._non_aces = non_aces
-
-    # @property
-    # def aces_score(self):
-    #     return self._aces_score
-    
-    # @aces_score.setter
-    # def aces_score(self, aces_score):
-    #     self._aces_score = aces_score
-
-    # @property
-    # def non_aces_score(self):
-    #     return self._non_aces_score
-    
-    # @non_aces_score.setter
-    # def non_aces_score(self, non_aces_score):
-    #     self._non_aces_score = non_aces_score
-
-    # @property
-    # def low_value_ace(self):
-    #     return self._low_value_ace
-    
-    # @low_value_ace.setter
-    # def low_value_ace(self, low_value_ace):
-    #     self._low_value_ace = low_value_ace
-
-    # @property
-    # def high_value_ace(self):
-    #     return self._high_value_ace
-    
-    # @high_value_ace.setter
-    # def high_value_ace(self, high_value_ace):
-    #     self._high_value_ace = high_value_ace
-
     def calculate_value(self):
         aces = []
         non_aces = []
@@ -160,11 +108,11 @@ class Hand():
             high_value_ace = ace.score[1]
 
             if ((non_aces_score + sum(aces_values) + high_value_ace)
-            <= self.MAX_WINNING_SCORE):
+            <= MAX_WINNING_SCORE):
                 aces_values.append(high_value_ace)
 
             elif ((non_aces_score + sum(aces_values) + low_value_ace)
-            <= self.MAX_WINNING_SCORE):
+            <= MAX_WINNING_SCORE):
                 aces_values.append(low_value_ace)
 
             elif high_value_ace in aces_values:
@@ -217,7 +165,7 @@ class Deck:
                 self.cards.append(card)
 
 class Participant:
-    MAX_WINNING_SCORE = 21
+    # MAX_WINNING_SCORE = 21
 
     def __init__(self):
         # STUB
@@ -228,7 +176,7 @@ class Participant:
         self.hand = Hand()
 
     def is_busted(self):
-        return self.hand.score > self.MAX_WINNING_SCORE
+        return self.hand.score > MAX_WINNING_SCORE
 
 
 class Player(Participant):
@@ -260,7 +208,7 @@ class Dealer(Participant):
             
 
 class TwentyOneGame:
-    MAX_WINNING_SCORE = 21
+    # MAX_WINNING_SCORE = 21
     DEALER_MINIMUM_SCORE = 17
 
     def __init__(self):
@@ -291,7 +239,7 @@ class TwentyOneGame:
 
         self.player_turn()
 
-        # if self.player.hand.score > self.MAX_WINNING_SCORE:
+        # if self.player.hand.score > MAX_WINNING_SCORE:
         if self.player.is_busted():
             result = self.establish_result()
         else:
@@ -324,7 +272,7 @@ class TwentyOneGame:
             if player_move == 'h':
                 self.player_hit()
 
-                # if self.player.hand.score > self.MAX_WINNING_SCORE:
+                # if self.player.hand.score > MAX_WINNING_SCORE:
                 if self.player.is_busted():
                     break
 
@@ -364,7 +312,7 @@ class TwentyOneGame:
         # # time.sleep(1)
 
     def dealer_turn(self):
-        # while self.dealer.hand.score <= self.MAX_WINNING_SCORE:
+        # while self.dealer.hand.score <= MAX_WINNING_SCORE:
         while not self.dealer.is_busted():
 
             self.display_dealer_hand_info('Dealer hand')
@@ -397,9 +345,9 @@ class TwentyOneGame:
         print("Thanks for playing 21! Goodbye!")
 
     def establish_result(self):
-        if self.player.hand.score > self.MAX_WINNING_SCORE:
+        if self.player.hand.score > MAX_WINNING_SCORE:
             return 'player_bust'
-        if self.dealer.hand.score > self.MAX_WINNING_SCORE:
+        if self.dealer.hand.score > MAX_WINNING_SCORE:
             return 'dealer_bust'
         if self.player.hand.score > self.dealer.hand.score:
             return 'player_wins'
