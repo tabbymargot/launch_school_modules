@@ -46,6 +46,38 @@ class Hand():
         self.all_cards_except_last = None
         self.most_recently_dealt_card = None
 
+    @property
+    def cards(self):
+        return self._cards
+    
+    @cards.setter
+    def cards(self, cards):
+        self._cards = cards
+
+    @property
+    def score(self):
+        return self._score
+    
+    @score.setter
+    def score(self, score):
+        self._score = score
+
+    @property
+    def all_cards_except_last(self):
+        return self._all_cards_except_last
+    
+    @all_cards_except_last.setter
+    def all_cards_except_last(self, all_cards_except_last):
+        self._all_cards_except_last = all_cards_except_last
+
+    @property
+    def most_recently_dealt_card(self):
+        return self._most_recently_dealt_card
+    
+    @most_recently_dealt_card.setter
+    def most_recently_dealt_card(self, most_recently_dealt_card):
+        self._most_recently_dealt_card = most_recently_dealt_card
+
     def calculate_value(self):
         aces = []
         non_aces = []
@@ -178,7 +210,6 @@ class Dealer(Participant):
             participant.hand.cards.append(card)
             self.deck.cards.remove(card)
 
-            # TODO: extract this to a method? Put the method in Hand, and use getters and setters to reassign the attributes.
             participant.hand.all_cards_except_last = participant.hand.cards[:-1]
             participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
             
