@@ -1,5 +1,3 @@
-
-
 # TODO: check no methods return a value and also have side effects
 import json
 with open('oo_21.json', 'r') as file:
@@ -41,11 +39,6 @@ class Card:
         self._score = score
 
 class Hand():
-    #TODO: there are now 2 constants with the same name
-    # MAX_WINNING_SCORE = 21
-
-    # most_recently_dealt_card = None
-
     def __init__(self):
         self.cards = []
         self.score = None
@@ -152,7 +145,6 @@ class Deck:
     def __init__(self):
         self.cards = []
 
-        # Create 52 card objects and add to a list, self.cards
         for suit in self.SUITS:
             values_and_scores = zip(self.STR_VALUES, self.SCORES)
 
@@ -165,7 +157,6 @@ class Deck:
                 self.cards.append(card)
 
 class Participant:
-    # MAX_WINNING_SCORE = 21
 
     def __init__(self):
         # STUB
@@ -177,7 +168,6 @@ class Participant:
 
     def is_busted(self):
         return self.hand.score > MAX_WINNING_SCORE
-
 
 class Player(Participant):
     def __init__(self):
@@ -206,9 +196,7 @@ class Dealer(Participant):
             participant.hand.all_cards_except_last = participant.hand.cards[:-1]
             participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
             
-
 class TwentyOneGame:
-    # MAX_WINNING_SCORE = 21
     DEALER_MINIMUM_SCORE = 17
 
     def __init__(self):
@@ -239,7 +227,6 @@ class TwentyOneGame:
 
         self.player_turn()
 
-        # if self.player.hand.score > MAX_WINNING_SCORE:
         if self.player.is_busted():
             result = self.establish_result()
         else:
@@ -252,8 +239,9 @@ class TwentyOneGame:
 
         self.display_goodbye_message()
 
-
     def show_cards(self):
+        # TODO: See if I can use the JSON doc if I replace self in the sample code below with something else that doesn't have to be initialised:
+        # self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
 
         self.prompt(f"Your hand contains the {self.player.hand.get_details_of_all_cards_except_last()} and {self.player.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
@@ -268,11 +256,9 @@ class TwentyOneGame:
         while True:
             player_move = self.get_player_move()
 
-            # TODO: Move hit / stay to Participant class?
             if player_move == 'h':
                 self.player_hit()
 
-                # if self.player.hand.score > MAX_WINNING_SCORE:
                 if self.player.is_busted():
                     break
 
@@ -312,7 +298,6 @@ class TwentyOneGame:
         # # time.sleep(1)
 
     def dealer_turn(self):
-        # while self.dealer.hand.score <= MAX_WINNING_SCORE:
         while not self.dealer.is_busted():
 
             self.display_dealer_hand_info('Dealer hand')
@@ -347,10 +332,13 @@ class TwentyOneGame:
     def establish_result(self):
         if self.player.hand.score > MAX_WINNING_SCORE:
             return 'player_bust'
+        
         if self.dealer.hand.score > MAX_WINNING_SCORE:
             return 'dealer_bust'
+        
         if self.player.hand.score > self.dealer.hand.score:
             return 'player_wins'
+        
         if self.dealer.hand.score > self.player.hand.score:
             return 'dealer_wins'
 
