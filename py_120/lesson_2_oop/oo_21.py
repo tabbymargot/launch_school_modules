@@ -1,6 +1,10 @@
 # TODO: make the deck a collaborator object of Dealer rather than passing it in as an argument to the various methods?
 
 # TODO: check no methods return a value and also have side effects
+import json
+with open('oo_21.json', 'r') as file:
+    MESSAGES = json.load(file)
+
 import os
 import random
 
@@ -302,6 +306,7 @@ class TwentyOneGame:
 
 
     def show_cards(self):
+
         self.prompt(f"Your hand contains the {self.player.hand.get_details_of_all_cards_except_last()} and {self.player.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
 
@@ -414,43 +419,32 @@ class TwentyOneGame:
 
         match result:
             case 'player_bust':
-                self.prompt(f'Your new score is {player_score}.\n')
+                self.prompt(MESSAGES['new_score'].format(player_score=player_score))
                 # time.sleep(1.5)
-                self.prompt("Oh no - you're bust! \U0001F62D That means the " \
-                "dealer's the winner.\n")
+
+                self.prompt(MESSAGES['player_bust'])
+
                 # time.sleep(1.5)
             case 'dealer_bust':
-                self.prompt(
-                f"You scored {player_score} and the dealer "
-                f"scored {dealer_score}.\n "
-                )
+
+                self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
                 # time.sleep(1.5)
-                self.prompt("The dealer's bust, so congratulations, you're " \
-                "the winner! \U0001F3C6 \n")
+                self.prompt(MESSAGES['dealer_bust'])
                 # time.sleep(1.5)
             case 'player_wins':
-                self.prompt(
-                f"You scored {player_score} and the dealer "
-                f"scored {dealer_score}.\n"
-                )
+                self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
                 # time.sleep(1.5)
-                self.prompt("Congratulations, you're the winner! \U0001F3C6\n")
+                self.prompt(MESSAGES['player_wins'])
                 # time.sleep(1.5)
             case 'dealer_wins':
-                self.prompt(
-                f"You scored {player_score} and the dealer "
-                f"scored {dealer_score}.\n"
-                )
+                self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
                 # time.sleep(1.5)
-                self.prompt("Oh no, that means you lost! \U0001F62D \n")
+                self.prompt(MESSAGES['player_loses'])
                 # time.sleep(1.5)
             case 'tie':
-                self.prompt(
-                f"You scored {player_score} and the dealer "
-                f"scored {dealer_score}. \n"
-                )
+                self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
                 # time.sleep(1.5)
-                self.prompt("It's a tie! \U0001F454 \n")
+                self.prompt(MESSAGES['tie'])
                 # time.sleep(1.5)
 
 game = TwentyOneGame()

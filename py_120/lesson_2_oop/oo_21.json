@@ -1,0 +1,9 @@
+{
+    "new_score": "Your diddy new score is {player_score}.\n",
+    "player_bust": "Oh no - you're bust! That means the dealer's the winner.\n",
+    "both_scores": "You scored diddy {player_score} and the dealer scored {dealer_score}.\n ",
+    "dealer_bust": "The dealer's bust, so congratulations, you're the winner! \n",
+    "player_wins": "Congratulations, you're the diddy winner! \n",
+    "player_loses": "Oh no, that means you diddy lost!",
+    "tie": "It's a tie!"
+}
