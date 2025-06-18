@@ -417,33 +417,31 @@ class TwentyOneGame:
         player_score = self.player.hand.score
         dealer_score = self.dealer.hand.score
 
+        if result != 'player_bust':
+            self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
+            # time.sleep(1.5)
+
         match result:
             case 'player_bust':
                 self.prompt(MESSAGES['new_score'].format(player_score=player_score))
                 # time.sleep(1.5)
 
                 self.prompt(MESSAGES['player_bust'])
-
                 # time.sleep(1.5)
+
             case 'dealer_bust':
-
-                self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
-                # time.sleep(1.5)
                 self.prompt(MESSAGES['dealer_bust'])
                 # time.sleep(1.5)
+
             case 'player_wins':
-                self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
-                # time.sleep(1.5)
                 self.prompt(MESSAGES['player_wins'])
                 # time.sleep(1.5)
+
             case 'dealer_wins':
-                self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
-                # time.sleep(1.5)
                 self.prompt(MESSAGES['player_loses'])
                 # time.sleep(1.5)
+
             case 'tie':
-                self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
-                # time.sleep(1.5)
                 self.prompt(MESSAGES['tie'])
                 # time.sleep(1.5)
 
