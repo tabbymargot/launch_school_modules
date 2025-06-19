@@ -1,5 +1,5 @@
 # TODO: go through and look at how instance methods match the explanation here https://www.remnote.com/w/6810e016669adfcb7792a93f/IP3ToB70IwpvOGTV8
-# TODO: go over internal and public usage
+# TODO: add validation to getters and setters
 # TODO: go through and determine the collaborator objects. Check with LSBot
 import json
 with open('oo_21.json', 'r') as file:
@@ -153,7 +153,7 @@ class Deck:
     
     @cards.setter
     def cards(self, cards):
-        self._cards = cards
+        self._cards = cards 
 
         for suit in self.SUITS:
             values_and_scores = zip(self.STR_VALUES, self.SCORES)
