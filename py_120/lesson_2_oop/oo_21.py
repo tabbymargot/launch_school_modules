@@ -1,4 +1,8 @@
 # TODO: check no methods return a value and also have side effects
+# TODO: add underscores to attributes. Check their access.
+# TODO: go through and look at how instance methods match the explanation here https://www.remnote.com/w/6810e016669adfcb7792a93f/IP3ToB70IwpvOGTV8
+# TODO: go over internal and public usage
+# TODO: go through and determine the collaborator objects. Check with LSBot
 import json
 with open('oo_21.json', 'r') as file:
     MESSAGES = json.load(file)
@@ -240,7 +244,7 @@ class TwentyOneGame:
         self.display_goodbye_message()
 
     def show_cards(self):
-        # TODO: See if I can use the JSON doc if I replace self in the sample code below with something else that doesn't have to be initialised:
+        # TODO: See if I can use the JSON doc if I replace self in the sample code below with something else that doesn't have to be initialised and therefore doesn't throw an error:
         # self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
 
         self.prompt(f"Your hand contains the {self.player.hand.get_details_of_all_cards_except_last()} and {self.player.hand.get_last_dealt_card_details()}.\n")
@@ -299,7 +303,7 @@ class TwentyOneGame:
 
     def dealer_turn(self):
         while not self.dealer.is_busted():
-
+            #TODO: is there a way to incorporate these into the JSON file instead?
             self.display_dealer_hand_info('Dealer hand')
 
             self.dealer.hand.calculate_value()
@@ -330,6 +334,7 @@ class TwentyOneGame:
         print("Thanks for playing 21! Goodbye!")
 
     def establish_result(self):
+        # TODO: instead of returning a value, create a result attribute? Would need to update the display_result function too.
         if self.player.hand.score > MAX_WINNING_SCORE:
             return 'player_bust'
         
@@ -351,7 +356,7 @@ class TwentyOneGame:
         if result != 'player_bust':
             self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
             # time.sleep(1.5)
-
+        # TODO: update the MESSAGES strings so that they're different from the strings following the case statements
         match result:
             case 'player_bust':
                 self.prompt(MESSAGES['new_score'].format(player_score=player_score))
