@@ -149,6 +149,14 @@ class Deck:
     def __init__(self):
         self.cards = []
 
+    @property
+    def cards(self):
+        return self._cards
+    
+    @cards.setter
+    def cards(self, cards):
+        self._cards = cards
+
         for suit in self.SUITS:
             values_and_scores = zip(self.STR_VALUES, self.SCORES)
 
@@ -169,6 +177,14 @@ class Participant:
         # What else goes here? all the redundant behaviors
         #   from Player and Dealer?
         self.hand = Hand()
+    
+    @property
+    def hand(self):
+        return self._hand
+    
+    @hand.setter
+    def hand(self, hand):
+        self._hand = hand
 
     def is_busted(self):
         return self.hand.score > MAX_WINNING_SCORE
@@ -181,10 +197,10 @@ class Dealer(Participant):
 
     def __init__(self):
         super().__init__()
-        self.deck = Deck()
+        self._deck = Deck()
 
     def deal(self, participant):
-        random.shuffle(self.deck.cards)
+        random.shuffle(self._deck.cards)
 
         if len(participant.hand.cards) == 0:
             number_of_cards_to_deal = 2
@@ -192,19 +208,16 @@ class Dealer(Participant):
             number_of_cards_to_deal = 1
         
         for _ in range(number_of_cards_to_deal):
-            card = self.deck.cards[0]
+            card = self._deck.cards[0]
 
             participant.hand.cards.append(card)
-            self.deck.cards.remove(card)
+            self._deck.cards.remove(card)
 
             participant.hand.all_cards_except_last = participant.hand.cards[:-1]
             participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
             
 class TwentyOneGame:
     DEALER_MINIMUM_SCORE = 17
-
-    # all_but_last_card = game.player.hand.get_details_of_all_cards_except_last()
-    #     last_card = self.player.hand.get_last_dealt_card_details()
 
     def __init__(self):
         self.dealer = Dealer()
