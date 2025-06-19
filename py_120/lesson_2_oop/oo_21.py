@@ -203,6 +203,9 @@ class Dealer(Participant):
 class TwentyOneGame:
     DEALER_MINIMUM_SCORE = 17
 
+    # all_but_last_card = game.player.hand.get_details_of_all_cards_except_last()
+    #     last_card = self.player.hand.get_last_dealt_card_details()
+
     def __init__(self):
         self.dealer = Dealer()
         self.player = Player()
@@ -244,8 +247,8 @@ class TwentyOneGame:
         self.display_goodbye_message()
 
     def show_cards(self):
-        # TODO: See if I can use the JSON doc if I replace self in the sample code below with something else that doesn't have to be initialised and therefore doesn't throw an error:
-        # self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
+
+        # self.prompt(MESSAGES['player_hand_contains'].format(all_but_last_card=all_but_last_card, last_card=last_card))
 
         self.prompt(f"Your hand contains the {self.player.hand.get_details_of_all_cards_except_last()} and {self.player.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
@@ -303,7 +306,6 @@ class TwentyOneGame:
 
     def dealer_turn(self):
         while not self.dealer.is_busted():
-            #TODO: is there a way to incorporate these into the JSON file instead?
             self.display_dealer_hand_info('Dealer hand')
 
             self.dealer.hand.calculate_value()
@@ -311,7 +313,7 @@ class TwentyOneGame:
             if self.dealer.hand.score >= self.DEALER_MINIMUM_SCORE:
                 break
             
-            self. display_dealer_hand_info('Current score')
+            self.display_dealer_hand_info('Current score')
 
             self.dealer.deal(self.dealer)
             self.dealer.hand.calculate_value()

@@ -1,5 +1,4 @@
 {
-    "player_hand_contains": "Your hand contains {all_but_last} and {last}.\n",
     "new_score": "Your diddy new score is {player_score}.\n",
     "player_bust": "Oh no - you're bust! That means the dealer's the winner.\n",
     "both_scores": "You scored diddy {player_score} and the dealer scored {dealer_score}.\n ",
