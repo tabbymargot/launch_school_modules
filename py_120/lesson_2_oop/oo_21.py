@@ -1,5 +1,3 @@
-# TODO: check no methods return a value and also have side effects
-# TODO: add underscores to attributes. Check their access.
 # TODO: go through and look at how instance methods match the explanation here https://www.remnote.com/w/6810e016669adfcb7792a93f/IP3ToB70IwpvOGTV8
 # TODO: go over internal and public usage
 # TODO: go through and determine the collaborator objects. Check with LSBot
@@ -220,8 +218,8 @@ class TwentyOneGame:
     DEALER_MINIMUM_SCORE = 17
 
     def __init__(self):
-        self.dealer = Dealer()
-        self.player = Player()
+        self._dealer = Dealer()
+        self._player = Player()
 
     def prompt(self, message):
         print(f'==> {message}')
@@ -237,17 +235,17 @@ class TwentyOneGame:
         # TODO: WHILE player wants to continue
         # TODO: Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
 
-        self.dealer.deal(self.player)
-        self.dealer.deal(self.dealer)
+        self._dealer.deal(self._player)
+        self._dealer.deal(self._dealer)
 
-        self.player.hand.calculate_value()
-        self.dealer.hand.calculate_value()
+        self._player.hand.calculate_value()
+        self._dealer.hand.calculate_value()
 
         self.show_cards()
 
         self.player_turn()
 
-        if self.player.is_busted():
+        if self._player.is_busted():
             result = self.establish_result()
         else:
             self.dealer_turn()
@@ -261,15 +259,15 @@ class TwentyOneGame:
 
     def show_cards(self):
 
-        # self.prompt(MESSAGES['player_hand_contains'].format(all_but_last_card=all_but_last_card, last_card=last_card))
+        # self.prompt(MESSAGES['_player_hand_contains'].format(all_but_last_card=all_but_last_card, last_card=last_card))
 
-        self.prompt(f"Your hand contains the {self.player.hand.get_details_of_all_cards_except_last()} and {self.player.hand.get_last_dealt_card_details()}.\n")
+        self.prompt(f"Your hand contains the {self._player.hand.get_details_of_all_cards_except_last()} and {self._player.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
 
-        self.prompt(f"Your hand is worth {self.player.hand.score} points.\n")
+        self.prompt(f"Your hand is worth {self._player.hand.score} points.\n")
         # time.sleep(1)
 
-        self.prompt(f"One of the dealer's two cards is {self.dealer.hand.get_last_dealt_card_details()}.\n")
+        self.prompt(f"One of the dealer's two cards is {self._dealer.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
 
     def player_turn(self):
@@ -279,7 +277,7 @@ class TwentyOneGame:
             if player_move == 'h':
                 self.player_hit()
 
-                if self.player.is_busted():
+                if self._player.is_busted():
                     break
 
                 self.print_updated_player_score()
@@ -302,34 +300,34 @@ class TwentyOneGame:
 
         self.prompt('Dealing additional card...\n')
         # time.sleep(1)
-        self.dealer.deal(self.player)
+        self._dealer.deal(self._player)
         self.print_updated_player_hand()
-        self.player.hand.calculate_value()
+        self._player.hand.calculate_value()
 
     def print_updated_player_hand(self):
-        self.prompt(f"Your hand now contains the {self.player.hand.get_details_of_all_cards_except_last()} and {self.player.hand.get_last_dealt_card_details()}.\n")
+        self.prompt(f"Your hand now contains the {self._player.hand.get_details_of_all_cards_except_last()} and {self._player.hand.get_last_dealt_card_details()}.\n")
 
     def print_updated_player_score(self):
-        self.prompt(f'Your new score is {self.player.hand.score}.\n')
+        self.prompt(f'Your new score is {self._player.hand.score}.\n')
         # time.sleep(1)
 
         self.prompt(f"As a reminder, one of the dealer's two " \
-                f"cards is {self.dealer.hand.get_last_dealt_card_details()}.\n")
+                f"cards is {self._dealer.hand.get_last_dealt_card_details()}.\n")
         # # time.sleep(1)
 
     def dealer_turn(self):
-        while not self.dealer.is_busted():
+        while not self._dealer.is_busted():
             self.display_dealer_hand_info('Dealer hand')
 
-            self.dealer.hand.calculate_value()
+            self._dealer.hand.calculate_value()
 
-            if self.dealer.hand.score >= self.DEALER_MINIMUM_SCORE:
+            if self._dealer.hand.score >= self.DEALER_MINIMUM_SCORE:
                 break
             
             self.display_dealer_hand_info('Current score')
 
-            self.dealer.deal(self.dealer)
-            self.dealer.hand.calculate_value()
+            self._dealer.deal(self._dealer)
+            self._dealer.hand.calculate_value()
             
             self. display_dealer_hand_info('Latest card, updated score')
 
@@ -338,35 +336,35 @@ class TwentyOneGame:
     def display_dealer_hand_info(self, required_info):
         match required_info:
             case 'Dealer hand':
-                self.prompt(f"The dealer's hand contains the {self.dealer.hand.get_details_of_all_cards_except_last()} and {self.dealer.hand.get_last_dealt_card_details()}.\n")
+                self.prompt(f"The dealer's hand contains the {self._dealer.hand.get_details_of_all_cards_except_last()} and {self._dealer.hand.get_last_dealt_card_details()}.\n")
             case 'Current score':
-                self.prompt(f"The dealer has {self.dealer.hand.score} points, so I'm just " \
+                self.prompt(f"The dealer has {self._dealer.hand.score} points, so I'm just " \
                 "dealing them another card...\n") 
             case 'Latest card, updated score':
-                self.prompt(f"The dealer's new card is {self.dealer.hand.get_last_dealt_card_details()}.\n")
+                self.prompt(f"The dealer's new card is {self._dealer.hand.get_last_dealt_card_details()}.\n")
 
     def display_goodbye_message(self):
         print("Thanks for playing 21! Goodbye!")
 
     def establish_result(self):
         # TODO: instead of returning a value, create a result attribute? Would need to update the display_result function too.
-        if self.player.hand.score > MAX_WINNING_SCORE:
+        if self._player.hand.score > MAX_WINNING_SCORE:
             return 'player_bust'
         
-        if self.dealer.hand.score > MAX_WINNING_SCORE:
+        if self._dealer.hand.score > MAX_WINNING_SCORE:
             return 'dealer_bust'
         
-        if self.player.hand.score > self.dealer.hand.score:
+        if self._player.hand.score > self._dealer.hand.score:
             return 'player_wins'
         
-        if self.dealer.hand.score > self.player.hand.score:
+        if self._dealer.hand.score > self._player.hand.score:
             return 'dealer_wins'
 
         return 'tie'
 
     def display_result(self, result):
-        player_score = self.player.hand.score
-        dealer_score = self.dealer.hand.score
+        player_score = self._player.hand.score
+        dealer_score = self._dealer.hand.score
 
         if result != 'player_bust':
             self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
