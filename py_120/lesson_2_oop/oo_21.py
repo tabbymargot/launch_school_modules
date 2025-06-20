@@ -12,10 +12,6 @@ SUITS = ('Clubs', 'Diamonds', 'Hearts', 'Spades')
 STR_VALUES = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
 SCORES = ((1, 11), 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10)
 
-SUITS_TEST = SUITS + ("InvalidSuit",)
-STR_VALUES_TEST = STR_VALUES + ['9']
-SCORES_TEST = SCORES + (99,)
-
 class Card:
     def __init__(self):
         self._initializing = True
@@ -398,7 +394,7 @@ class TwentyOneGame:
         if result != 'player_bust':
             self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
             # time.sleep(1.5)
-        # TODO: update the MESSAGES strings so that they're different from the strings following the case statements
+
         match result:
             case 'player_bust':
                 self.prompt(MESSAGES['new_score'].format(player_score=player_score))
