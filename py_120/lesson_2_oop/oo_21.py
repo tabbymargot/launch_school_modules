@@ -13,6 +13,10 @@ SUITS = ('Clubs', 'Diamonds', 'Hearts', 'Spades')
 STR_VALUES = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
 SCORES = ((1, 11), 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10)
 
+# SUITS_TEST = SUITS + ("InvalidSuit",)
+# STR_VALUES_TEST = STR_VALUES + ["InvalidValue"]
+# SCORES_TEST = SCORES + (99,)
+
 class Card:
     def __init__(self):
         self.suit = None
@@ -25,9 +29,10 @@ class Card:
     
     @suit.setter
     def suit(self, suit):
-        if suit not in SUITS:
-            return "That's not a suit!"
-        
+        # if suit not in SUITS:
+        #     print(f'Suit: {suit}')
+        #     print("That's not a suit!")
+        print(suit)
         self._suit = suit
 
     @property
@@ -36,9 +41,11 @@ class Card:
     
     @str_value.setter
     def str_value(self, str_value):
-        if str_value not in STR_VALUES:
-            return "That's not a valid string value!"
+        # if str_value not in STR_VALUES:
+        #     print(f'Str_value: {str_value}')
+        #     print("That's not a valid string value!")
         
+        print(str_value)
         self._str_value = str_value
 
     @property
@@ -47,9 +54,11 @@ class Card:
     
     @score.setter
     def score(self, score):
-        if score not in SCORES:
-            return "That's not a valid score!"
+        # if score not in SCORES:
+        #     print(f'Score: {score}')
+        #     print("That's not a valid score!")
         
+        print(score)
         self._score = score
 
 class Hand():
