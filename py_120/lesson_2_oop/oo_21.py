@@ -9,6 +9,9 @@ import os
 import random
 
 MAX_WINNING_SCORE = 21
+SUITS = ('Clubs', 'Diamonds', 'Hearts', 'Spades')
+STR_VALUES = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
+SCORES = ((1, 11), 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10)
 
 class Card:
     def __init__(self):
@@ -22,6 +25,9 @@ class Card:
     
     @suit.setter
     def suit(self, suit):
+        if suit not in SUITS:
+            return "That's not a suit!"
+        
         self._suit = suit
 
     @property
@@ -30,6 +36,9 @@ class Card:
     
     @str_value.setter
     def str_value(self, str_value):
+        if str_value not in STR_VALUES:
+            return "That's not a valid string value!"
+        
         self._str_value = str_value
 
     @property
@@ -38,6 +47,9 @@ class Card:
     
     @score.setter
     def score(self, score):
+        if score not in SCORES:
+            return "That's not a valid score!"
+        
         self._score = score
 
 class Hand():
@@ -53,6 +65,9 @@ class Hand():
     
     @cards.setter
     def cards(self, cards):
+        if not isinstance(cards, list):
+            return "That's not a list of cards!"
+        
         self._cards = cards
 
     @property
@@ -140,10 +155,6 @@ class Hand():
         return f'the {value} of {suit}'
 
 class Deck:
-    SUITS = ('Clubs', 'Diamonds', 'Hearts', 'Spades')
-    STR_VALUES = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
-    SCORES = ((1, 11), 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10)
-
     def __init__(self):
         self.cards = []
 
@@ -155,8 +166,8 @@ class Deck:
     def cards(self, cards):
         self._cards = cards 
 
-        for suit in self.SUITS:
-            values_and_scores = zip(self.STR_VALUES, self.SCORES)
+        for suit in SUITS:
+            values_and_scores = zip(STR_VALUES, SCORES)
 
             for str_value, score in values_and_scores:
                 card = Card()
@@ -207,7 +218,8 @@ class Dealer(Participant):
         
         for _ in range(number_of_cards_to_deal):
             card = self._deck.cards[0]
-
+            
+            #TODO: how does this work with the setter method? Is the error message appropriate?
             participant.hand.cards.append(card)
             self._deck.cards.remove(card)
 
