@@ -167,14 +167,6 @@ class Deck:
     def __init__(self):
         self.cards = []
 
-    @property
-    def cards(self):
-        return self._cards
-    
-    @cards.setter
-    def cards(self, cards):
-        self._cards = cards 
-
         for suit in SUITS:
             values_and_scores = zip(STR_VALUES, SCORES)
 
@@ -185,6 +177,14 @@ class Deck:
                 card.score = score
 
                 self.cards.append(card)
+
+    @property
+    def cards(self):
+        return self._cards
+    
+    @cards.setter
+    def cards(self, cards):
+        self._cards = cards 
 
 class Participant:
 
