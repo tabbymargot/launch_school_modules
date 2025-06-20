@@ -280,8 +280,6 @@ class TwentyOneGame:
 
             self.display_result(result)
 
-            # TODO: After each game is over, ask the player if they want to play again. Start a new game if they say yes, else end the game.
-
             while True:
                 self.prompt("Would you like to play again? Enter Y for yes " \
                 "and N for no.\n")
@@ -302,9 +300,6 @@ class TwentyOneGame:
             
 
     def show_cards(self):
-
-        # self.prompt(MESSAGES['_player_hand_contains'].format(all_but_last_card=all_but_last_card, last_card=last_card))
-
         self.prompt(f"Your hand contains the {self._player.hand.get_details_of_all_cards_except_last()} and {self._player.hand.get_last_dealt_card_details()}.\n")
         # time.sleep(1)
 
