@@ -83,7 +83,6 @@ class Hand():
     
     @score.setter
     def score(self, score):
-        print(score)
         if not self._initializing and not isinstance(score, int):
             raise TypeError("The hand's score attribute must be an integer")
         
@@ -378,7 +377,6 @@ class TwentyOneGame:
         print("Thanks for playing 21! Goodbye!")
 
     def establish_result(self):
-        # TODO: instead of returning a value, create a result attribute? Would need to update the display_result function too.
         if self._player.hand.score > MAX_WINNING_SCORE:
             return 'player_bust'
         
@@ -406,15 +404,15 @@ class TwentyOneGame:
                 self.prompt(MESSAGES['new_score'].format(player_score=player_score))
                 # time.sleep(1.5)
 
-                self.prompt(MESSAGES['player_bust'])
+                self.prompt(MESSAGES['player_is_bust'])
                 # time.sleep(1.5)
 
             case 'dealer_bust':
-                self.prompt(MESSAGES['dealer_bust'])
+                self.prompt(MESSAGES['dealer_is_bust'])
                 # time.sleep(1.5)
 
             case 'player_wins':
-                self.prompt(MESSAGES['player_wins'])
+                self.prompt(MESSAGES['player_is_winner'])
                 # time.sleep(1.5)
 
             case 'dealer_wins':
