@@ -171,7 +171,7 @@ class Deck:
         self.cards = []
 
         for suit in SUITS:
-            values_and_scores = zip(STR_VALUES, SCORES_TEST)
+            values_and_scores = zip(STR_VALUES, SCORES)
 
             for str_value, score in values_and_scores:
                 card = Card()
@@ -256,32 +256,50 @@ class TwentyOneGame:
     def start(self):
         self.display_welcome_message()
 
-        # TODO: When the program starts, give the player 5 dollars with which to bet. Deduct 1 dollar each time she loses, and add 1 dollar each time she wins. The program should quit when she is broke (0 dollars) or rich (has a total of 10 dollars).
+        while True:
+            # TODO: When the program starts, give the player 5 dollars with which to bet. Deduct 1 dollar each time she loses, and add 1 dollar each time she wins. The program should quit when she is broke (0 dollars) or rich (has a total of 10 dollars).
 
-        # TODO: WHILE player wants to continue
-        # TODO: Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
+            # TODO: WHILE player wants to continue
+            # TODO: Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
 
-        self._dealer.deal(self._player)
-        self._dealer.deal(self._dealer)
+            self._dealer.deal(self._player)
+            self._dealer.deal(self._dealer)
 
-        self._player.hand.calculate_value()
-        self._dealer.hand.calculate_value()
+            self._player.hand.calculate_value()
+            self._dealer.hand.calculate_value()
 
-        self.show_cards()
+            self.show_cards()
 
-        self.player_turn()
+            self.player_turn()
 
-        if self._player.is_busted():
-            result = self.establish_result()
-        else:
-            self.dealer_turn()
-            result = self.establish_result()
+            if self._player.is_busted():
+                result = self.establish_result()
+            else:
+                self.dealer_turn()
+                result = self.establish_result()
 
-        self.display_result(result)
+            self.display_result(result)
 
-        # TODO: After each game is over, ask the player if they want to play again. Start a new game if they say yes, else end the game.
+            # TODO: After each game is over, ask the player if they want to play again. Start a new game if they say yes, else end the game.
+
+            while True:
+                self.prompt("Would you like to play again? Enter Y for yes " \
+                "and N for no.\n")
+                play_again = input().strip().lower()
+
+                if play_again in ('y', 'n'):
+                    break
+                else:
+                    self.prompt("That's not a valid choice. Please try again\n.")
+                # time.sleep(1.5)
+
+            if play_again == 'y':
+                self.prompt("Great, let's continue!")
+            else:
+                break
 
         self.display_goodbye_message()
+            
 
     def show_cards(self):
 
