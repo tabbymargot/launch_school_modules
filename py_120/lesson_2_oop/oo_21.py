@@ -1,5 +1,4 @@
 # TODO: go through and look at how instance methods match the explanation here https://www.remnote.com/w/6810e016669adfcb7792a93f/IP3ToB70IwpvOGTV8
-# TODO: add validation to getters and setters
 # TODO: go through and determine the collaborator objects. Check with LSBot
 import json
 with open('oo_21.json', 'r') as file:
@@ -13,15 +12,17 @@ SUITS = ('Clubs', 'Diamonds', 'Hearts', 'Spades')
 STR_VALUES = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
 SCORES = ((1, 11), 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10)
 
-# SUITS_TEST = SUITS + ("InvalidSuit",)
-# STR_VALUES_TEST = STR_VALUES + ["InvalidValue"]
-# SCORES_TEST = SCORES + (99,)
+SUITS_TEST = SUITS + ("InvalidSuit",)
+STR_VALUES_TEST = STR_VALUES + ['9']
+SCORES_TEST = SCORES + (99,)
 
 class Card:
     def __init__(self):
+        self._initializing = True
         self.suit = None
         self.str_value = None
         self.score = None
+        self._initializing = False
 
     @property
     def suit(self):
@@ -29,10 +30,9 @@ class Card:
     
     @suit.setter
     def suit(self, suit):
-        # if suit not in SUITS:
-        #     print(f'Suit: {suit}')
-        #     print("That's not a suit!")
-        print(suit)
+        if not self._initializing and suit not in SUITS:
+            raise ValueError("Suit must be one of Clubs, Diamonds, Hearts or Spades")
+
         self._suit = suit
 
     @property
@@ -41,11 +41,9 @@ class Card:
     
     @str_value.setter
     def str_value(self, str_value):
-        # if str_value not in STR_VALUES:
-        #     print(f'Str_value: {str_value}')
-        #     print("That's not a valid string value!")
+        if not self._initializing and str_value not in STR_VALUES:
+            raise ValueError("Invalid string value")
         
-        print(str_value)
         self._str_value = str_value
 
     @property
@@ -54,19 +52,19 @@ class Card:
     
     @score.setter
     def score(self, score):
-        # if score not in SCORES:
-        #     print(f'Score: {score}')
-        #     print("That's not a valid score!")
+        if not self._initializing and score not in SCORES:
+            raise ValueError("Invalid card score.")
         
-        print(score)
         self._score = score
 
 class Hand():
     def __init__(self):
+        self._initializing = True
         self.cards = []
         self.score = None
         self.all_cards_except_last = None
         self.most_recently_dealt_card = None
+        self._initializing = False
 
     @property
     def cards(self):
@@ -74,8 +72,8 @@ class Hand():
     
     @cards.setter
     def cards(self, cards):
-        if not isinstance(cards, list):
-            return "That's not a list of cards!"
+        if not self._initializing and not isinstance(cards, list):
+            raise TypeError("The hand's card attribute must be a list")
         
         self._cards = cards
 
@@ -85,6 +83,10 @@ class Hand():
     
     @score.setter
     def score(self, score):
+        print(score)
+        if not self._initializing and not isinstance(score, int):
+            raise TypeError("The hand's score attribute must be an integer")
+        
         self._score = score
 
     @property
@@ -93,6 +95,9 @@ class Hand():
     
     @all_cards_except_last.setter
     def all_cards_except_last(self, all_cards_except_last):
+        if not self._initializing and not isinstance(all_cards_except_last, list):
+            raise TypeError("The hand's all_cards_except_last attribute must be a list")
+        
         self._all_cards_except_last = all_cards_except_last
 
     @property
@@ -101,6 +106,9 @@ class Hand():
     
     @most_recently_dealt_card.setter
     def most_recently_dealt_card(self, most_recently_dealt_card):
+        if not self._initializing and not isinstance(most_recently_dealt_card, Card):
+            raise TypeError("The hand's most_recently_dealt_card attribute must be a Card")
+        
         self._most_recently_dealt_card = most_recently_dealt_card
 
     def calculate_value(self):
@@ -168,7 +176,7 @@ class Deck:
         self.cards = []
 
         for suit in SUITS:
-            values_and_scores = zip(STR_VALUES, SCORES)
+            values_and_scores = zip(STR_VALUES, SCORES_TEST)
 
             for str_value, score in values_and_scores:
                 card = Card()
@@ -184,6 +192,9 @@ class Deck:
     
     @cards.setter
     def cards(self, cards):
+        if not isinstance(cards, list):
+            raise TypeError("The deck's cards attribute must be a list")
+        
         self._cards = cards 
 
 class Participant:
@@ -228,7 +239,6 @@ class Dealer(Participant):
         for _ in range(number_of_cards_to_deal):
             card = self._deck.cards[0]
             
-            #TODO: how does this work with the setter method? Is the error message appropriate?
             participant.hand.cards.append(card)
             self._deck.cards.remove(card)
 
