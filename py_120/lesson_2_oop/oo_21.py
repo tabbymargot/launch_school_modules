@@ -6,6 +6,7 @@ with open('oo_21.json', 'r') as file:
 
 import os
 import random
+import time
 
 MAX_WINNING_SCORE = 21
 SUITS = ('Clubs', 'Diamonds', 'Hearts', 'Spades')
@@ -227,7 +228,6 @@ class Player(Participant):
     def __init__(self):
         super().__init__()
         self._bankroll = 5
-        print(f'Bankroll created: {self._bankroll}')
 
     @property
     def bankroll(self):
@@ -269,6 +269,8 @@ class Dealer(Participant):
             
 class TwentyOneGame:
     DEALER_MINIMUM_SCORE = 17
+    MIN_BANKROLL = 3
+    MAX_BANKROLL = 7
 
     games_played = 0
 
@@ -280,19 +282,13 @@ class TwentyOneGame:
         print(f'==> {message}')
 
     def display_welcome_message(self):
-        self.prompt("Welcome to 21! You have $5 in your bankroll.")
+        self.prompt("Welcome to 21! You have $5 in your bankroll. \n")
+        time.sleep(0.75)
 
     def start(self):
         self.display_welcome_message()
 
-        print(f'Player bankroll: {self._player.bankroll}')
-
         while True:
-            # TODO: When the program starts, give the player 5 dollars with which to bet. Deduct 1 dollar each time she loses, and add 1 dollar each time she wins. The program should quit when she is broke (0 dollars) or rich (has a total of 10 dollars).
-
-            # TODO: WHILE player wants to continue
-            # TODO: Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
-
             if TwentyOneGame.games_played > 0:
                 self._player.create_empty_hand()
                 self._dealer.create_empty_hand()              
@@ -315,29 +311,19 @@ class TwentyOneGame:
 
             self.update_player_bankroll(result)
 
-            # if result in ('dealer_bust', 'player_wins'):
-            #     self._player.bankroll += 1
-            # else:
-            #     self._player.bankroll -= 1
-
             self.display_result(result)
+
+            if self._player.bankroll in (self.MIN_BANKROLL, self.MAX_BANKROLL):
+                self.output_bankroll_status()
+                break
 
             play_again = self.get_player_intention()
 
-            # while True:
-            #     self.prompt("Would you like to play again? Enter Y for yes " \
-            #     "and N for no.\n")
-            #     play_again = input().strip().lower()
-
-            #     if play_again in ('y', 'n'):
-            #         break
-            #     else:
-            #         self.prompt("That's not a valid choice. Please try again\n.")
-            #     # time.sleep(1.5)
-
             if play_again == 'y':
                 TwentyOneGame.games_played += 1
-                self.prompt("Great, let's continue!")
+                os.system('clear')
+                self.prompt("Great, let's continue! \n")
+                time.sleep(0.75)
             else:
                 break
 
@@ -346,13 +332,13 @@ class TwentyOneGame:
 
     def show_cards(self):
         self.prompt(f"Your hand contains the {self._player.hand.get_details_of_all_cards_except_last()} and {self._player.hand.get_last_dealt_card_details()}.\n")
-        # time.sleep(1)
+        time.sleep(0.75)
 
         self.prompt(f"Your hand is worth {self._player.hand.score} points.\n")
-        # time.sleep(1)
+        time.sleep(0.75)
 
         self.prompt(f"One of the dealer's two cards is {self._dealer.hand.get_last_dealt_card_details()}.\n")
-        # time.sleep(1)
+        time.sleep(0.75)
 
     def player_turn(self):
         while True:
@@ -377,13 +363,13 @@ class TwentyOneGame:
                 return move
 
             self.prompt("That's not a valid choice. Please try again\n.")
-            # time.sleep(1.5)
+            time.sleep(0.75)
 
     def player_hit(self):
         os.system('clear')
 
         self.prompt('Dealing additional card...\n')
-        # time.sleep(1)
+        time.sleep(0.75)
         self._dealer.deal(self._player)
         self.print_updated_player_hand()
         self._player.hand.calculate_value()
@@ -397,7 +383,7 @@ class TwentyOneGame:
 
         self.prompt(f"As a reminder, one of the dealer's two " \
                 f"cards is {self._dealer.hand.get_last_dealt_card_details()}.\n")
-        # # time.sleep(1)
+        time.sleep(0.75)
 
     def dealer_turn(self):
         while not self._dealer.is_busted():
@@ -415,7 +401,7 @@ class TwentyOneGame:
             
             self. display_dealer_hand_info('Latest card, updated score')
 
-            # time.sleep(1)
+            time.sleep(0.75)
 
     def display_dealer_hand_info(self, required_info):
         match required_info:
@@ -428,7 +414,7 @@ class TwentyOneGame:
                 self.prompt(f"The dealer's new card is {self._dealer.hand.get_last_dealt_card_details()}.\n")
 
     def display_goodbye_message(self):
-        print("Thanks for playing 21! Goodbye!")
+        self.prompt("Thanks for playing 21! Goodbye!")
 
     def establish_result(self):
         if self._player.hand.score > MAX_WINNING_SCORE:
@@ -446,10 +432,19 @@ class TwentyOneGame:
         return 'tie'
     
     def update_player_bankroll(self, result):
-        if result in ('dealer_bust', 'player_wins'):
+        if result == 'tie':
+            pass # Keep the bankroll as it is.
+        elif result in ('dealer_bust', 'player_wins'):
             self._player.bankroll += 1
         else:
             self._player.bankroll -= 1
+
+    def output_bankroll_status(self):
+        if self._player.bankroll == self.MIN_BANKROLL:
+            self.prompt("You've run out of funds. Bummer! \n")
+
+        elif self._player.bankroll == self.MAX_BANKROLL:
+            self.prompt("You've got $10 in your bankroll! I can't afford to play with you anymore, so I'll have to end the game. \n ")
 
     def display_result(self, result):
         player_score = self._player.hand.score
@@ -457,33 +452,34 @@ class TwentyOneGame:
 
         if result != 'player_bust':
             self.prompt(MESSAGES['both_scores'].format(player_score=player_score, dealer_score=dealer_score))
-            # time.sleep(1.5)
+            time.sleep(0.75)
 
         match result:
             case 'player_bust':
                 self.prompt(MESSAGES['new_score'].format(player_score=player_score))
-                # time.sleep(1.5)
+                time.sleep(0.75)
 
                 self.prompt(MESSAGES['player_is_bust'])
-                # time.sleep(1.5)
+                time.sleep(0.75)
 
             case 'dealer_bust':
                 self.prompt(MESSAGES['dealer_is_bust'])
-                # time.sleep(1.5)
+                time.sleep(0.75)
 
             case 'player_wins':
                 self.prompt(MESSAGES['player_is_winner'])
-                # time.sleep(1.5)
+                time.sleep(0.75)
 
             case 'dealer_wins':
                 self.prompt(MESSAGES['player_loses'])
-                # time.sleep(1.5)
+                time.sleep(0.75)
 
             case 'tie':
                 self.prompt(MESSAGES['tie'])
-                # time.sleep(1.5)
+                time.sleep(0.75)
 
-        self.prompt(f'Your bankroll is now worth ${self._player.bankroll}.\n')
+        self.prompt(f'Your bankroll is worth ${self._player.bankroll}.\n')
+        time.sleep(0.75)
     
     def get_player_intention(self):
         while True:
@@ -495,7 +491,7 @@ class TwentyOneGame:
                 break
             else:
                 self.prompt("That's not a valid choice. Please try again\n.")
-            # time.sleep(1.5)
+            time.sleep(0.75)
 
         return play_again
 
