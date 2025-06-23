@@ -27,7 +27,7 @@ class Card:
     @suit.setter
     def suit(self, suit):
         if not self._initializing and suit not in SUITS:
-            raise ValueError("Suit must be one of Clubs, Diamonds, Hearts or Spades")
+            raise ValueError("Suit must be one of the following strings: Clubs, Diamonds, Hearts or Spades")
 
         self._suit = suit
 
@@ -57,7 +57,7 @@ class Hand():
     def __init__(self):
         self._initializing = True
         self.cards = []
-        self.score = None
+        self.score = 0
         self.all_cards_except_last = None
         self.most_recently_dealt_card = None
         self._initializing = False
@@ -79,7 +79,9 @@ class Hand():
     
     @score.setter
     def score(self, score):
-        if not self._initializing and not isinstance(score, int):
+        # if not self._initializing and not isinstance(score, int):
+        #     raise TypeError("The hand's score attribute must be an integer")
+        if not isinstance(score, int):
             raise TypeError("The hand's score attribute must be an integer")
         
         self._score = score
@@ -210,6 +212,14 @@ class Participant:
     def hand(self, hand):
         self._hand = hand
 
+    @hand.deleter
+    def hand(self):
+        del self._hand
+
+    def create_empty_hand(self):
+        del self.hand
+        self.hand = Hand()
+
     def is_busted(self):
         return self.hand.score > MAX_WINNING_SCORE
 
@@ -223,6 +233,9 @@ class Dealer(Participant):
         super().__init__()
         self._deck = Deck()
 
+    def recreate_deck(self):
+        self._deck = Deck()
+
     def deal(self, participant):
         random.shuffle(self._deck.cards)
 
@@ -232,7 +245,11 @@ class Dealer(Participant):
             number_of_cards_to_deal = 1
         
         for _ in range(number_of_cards_to_deal):
-            card = self._deck.cards[0]
+            try:
+                card = self._deck.cards[0]
+            except IndexError:
+                self.recreate_deck()
+                card = self._deck.cards[0]
             
             participant.hand.cards.append(card)
             self._deck.cards.remove(card)
@@ -242,6 +259,8 @@ class Dealer(Participant):
             
 class TwentyOneGame:
     DEALER_MINIMUM_SCORE = 17
+
+    games_played = 0
 
     def __init__(self):
         self._dealer = Dealer()
@@ -261,6 +280,11 @@ class TwentyOneGame:
 
             # TODO: WHILE player wants to continue
             # TODO: Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
+            print(f'Cards in deck: {len(self._dealer._deck.cards)}')
+
+            if TwentyOneGame.games_played > 0:
+                self._player.create_empty_hand()
+                self._dealer.create_empty_hand()              
 
             self._dealer.deal(self._player)
             self._dealer.deal(self._dealer)
@@ -280,18 +304,21 @@ class TwentyOneGame:
 
             self.display_result(result)
 
-            while True:
-                self.prompt("Would you like to play again? Enter Y for yes " \
-                "and N for no.\n")
-                play_again = input().strip().lower()
+            play_again = self.get_player_intention()
 
-                if play_again in ('y', 'n'):
-                    break
-                else:
-                    self.prompt("That's not a valid choice. Please try again\n.")
-                # time.sleep(1.5)
+            # while True:
+            #     self.prompt("Would you like to play again? Enter Y for yes " \
+            #     "and N for no.\n")
+            #     play_again = input().strip().lower()
+
+            #     if play_again in ('y', 'n'):
+            #         break
+            #     else:
+            #         self.prompt("That's not a valid choice. Please try again\n.")
+            #     # time.sleep(1.5)
 
             if play_again == 'y':
+                TwentyOneGame.games_played += 1
                 self.prompt("Great, let's continue!")
             else:
                 break
@@ -431,6 +458,20 @@ class TwentyOneGame:
             case 'tie':
                 self.prompt(MESSAGES['tie'])
                 # time.sleep(1.5)
+    
+    def get_player_intention(self):
+        while True:
+            self.prompt("Would you like to play again? Enter Y for yes " \
+            "and N for no.\n")
+            play_again = input().strip().lower()
+
+            if play_again in ('y', 'n'):
+                break
+            else:
+                self.prompt("That's not a valid choice. Please try again\n.")
+            # time.sleep(1.5)
+
+        return play_again
 
 game = TwentyOneGame()
 game.start()
