@@ -246,6 +246,10 @@ class Dealer(Participant):
     def recreate_deck(self):
         self._deck = Deck()
 
+    def update_hand_attributes(self, participant):
+        participant.hand.all_cards_except_last = participant.hand.cards[:-1]
+        participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
+
     def deal(self, participant):
         random.shuffle(self._deck.cards)
 
@@ -264,8 +268,7 @@ class Dealer(Participant):
             participant.hand.cards.append(card)
             self._deck.cards.remove(card)
 
-            participant.hand.all_cards_except_last = participant.hand.cards[:-1]
-            participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
+            self.update_hand_attributes(participant)
             
 class TwentyOneGame:
     DEALER_MINIMUM_SCORE = 17
