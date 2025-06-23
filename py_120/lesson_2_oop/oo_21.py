@@ -258,8 +258,10 @@ class Dealer(Participant):
 
     def deal(self, participant):
         random.shuffle(self._deck.cards)
+
+        number_of_cards = self.calculate_number_of_cards_to_deal(participant)
         
-        for _ in range(self.calculate_number_of_cards_to_deal(participant)):
+        for _ in range(number_of_cards):
             try:
                 card = self._deck.cards[0]
             except IndexError:
