@@ -246,19 +246,20 @@ class Dealer(Participant):
     def recreate_deck(self):
         self._deck = Deck()
 
+    def calculate_number_of_cards_to_deal(self, participant):
+        if len(participant.hand.cards) == 0:
+            return 2
+        
+        return 1
+
     def update_hand_attributes(self, participant):
         participant.hand.all_cards_except_last = participant.hand.cards[:-1]
         participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
 
     def deal(self, participant):
         random.shuffle(self._deck.cards)
-
-        if len(participant.hand.cards) == 0:
-            number_of_cards_to_deal = 2
-        else:
-            number_of_cards_to_deal = 1
         
-        for _ in range(number_of_cards_to_deal):
+        for _ in range(self.calculate_number_of_cards_to_deal(participant)):
             try:
                 card = self._deck.cards[0]
             except IndexError:
