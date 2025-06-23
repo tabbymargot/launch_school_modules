@@ -4,6 +4,6 @@
     "both_scores": "You scored {player_score} and the dealer scored {dealer_score}.\n ",
     "dealer_is_bust": "The dealer's bust, so congratulations, you're the winner! \n",
     "player_is_winner": "Congratulations, you're the winner! \n",
-    "player_loses": "Oh no, that means you lost!",
+    "player_loses": "Oh no, that means you lost! \n",
     "tie": "It's a tie!"
 }

@@ -226,6 +226,16 @@ class Participant:
 class Player(Participant):
     def __init__(self):
         super().__init__()
+        self._bankroll = 5
+        print(f'Bankroll created: {self._bankroll}')
+
+    @property
+    def bankroll(self):
+        return self._bankroll
+
+    @bankroll.setter
+    def bankroll(self, new_bankroll):
+        self._bankroll = new_bankroll
     
 class Dealer(Participant):
 
@@ -270,17 +280,18 @@ class TwentyOneGame:
         print(f'==> {message}')
 
     def display_welcome_message(self):
-        self.prompt("Welcome to 21!")
+        self.prompt("Welcome to 21! You have $5 in your bankroll.")
 
     def start(self):
         self.display_welcome_message()
+
+        print(f'Player bankroll: {self._player.bankroll}')
 
         while True:
             # TODO: When the program starts, give the player 5 dollars with which to bet. Deduct 1 dollar each time she loses, and add 1 dollar each time she wins. The program should quit when she is broke (0 dollars) or rich (has a total of 10 dollars).
 
             # TODO: WHILE player wants to continue
             # TODO: Be prepared to run out of cards. You can either create a new deck for each game, or keep track of how many cards remain and create a new deck as needed.
-            print(f'Cards in deck: {len(self._dealer._deck.cards)}')
 
             if TwentyOneGame.games_played > 0:
                 self._player.create_empty_hand()
@@ -301,6 +312,13 @@ class TwentyOneGame:
             else:
                 self.dealer_turn()
                 result = self.establish_result()
+
+            self.update_player_bankroll(result)
+
+            # if result in ('dealer_bust', 'player_wins'):
+            #     self._player.bankroll += 1
+            # else:
+            #     self._player.bankroll -= 1
 
             self.display_result(result)
 
@@ -426,6 +444,12 @@ class TwentyOneGame:
             return 'dealer_wins'
 
         return 'tie'
+    
+    def update_player_bankroll(self, result):
+        if result in ('dealer_bust', 'player_wins'):
+            self._player.bankroll += 1
+        else:
+            self._player.bankroll -= 1
 
     def display_result(self, result):
         player_score = self._player.hand.score
@@ -458,6 +482,8 @@ class TwentyOneGame:
             case 'tie':
                 self.prompt(MESSAGES['tie'])
                 # time.sleep(1.5)
+
+        self.prompt(f'Your bankroll is now worth ${self._player.bankroll}.\n')
     
     def get_player_intention(self):
         while True:
