@@ -252,7 +252,8 @@ class Dealer(Participant):
         
         return 1
 
-    def update_hand_attributes(self, participant):
+    def update_hand(self, participant, card):
+        participant.hand.cards.append(card)
         participant.hand.all_cards_except_last = participant.hand.cards[:-1]
         participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
 
@@ -268,10 +269,8 @@ class Dealer(Participant):
                 self.recreate_deck()
                 card = self._deck.cards[0]
             
-            participant.hand.cards.append(card)
             self._deck.cards.remove(card)
-
-            self.update_hand_attributes(participant)
+            self.update_hand(participant, card)
             
 class TwentyOneGame:
     DEALER_MINIMUM_SCORE = 17
