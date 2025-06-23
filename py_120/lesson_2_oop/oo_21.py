@@ -404,7 +404,7 @@ class TwentyOneGame:
             self._dealer.deal(self._dealer)
             self._dealer.hand.calculate_value()
             
-            self. display_dealer_hand_info('Latest card, updated score')
+            self.display_dealer_hand_info('Latest card, updated score')
 
             time.sleep(0.75)
 
