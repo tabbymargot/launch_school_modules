@@ -317,6 +317,9 @@ class GameInterface:
             self.prompt("That's not a valid choice. Please try again\n.")
             time.sleep(0.75)
 
+    def display_dealing_message(self):
+        self.prompt('Dealing additional card...\n')
+
     def print_updated_player_score(self, player, dealer):
         self.prompt(f'Your new score is {player.hand.score}.\n')
         time.sleep(0.75)
@@ -419,6 +422,9 @@ class GameInterface:
 
         return play_again
     
+    def display_continue_message(self):
+        self.prompt("Great, let's continue! \n")
+    
     def display_goodbye_message(self):
         self.prompt("Thanks for playing 21! Goodbye!")
 
@@ -430,7 +436,7 @@ class TwentyOneGame:
     def __init__(self):
         self._dealer = Dealer()
         self._player = Player()
-        self._gameinterface = GameInterface()
+        self._game_interface = GameInterface()
 
     @property
     def player(self):
@@ -448,12 +454,8 @@ class TwentyOneGame:
     def dealer(self, dealer):
         self._dealer = dealer
 
-    #TODO: delete this once gameinterface class complete
-    # def prompt(self, message):
-    #     print(f'==> {message}')
-
     def start(self):
-        self._gameinterface.display_welcome_message()
+        self._game_interface.display_welcome_message()
 
         while True:
             if TwentyOneGame.games_played > 0:
@@ -466,7 +468,7 @@ class TwentyOneGame:
             self.player.hand.calculate_value()
             self.dealer.hand.calculate_value()
 
-            self._gameinterface.show_cards(self.player, self.dealer)
+            self._game_interface.show_cards(self.player, self.dealer)
 
             self.player_turn()
 
@@ -478,28 +480,27 @@ class TwentyOneGame:
 
             self.update_player_bankroll(result)
 
-            self._gameinterface.display_result(result, self.player, self.dealer)
+            self._game_interface.display_result(result, self.player, self.dealer)
 
             if self.player.bankroll in (MIN_BANKROLL, MAX_BANKROLL):
-                self._gameinterface.output_bankroll_status(self.player)
+                self._game_interface.output_bankroll_status(self.player)
                 break
 
-            play_again = self._gameinterface.get_player_intention(self.player)
+            play_again = self._game_interface.get_player_intention(self.player)
 
             if play_again == 'y':
                 TwentyOneGame.games_played += 1
                 os.system('clear')
-                #TODO: move next line to game interface class?
-                self._gameinterface.prompt("Great, let's continue! \n")
+                self._game_interface.display_continue_message()
                 time.sleep(0.75)
             else:
                 break
 
-        self._gameinterface.display_goodbye_message()
+        self._game_interface.display_goodbye_message()
 
     def player_turn(self):
         while True:
-            player_move = self._gameinterface.get_player_move(self.player)
+            player_move = self._game_interface.get_player_move(self.player)
 
             if player_move == 'h':
                 self.player_hit()
@@ -507,34 +508,33 @@ class TwentyOneGame:
                 if self.player.is_busted():
                     break
 
-                self._gameinterface.print_updated_player_score(self.player, self.dealer)
+                self._game_interface.print_updated_player_score(self.player, self.dealer)
             else:
                 break
 
     def player_hit(self):
         os.system('clear')
-        #TODO: move this line to game interface class?
-        self._gameinterface.prompt('Dealing additional card...\n')
+        self._game_interface.display_dealing_message()
         time.sleep(0.75)
         self.dealer.deal(self.player)
-        self._gameinterface.print_updated_player_hand(self.player)
+        self._game_interface.print_updated_player_hand(self.player)
         self.player.hand.calculate_value()
 
     def dealer_turn(self):
         while not self.dealer.is_busted():
-            self._gameinterface.display_dealer_hand_info('Dealer hand', self.dealer)
+            self._game_interface.display_dealer_hand_info('Dealer hand', self.dealer)
 
             self.dealer.hand.calculate_value()
 
             if self.dealer.hand.score >= self.DEALER_MINIMUM_SCORE:
                 break
 
-            self._gameinterface.display_dealer_hand_info('Current score', self.dealer)
+            self._game_interface.display_dealer_hand_info('Current score', self.dealer)
 
             self.dealer.deal(self.dealer)
             self.dealer.hand.calculate_value()
 
-            self._gameinterface.display_dealer_hand_info('Latest card, updated score', self.dealer)
+            self._game_interface.display_dealer_hand_info('Latest card, updated score', self.dealer)
 
             time.sleep(0.75)
 
