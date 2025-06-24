@@ -392,7 +392,7 @@ class GameInterface:
                 "You've got $10 in your bankroll! I can't afford to play "
                 "with you anymore, so I'll have to end the game. \n ")
 
-    def get_player_intention(self, player):
+    def get_player_intention(self):
         while True:
             self.prompt(
                 "Would you like to play again? Enter Y for yes "
@@ -472,7 +472,7 @@ class TwentyOneGame:
                 self._game_interface.output_bankroll_status(self.player)
                 break
 
-            play_again = self._game_interface.get_player_intention(self.player)
+            play_again = self._game_interface.get_player_intention()
 
             if play_again == 'y':
                 TwentyOneGame.games_played += 1
