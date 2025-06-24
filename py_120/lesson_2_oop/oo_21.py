@@ -1,4 +1,3 @@
-# TODO: go through and determine the collaborator objects. Check with LSBot
 import json
 with open('oo_21.json', 'r') as file:
     MESSAGES = json.load(file)
