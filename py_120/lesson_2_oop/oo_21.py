@@ -133,12 +133,9 @@ class Hand():
 
         self.score = non_aces_score + aces_score
 
-    def ace_should_be_high(self, non_aces_score, aces_values, high_value_ace):
+    def high_ace_keeps_hand_valid \
+    (self, non_aces_score, aces_values, high_value_ace):
         return ((non_aces_score + sum(aces_values) + high_value_ace)
-        <= MAX_WINNING_SCORE)
-    
-    def ace_should_be_low(self, non_aces_score, aces_values, low_value_ace):
-        return ((non_aces_score + sum(aces_values) + low_value_ace)
         <= MAX_WINNING_SCORE)
 
     def calculate_ace_values(self, aces, non_aces_score):
@@ -148,21 +145,16 @@ class Hand():
             low_value_ace = ace.score[0]
             high_value_ace = ace.score[1]
 
-            if self.ace_should_be_high(non_aces_score, aces_values, high_value_ace):
+            if self.high_ace_keeps_hand_valid \
+            (non_aces_score, aces_values, high_value_ace):
                 aces_values.append(high_value_ace)
-
-            elif self.ace_should_be_low(non_aces_score, aces_values, low_value_ace):
-                aces_values.append(low_value_ace)
-
             else:
-                pass
+                aces_values.append(low_value_ace)
 
         return sum(aces_values)
 
     def get_details_of_all_cards_except_last(self):
         all_card_details = []
-
-        print(f'Type: {type(self.all_cards_except_last)}')
 
         for card in self.all_cards_except_last:
             suit = card.suit
@@ -284,9 +276,9 @@ class GameInterface:
 
     def show_cards(self, player, dealer):
         self.prompt(
-            f"Your hand contains the \
-            {player.hand.get_details_of_all_cards_except_last()} \
-            and {player.hand.get_last_dealt_card_details()}.\n"
+            "Your hand contains the "
+            f"{player.hand.get_details_of_all_cards_except_last()} "
+            f"and {player.hand.get_last_dealt_card_details()}.\n"
             )
         time.sleep(0.75)
 
@@ -296,15 +288,17 @@ class GameInterface:
         time.sleep(0.75)
 
         self.prompt(
-            f"One of the dealer's two cards is \
-            {dealer.hand.get_last_dealt_card_details()}.\n"
+            "One of the dealer's two cards is "
+            f"{dealer.hand.get_last_dealt_card_details()}.\n"
             )
         time.sleep(0.75)
 
     def get_player_move(self):
         while True:
-            self.prompt("Would you like to hit or stay? Enter H for hit " \
-            "and S for stay.\n")
+            self.prompt(
+            "Would you like to hit or stay? Enter H for hit "
+            "and S for stay.\n"
+            )
             move = input().strip().lower()
             if move in ('h', 's'):
                 return move
@@ -320,43 +314,40 @@ class GameInterface:
         time.sleep(0.75)
 
         self.prompt(
-            f"As a reminder, one of the dealer's two \
-            cards is {dealer.hand.get_last_dealt_card_details()}.\n"
+            "As a reminder, one of the dealer's two "
+            f"cards is {dealer.hand.get_last_dealt_card_details()}.\n"
             )
         time.sleep(0.75)
 
     def print_updated_player_hand(self, player):
         self.prompt(
-            f"Your hand now contains the \
-            {player.hand.get_details_of_all_cards_except_last()} \
-            and {player.hand.get_last_dealt_card_details()}.\n"
+            "Your hand now contains the "
+            f"{player.hand.get_details_of_all_cards_except_last()} "
+            f"and {player.hand.get_last_dealt_card_details()}.\n"
             )
 
     def display_dealer_hand_info(self, required_info, dealer):
         match required_info:
             case 'Dealer hand':
                 self.prompt(
-                    f"The dealer's hand contains the \
-                    {dealer.hand. \
-                    get_details_of_all_cards_except_last()} \
-                    and {dealer.hand.get_last_dealt_card_details()}.\n"
+                    "The dealer's hand contains the "
+                    f"{dealer.hand.get_details_of_all_cards_except_last()} "
+                    f"and {dealer.hand.get_last_dealt_card_details()}.\n"
                     )
             case 'Current score':
                 self.prompt(
-                    f"The dealer has {dealer.hand.score} points, so \
-                    I'm just dealing them another card...\n"
+                    f"The dealer has {dealer.hand.score} points, so "
+                    "I'm just dealing them another card...\n"
                     )
             case 'Latest card, updated score':
                 self.prompt(
-                    f"The dealer's new card is \
-                    {dealer.hand.get_last_dealt_card_details()}.\n"
+                    "The dealer's new card is "
+                    f"{dealer.hand.get_last_dealt_card_details()}.\n"
                     )
 
     def display_result(self, result, player, dealer):
         player_score = player.hand.score
         dealer_score = dealer.hand.score
-        print(f'Player score: {player_score}')
-        print(f'Dealer score: {dealer_score}')
 
         if result != 'player_bust':
             self.prompt(
@@ -399,13 +390,14 @@ class GameInterface:
 
         elif player.bankroll == MAX_BANKROLL:
             self.prompt(
-                "You've got $10 in your bankroll! I can't afford to play \
-                with you anymore, so I'll have to end the game. \n ")
+                "You've got $10 in your bankroll! I can't afford to play "
+                "with you anymore, so I'll have to end the game. \n ")
 
     def get_player_intention(self, player):
         while True:
-            self.prompt("Would you like to play again? Enter Y for yes " \
-            "and N for no.\n")
+            self.prompt(
+                "Would you like to play again? Enter Y for yes "
+                "and N for no.\n")
             play_again = input().strip().lower()
 
             if play_again in ('y', 'n'):
