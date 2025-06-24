@@ -12,8 +12,8 @@ STR_VALUES        = (['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10',
                     'Jack', 'Queen', 'King'])
 SCORES            =  ((1, 11), 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10)
 MAX_WINNING_SCORE = 21
-MIN_BANKROLL = 3
-MAX_BANKROLL = 7
+MIN_BANKROLL = 0
+MAX_BANKROLL = 15
 
 class Card:
     def __init__(self):
@@ -133,6 +133,14 @@ class Hand():
 
         self.score = non_aces_score + aces_score
 
+    def ace_should_be_high(self, non_aces_score, aces_values, high_value_ace):
+        return ((non_aces_score + sum(aces_values) + high_value_ace)
+        <= MAX_WINNING_SCORE)
+    
+    def ace_should_be_low(self, non_aces_score, aces_values, low_value_ace):
+        return ((non_aces_score + sum(aces_values) + low_value_ace)
+        <= MAX_WINNING_SCORE)
+
     def calculate_ace_values(self, aces, non_aces_score):
         aces_values = []
 
@@ -140,20 +148,10 @@ class Hand():
             low_value_ace = ace.score[0]
             high_value_ace = ace.score[1]
 
-            if ((non_aces_score + sum(aces_values) + high_value_ace)
-            <= MAX_WINNING_SCORE):
+            if self.ace_should_be_high(non_aces_score, aces_values, high_value_ace):
                 aces_values.append(high_value_ace)
 
-            elif ((non_aces_score + sum(aces_values) + low_value_ace)
-            <= MAX_WINNING_SCORE):
-                aces_values.append(low_value_ace)
-
-            elif high_value_ace in aces_values:
-                for idx, value in enumerate(aces_values):
-                    if value == high_value_ace:
-                        aces_values[idx] = low_value_ace
-                        break
-
+            elif self.ace_should_be_low(non_aces_score, aces_values, low_value_ace):
                 aces_values.append(low_value_ace)
 
             else:
