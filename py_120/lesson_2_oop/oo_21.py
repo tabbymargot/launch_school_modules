@@ -1,4 +1,3 @@
-# TODO: go through and look at how instance methods match the explanation here https://www.remnote.com/w/6810e016669adfcb7792a93f/IP3ToB70IwpvOGTV8
 # TODO: go through and determine the collaborator objects. Check with LSBot
 import json
 with open('oo_21.json', 'r') as file:
@@ -8,11 +7,11 @@ import os
 import random
 import time
 
-MAX_WINNING_SCORE = 21
 SUITS             = ('Clubs', 'Diamonds', 'Hearts', 'Spades')
 STR_VALUES        = (['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10',
                     'Jack', 'Queen', 'King'])
 SCORES            =  ((1, 11), 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10)
+MAX_WINNING_SCORE = 21
 MIN_BANKROLL = 3
 MAX_BANKROLL = 7
 
@@ -86,8 +85,6 @@ class Hand():
 
     @score.setter
     def score(self, score):
-        # if not self._initializing and not isinstance(score, int):
-        #     raise TypeError("The hand's score attribute must be an integer")
         if not isinstance(score, int):
             raise TypeError("The hand's score attribute must be an integer")
 
@@ -306,7 +303,7 @@ class GameInterface:
             )
         time.sleep(0.75)
 
-    def get_player_move(self, player):
+    def get_player_move(self):
         while True:
             self.prompt("Would you like to hit or stay? Enter H for hit " \
             "and S for stay.\n")
@@ -336,7 +333,7 @@ class GameInterface:
             {player.hand.get_details_of_all_cards_except_last()} \
             and {player.hand.get_last_dealt_card_details()}.\n"
             )
-        
+
     def display_dealer_hand_info(self, required_info, dealer):
         match required_info:
             case 'Dealer hand':
@@ -358,7 +355,6 @@ class GameInterface:
                     )
 
     def display_result(self, result, player, dealer):
-        
         player_score = player.hand.score
         dealer_score = dealer.hand.score
         print(f'Player score: {player_score}')
@@ -407,7 +403,7 @@ class GameInterface:
             self.prompt(
                 "You've got $10 in your bankroll! I can't afford to play \
                 with you anymore, so I'll have to end the game. \n ")
-            
+
     def get_player_intention(self, player):
         while True:
             self.prompt("Would you like to play again? Enter Y for yes " \
@@ -421,10 +417,10 @@ class GameInterface:
             time.sleep(0.75)
 
         return play_again
-    
+
     def display_continue_message(self):
         self.prompt("Great, let's continue! \n")
-    
+
     def display_goodbye_message(self):
         self.prompt("Thanks for playing 21! Goodbye!")
 
@@ -441,7 +437,7 @@ class TwentyOneGame:
     @property
     def player(self):
         return self._player
-    
+
     @player.setter
     def player(self, player):
         self._player = player
@@ -449,7 +445,7 @@ class TwentyOneGame:
     @property
     def dealer(self):
         return self._dealer
-    
+
     @dealer.setter
     def dealer(self, dealer):
         self._dealer = dealer
@@ -480,7 +476,8 @@ class TwentyOneGame:
 
             self.update_player_bankroll(result)
 
-            self._game_interface.display_result(result, self.player, self.dealer)
+            self._game_interface.display_result \
+            (result, self.player, self.dealer)
 
             if self.player.bankroll in (MIN_BANKROLL, MAX_BANKROLL):
                 self._game_interface.output_bankroll_status(self.player)
@@ -500,7 +497,7 @@ class TwentyOneGame:
 
     def player_turn(self):
         while True:
-            player_move = self._game_interface.get_player_move(self.player)
+            player_move = self._game_interface.get_player_move()
 
             if player_move == 'h':
                 self.player_hit()
@@ -508,7 +505,8 @@ class TwentyOneGame:
                 if self.player.is_busted():
                     break
 
-                self._game_interface.print_updated_player_score(self.player, self.dealer)
+                self._game_interface.print_updated_player_score \
+                (self.player, self.dealer)
             else:
                 break
 
@@ -522,19 +520,22 @@ class TwentyOneGame:
 
     def dealer_turn(self):
         while not self.dealer.is_busted():
-            self._game_interface.display_dealer_hand_info('Dealer hand', self.dealer)
+            self._game_interface.display_dealer_hand_info \
+            ('Dealer hand', self.dealer)
 
             self.dealer.hand.calculate_value()
 
             if self.dealer.hand.score >= self.DEALER_MINIMUM_SCORE:
                 break
 
-            self._game_interface.display_dealer_hand_info('Current score', self.dealer)
+            self._game_interface.display_dealer_hand_info \
+            ('Current score', self.dealer)
 
             self.dealer.deal(self.dealer)
             self.dealer.hand.calculate_value()
 
-            self._game_interface.display_dealer_hand_info('Latest card, updated score', self.dealer)
+            self._game_interface.display_dealer_hand_info \
+            ('Latest card, updated score', self.dealer)
 
             time.sleep(0.75)
 
