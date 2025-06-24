@@ -63,7 +63,7 @@ class Hand():
         self._initializing = True
         self.cards = []
         self.score = 0
-        self.all_cards_except_last = None
+        self.all_cards_except_last = []
         self.most_recently_dealt_card = None
         self._initializing = False
 
@@ -97,8 +97,7 @@ class Hand():
 
     @all_cards_except_last.setter
     def all_cards_except_last(self, all_cards_except_last):
-        if  not self._initializing and \
-            not isinstance(all_cards_except_last, list):
+        if  not isinstance(all_cards_except_last, list):
             raise TypeError(
                 "The hand's all_cards_except_last attribute must be a list"
                 )
@@ -292,11 +291,10 @@ class Dealer(Participant):
         number_of_cards = self.calculate_number_of_cards_to_deal(participant)
 
         for _ in range(number_of_cards):
-            try:
-                card = self._deck.cards[0]
-            except IndexError:
+            if len(self._deck.cards) == 0:
                 self.recreate_deck()
-                card = self._deck.cards[0]
+
+            card = self._deck.cards[0]
 
             self._deck.cards.remove(card)
             self.update_hand(participant, card)
