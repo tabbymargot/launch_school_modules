@@ -51,12 +51,11 @@ import random
 
 class GuessingGame:
     def __init__(self):
-        self.remaining_guesses = 7
+        self.remaining_guesses = None
         self.valid_range = range(1, 100)
         self.target_number = None
         self.player_guess = None
         
-
     def validate_guess(self):
         print(repr(self.player_guess))
         while True:
@@ -72,7 +71,16 @@ class GuessingGame:
             else:
                 break
 
+    def output_player_update(self):
+        if self.player_guess < self.target_number:
+            print('Your guess is too low.\n')
+        else:
+            print('Your guess is too high.\n')
+
     def play_one_game(self):
+        self.remaining_guesses = 7
+        self.target_number = random.choice(self.valid_range)
+
         while self.remaining_guesses > 0:
             print(f"You have {self.remaining_guesses} guesses remaining.")
 
@@ -80,10 +88,8 @@ class GuessingGame:
             
             self.validate_guess()
 
-            if self.player_guess < self.target_number:
-                print('Your player_guess is too low.\n')
-            elif self.player_guess > self.target_number:
-                print('Your player_guess is too high.\n')
+            if self.player_guess != self.target_number:
+                self.output_player_update()
             else:
                 print("That's the number!\n\nYou won!")
                 break
@@ -91,17 +97,11 @@ class GuessingGame:
             self.remaining_guesses -= 1
 
             if self.remaining_guesses == 0:
-                print('You have no more guesses. You lost!')
-        
-            # break
+                print('You have no more guesses. You lost!\n')
 
     def play(self):
         while True:
-            self.target_number = random.choice(self.valid_range)
-
             self.play_one_game()
-
-            print('ddd')
 
 game = GuessingGame()
 game.play()
