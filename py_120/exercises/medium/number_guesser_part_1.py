@@ -58,18 +58,28 @@ class GuessingGame:
         
     def validate_guess(self):
         print(repr(self.player_guess))
-        while True:
-            while True:
-                try: 
-                    self.player_guess = int(self.player_guess)
-                    break
-                except:
-                    self.player_guess = input("That's not a valid number! Please try again. \n")
+        # while True:
+        #     if type(self.player_guess) != int:
+        #         self.player_guess = input(
+        #             "That's not a valid number! Please try again. \n"
+        #             )
+        #     elif self.player_guess not in self.valid_range:
+        #         self.player_guess = input(
+        #             "Invalid guess. Enter a number between 1 and 100. \n"
+        #             )
+        #     else:
+        #         break
 
-            if self.player_guess not in self.valid_range:
-                self.player_guess = input("Invalid player_guess. Enter a number between 1 and 100 \n")
+        while True:
+            try: 
+                self.player_guess = int(self.player_guess)
+            except:
+                self.player_guess = input("That's not a valid number! Please try again. \n")
             else:
-                break
+                if self.player_guess in self.valid_range:
+                    break    
+                else:
+                    self.player_guess = input("Invalid guess. Enter a number between 1 and 100 \n")
 
     def output_player_update(self):
         if self.player_guess < self.target_number:
