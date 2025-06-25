@@ -52,17 +52,15 @@ import random
 class GuessingGame:
     def __init__(self):
         self.remaining_guesses = None
-        self.valid_range = range(1, 100)
+        self.valid_range = range(1, 101)
         self.target_number = None
         self.player_guess = None
         
     def validate_guess(self):
-        print(repr(self.player_guess))
-
         while True:
             try: 
                 self.player_guess = int(self.player_guess)
-            except:
+            except ValueError:
                 self.player_guess = input("That's not a valid number! Please try again. \n")
             else:
                 if self.player_guess in self.valid_range:
