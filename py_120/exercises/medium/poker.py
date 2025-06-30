@@ -101,8 +101,7 @@ class PokerHand:
             return True
         
     def last_two_are_equal(self, ranks):
-        # if (ranks[0] == ranks[1]):
-        if len (set(ranks)) == 1:
+        if len(set(ranks)) == 1:
             return True
         
     def get_ranks_as_list(self):
