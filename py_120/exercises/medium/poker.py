@@ -50,11 +50,7 @@ class PokerHand:
     NUMBER_OF_CARDS = 5 
 
     def __init__(self, deck):
-        # This is convoluted but I can't think of another way to check if it's a full deck.
-        if len(list(deck.__dict__.values())[0]) == 52:
-            self.cards = [deck.draw() for _ in range(PokerHand.NUMBER_OF_CARDS)]
-        else:
-            self.cards = deck._deck
+        self.cards = [deck.draw() for _ in range(PokerHand.NUMBER_OF_CARDS)]
     
     def print(self):
         for card in self.cards:
@@ -101,7 +97,7 @@ class PokerHand:
         return first_three, last_two
 
     def first_three_are_equal(self, ranks):
-        if (ranks[0] == ranks[1]) and (ranks[0] == ranks[2]):
+        if all([True if rank == ranks[0] else False for rank in ranks]):
             return True
         
     def last_two_are_equal(self, ranks):
@@ -196,10 +192,10 @@ class PokerHand:
             return True
 
 
-hand = PokerHand(Deck())
-hand.print()
-print(hand.evaluate())
-print()
+# hand = PokerHand(Deck())
+# hand.print()
+# print(hand.evaluate())
+# print()
 
 
 # Adding TestDeck class for testing purposes
@@ -207,6 +203,9 @@ print()
 class TestDeck(Deck):
     def __init__(self, cards):
         self._deck = cards
+
+    def draw(self):
+        return self._deck.pop(0)
 
 # All of these tests should return True
 
