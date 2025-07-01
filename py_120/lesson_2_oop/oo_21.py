@@ -15,56 +15,30 @@ MIN_BANKROLL = 0
 MAX_BANKROLL = 15
 
 class Card:
-    def __init__(self):
-        self._initializing = True
-        self.suit = None
-        self.str_value = None
-        self.score = None
-        self._initializing = False
+    def __init__(self, suit, str_value, score):
+        self._suit = suit
+        self._str_value = str_value
+        self._score = score
 
     @property
     def suit(self):
         return self._suit
 
-    @suit.setter
-    def suit(self, suit):
-        if not self._initializing and suit not in SUITS:
-            raise ValueError(
-                "Suit must be one of the following strings: " \
-                "Clubs, Diamonds, Hearts or Spades"
-                )
-
-        self._suit = suit
-
     @property
     def str_value(self):
         return self._str_value
 
-    @str_value.setter
-    def str_value(self, str_value):
-        if not self._initializing and str_value not in STR_VALUES:
-            raise ValueError("Invalid string value")
-
-        self._str_value = str_value
-
     @property
     def score(self):
         return self._score
-
-    @score.setter
-    def score(self, score):
-        if not self._initializing and score not in SCORES:
-            raise ValueError("Invalid card score.")
-
-        self._score = score
 
 class Hand():
     def __init__(self):
         self._initializing = True
         self.cards = []
         self.score = 0
-        self.all_cards_except_last = []
-        self.most_recently_dealt_card = None
+        # self.all_cards_except_last = []
+        # self.most_recently_dealt_card = None
         self._initializing = False
 
     @property
@@ -89,32 +63,19 @@ class Hand():
 
         self._score = score
 
-    @property
-    def all_cards_except_last(self):
-        return self._all_cards_except_last
+    # @property
+    # def most_recently_dealt_card(self):
+    #     return self._most_recently_dealt_card
 
-    @all_cards_except_last.setter
-    def all_cards_except_last(self, all_cards_except_last):
-        if  not isinstance(all_cards_except_last, list):
-            raise TypeError(
-                "The hand's all_cards_except_last attribute must be a list"
-                )
+    # @most_recently_dealt_card.setter
+    # def most_recently_dealt_card(self, most_recently_dealt_card):
+    #     if  not self._initializing and \
+    #         not isinstance(most_recently_dealt_card, Card):
+    #         raise TypeError(
+    #             "The hand's most_recently_dealt_card attribute must be a Card"
+    #             )
 
-        self._all_cards_except_last = all_cards_except_last
-
-    @property
-    def most_recently_dealt_card(self):
-        return self._most_recently_dealt_card
-
-    @most_recently_dealt_card.setter
-    def most_recently_dealt_card(self, most_recently_dealt_card):
-        if  not self._initializing and \
-            not isinstance(most_recently_dealt_card, Card):
-            raise TypeError(
-                "The hand's most_recently_dealt_card attribute must be a Card"
-                )
-
-        self._most_recently_dealt_card = most_recently_dealt_card
+    #     self._most_recently_dealt_card = most_recently_dealt_card
 
     def calculate_value(self):
         aces = []
@@ -152,10 +113,16 @@ class Hand():
 
         return sum(aces_values)
 
+    def all_cards_except_last(self):
+        return self.cards[:-1]
+    
+    def most_recently_dealt_card(self):
+        return self.cards[-1]
+    
     def get_details_of_all_cards_except_last(self):
         all_card_details = []
 
-        for card in self.all_cards_except_last:
+        for card in self.all_cards_except_last():
             suit = card.suit
             value = card.str_value
             all_card_details.append(f'the {value} of {suit}')
@@ -163,36 +130,25 @@ class Hand():
         return ', '.join(list(all_card_details))
 
     def get_last_dealt_card_details(self):
-        suit = self.most_recently_dealt_card.suit
-        value = self.most_recently_dealt_card.str_value
+        card = self.most_recently_dealt_card()
 
-        return f'the {value} of {suit}'
+        return f'the {card.str_value} of {card.suit}'
 
 class Deck:
     def __init__(self):
-        self.cards = []
+        self._cards = []
 
         for suit in SUITS:
             values_and_scores = zip(STR_VALUES, SCORES)
 
             for str_value, score in values_and_scores:
-                card = Card()
-                card.suit = suit
-                card.str_value = str_value
-                card.score = score
+                card = Card(suit, str_value, score)
 
-                self.cards.append(card)
+                self._cards.append(card)
 
     @property
     def cards(self):
         return self._cards
-
-    @cards.setter
-    def cards(self, cards):
-        if not isinstance(cards, list):
-            raise TypeError("The deck's cards attribute must be a list")
-
-        self._cards = cards
 
 class Participant:
 
@@ -248,8 +204,8 @@ class Dealer(Participant):
 
     def update_hand(self, participant, card):
         participant.hand.cards.append(card)
-        participant.hand.all_cards_except_last = participant.hand.cards[:-1]
-        participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
+        # participant.hand.all_cards_except_last() = participant.hand.cards[:-1]
+        # participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
 
     def deal(self, participant):
         random.shuffle(self._deck.cards)
@@ -423,41 +379,25 @@ class TwentyOneGame:
         self._player = Player()
         self._game_interface = GameInterface()
 
-    @property
-    def player(self):
-        return self._player
-
-    @player.setter
-    def player(self, player):
-        self._player = player
-
-    @property
-    def dealer(self):
-        return self._dealer
-
-    @dealer.setter
-    def dealer(self, dealer):
-        self._dealer = dealer
-
     def start(self):
         self._game_interface.display_welcome_message()
 
         while True:
             if TwentyOneGame.games_played > 0:
-                self.player.create_empty_hand()
-                self.dealer.create_empty_hand()
+                self._player.create_empty_hand()
+                self._dealer.create_empty_hand()
 
-            self.dealer.deal(self.player)
-            self.dealer.deal(self.dealer)
+            self._dealer.deal(self._player)
+            self._dealer.deal(self._dealer)
 
-            self.player.hand.calculate_value()
-            self.dealer.hand.calculate_value()
+            self._player.hand.calculate_value()
+            self._dealer.hand.calculate_value()
 
-            self._game_interface.show_cards(self.player, self.dealer)
+            self._game_interface.show_cards(self._player, self._dealer)
 
             self.player_turn()
 
-            if self.player.is_busted():
+            if self._player.is_busted():
                 result = self.establish_result()
             else:
                 self.dealer_turn()
@@ -466,10 +406,10 @@ class TwentyOneGame:
             self.update_player_bankroll(result)
 
             self._game_interface.display_result \
-            (result, self.player, self.dealer)
+            (result, self._player, self._dealer)
 
-            if self.player.bankroll in (MIN_BANKROLL, MAX_BANKROLL):
-                self._game_interface.output_bankroll_status(self.player)
+            if self._player.bankroll in (MIN_BANKROLL, MAX_BANKROLL):
+                self._game_interface.output_bankroll_status(self._player)
                 break
 
             play_again = self._game_interface.get_player_intention()
@@ -491,11 +431,11 @@ class TwentyOneGame:
             if player_move == 'h':
                 self.player_hit()
 
-                if self.player.is_busted():
+                if self._player.is_busted():
                     break
 
                 self._game_interface.print_updated_player_score \
-                (self.player, self.dealer)
+                (self._player, self._dealer)
             else:
                 break
 
@@ -503,42 +443,42 @@ class TwentyOneGame:
         os.system('clear')
         self._game_interface.display_dealing_message()
         time.sleep(0.75)
-        self.dealer.deal(self.player)
-        self._game_interface.print_updated_player_hand(self.player)
-        self.player.hand.calculate_value()
+        self._dealer.deal(self._player)
+        self._game_interface.print_updated_player_hand(self._player)
+        self._player.hand.calculate_value()
 
     def dealer_turn(self):
-        while not self.dealer.is_busted():
+        while not self._dealer.is_busted():
             self._game_interface.display_dealer_hand_info \
-            ('Dealer hand', self.dealer)
+            ('Dealer hand', self._dealer)
 
-            self.dealer.hand.calculate_value()
+            self._dealer.hand.calculate_value()
 
-            if self.dealer.hand.score >= self.DEALER_MINIMUM_SCORE:
+            if self._dealer.hand.score >= self.DEALER_MINIMUM_SCORE:
                 break
 
             self._game_interface.display_dealer_hand_info \
-            ('Current score', self.dealer)
+            ('Current score', self._dealer)
 
-            self.dealer.deal(self.dealer)
-            self.dealer.hand.calculate_value()
+            self._dealer.deal(self._dealer)
+            self._dealer.hand.calculate_value()
 
             self._game_interface.display_dealer_hand_info \
-            ('Latest card, updated score', self.dealer)
+            ('Latest card, updated score', self._dealer)
 
             time.sleep(0.75)
 
     def establish_result(self):
-        if self.player.hand.score > MAX_WINNING_SCORE:
+        if self._player.hand.score > MAX_WINNING_SCORE:
             return 'player_bust'
 
-        if self.dealer.hand.score > MAX_WINNING_SCORE:
+        if self._dealer.hand.score > MAX_WINNING_SCORE:
             return 'dealer_bust'
 
-        if self.player.hand.score > self.dealer.hand.score:
+        if self._player.hand.score > self._dealer.hand.score:
             return 'player_wins'
 
-        if self.dealer.hand.score > self.player.hand.score:
+        if self._dealer.hand.score > self._player.hand.score:
             return 'dealer_wins'
 
         return 'tie'
@@ -547,9 +487,9 @@ class TwentyOneGame:
         if result == 'tie':
             pass # Keep the bankroll as it is.
         elif result in ('dealer_bust', 'player_wins'):
-            self.player.bankroll += 1
+            self._player.bankroll += 1
         else:
-            self.player.bankroll -= 1
+            self._player.bankroll -= 1
 
 game = TwentyOneGame()
 game.start()
