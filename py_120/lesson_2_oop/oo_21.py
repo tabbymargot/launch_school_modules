@@ -34,48 +34,16 @@ class Card:
 
 class Hand():
     def __init__(self):
-        self._initializing = True
-        self.cards = []
-        self.score = 0
-        # self.all_cards_except_last = []
-        # self.most_recently_dealt_card = None
-        self._initializing = False
+        self._cards = []
+        self._score = 0
 
     @property
     def cards(self):
         return self._cards
 
-    @cards.setter
-    def cards(self, cards):
-        if not self._initializing and not isinstance(cards, list):
-            raise TypeError("The hand's card attribute must be a list")
-
-        self._cards = cards
-
     @property
     def score(self):
         return self._score
-
-    @score.setter
-    def score(self, score):
-        if not isinstance(score, int):
-            raise TypeError("The hand's score attribute must be an integer")
-
-        self._score = score
-
-    # @property
-    # def most_recently_dealt_card(self):
-    #     return self._most_recently_dealt_card
-
-    # @most_recently_dealt_card.setter
-    # def most_recently_dealt_card(self, most_recently_dealt_card):
-    #     if  not self._initializing and \
-    #         not isinstance(most_recently_dealt_card, Card):
-    #         raise TypeError(
-    #             "The hand's most_recently_dealt_card attribute must be a Card"
-    #             )
-
-    #     self._most_recently_dealt_card = most_recently_dealt_card
 
     def calculate_value(self):
         aces = []
@@ -91,7 +59,7 @@ class Hand():
 
         aces_score = self.calculate_ace_values(aces, non_aces_score)
 
-        self.score = non_aces_score + aces_score
+        self._score = non_aces_score + aces_score
 
     def high_ace_keeps_hand_valid \
     (self, non_aces_score, aces_values, high_value_ace):
@@ -115,23 +83,20 @@ class Hand():
 
     def all_cards_except_last(self):
         return self.cards[:-1]
-    
+
     def most_recently_dealt_card(self):
         return self.cards[-1]
-    
+
     def get_details_of_all_cards_except_last(self):
         all_card_details = []
 
         for card in self.all_cards_except_last():
-            suit = card.suit
-            value = card.str_value
-            all_card_details.append(f'the {value} of {suit}')
+            all_card_details.append(f'the {card.str_value} of {card.suit}')
 
         return ', '.join(list(all_card_details))
 
     def get_last_dealt_card_details(self):
         card = self.most_recently_dealt_card()
-
         return f'the {card.str_value} of {card.suit}'
 
 class Deck:
@@ -150,8 +115,11 @@ class Deck:
     def cards(self):
         return self._cards
 
-class Participant:
+    @cards.setter
+    def cards(self, cards):
+        self._cards = cards
 
+class Participant:
     def __init__(self):
         self.hand = Hand()
 
@@ -204,8 +172,6 @@ class Dealer(Participant):
 
     def update_hand(self, participant, card):
         participant.hand.cards.append(card)
-        # participant.hand.all_cards_except_last() = participant.hand.cards[:-1]
-        # participant.hand.most_recently_dealt_card = participant.hand.cards[-1]
 
     def deal(self, participant):
         random.shuffle(self._deck.cards)
